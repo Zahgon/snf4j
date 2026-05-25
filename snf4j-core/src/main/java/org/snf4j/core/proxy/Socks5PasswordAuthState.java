@@ -29,73 +29,54 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 class Socks5PasswordAuthState extends AbstractSocksState {
-	
-	private final static byte VERSION = 1;	
-	
-	private final static byte SUCCESS = 0;
-	
-	private final static int RESPONSE_SIZE = 2;
 
-	final static int STATUS_INDEX = 1;
-	
-	private final String username;
-	
-	private final String password;
-	
-	private final AbstractSocksState nextState;
+    private final static byte VERSION = 1;
 
-	Socks5PasswordAuthState(Socks5ProxyHandler handler, String username, String password, AbstractSocksState nextState) {
-		super(handler);
-		this.username = check(username, "username");
-		this.password = check(password, "password");
-		this.nextState = nextState;
-	}
-	
-	private String check(String value, String name) {
-		value = value == null || value.isEmpty() ? null : value;
-		if (value != null) {
-			if (value.getBytes(StandardCharsets.US_ASCII).length > 255) {
-				throw new IllegalArgumentException(name + " length is too long (expected less than 256)");
-			}
-		}
-		return value;
-	}
+    private final static byte SUCCESS = 0;
 
-	boolean isConfigured() {
-		return username != null || password != null;
-	}
-	
-	@Override
-	int responseSize() {
-		return RESPONSE_SIZE;
-	}
-	
-	@Override
-	AbstractSocksState read(byte[] data) {
-		if (data[VER_INDEX] != VERSION) {
-			throw new ProxyConnectionException("Unsupported SOCKS5 subnegotiation reply version: " + data[0]);
-		}
-		
-		byte statusCode = data[STATUS_INDEX];
-		
-		if (statusCode != SUCCESS) {
-			throw new ProxyConnectionException("Username/Password authentication response status code: " + statusCode);
-		}
-		return nextState;
-	}
+    private final static int RESPONSE_SIZE = 2;
 
-	@Override
-	void handleReady() {
-		byte[] user = username == null ? new byte[0] : username.getBytes(StandardCharsets.US_ASCII);
-		byte[] pass = password == null ? new byte[0] : password.getBytes(StandardCharsets.US_ASCII);
-		ByteBuffer buf = handler.getSession().allocate(3 + user.length + pass.length);
+    final static int STATUS_INDEX = 1;
 
-		buf.put(VERSION);
-		buf.put((byte)user.length);
-		buf.put(user);
-		buf.put((byte)pass.length);
-		buf.put(pass);
-		handler.flipAndWrite(buf);
-	}
+    private final String username;
 
+    private final String password;
+
+    private final AbstractSocksState nextState;
+
+    Socks5PasswordAuthState(Socks5ProxyHandler handler, String username, String password, AbstractSocksState nextState) {
+        super(handler);
+        this.username = check(username, "username");
+        this.password = check(password, "password");
+        this.nextState = nextState;
+    }
+
+    private String check(String value, String name) {
+        value = value == null || value.isEmpty() ? null : value;
+        if (value != null) {
+            if (value.getBytes(StandardCharsets.US_ASCII).length > 255) {
+                throw new IllegalArgumentException(name + " length is too long (expected less than 256)");
+            }
+        }
+        return value;
+    }
+
+    boolean isConfigured() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    int responseSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    AbstractSocksState read(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    void handleReady() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

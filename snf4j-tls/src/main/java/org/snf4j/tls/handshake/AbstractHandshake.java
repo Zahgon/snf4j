@@ -30,65 +30,43 @@ import java.nio.ByteBuffer;
 
 public abstract class AbstractHandshake implements IHandshake {
 
-	private final HandshakeType type;
-	
-	private byte[] prepared;
-	
-	protected AbstractHandshake(HandshakeType type) {
-		this.type = type;
-	}
-	
-	@Override
-	public HandshakeType getType() {
-		return type;
-	}
+    private final HandshakeType type;
 
-	@Override
-	public int getLength() {
-		return 4 + getDataLength();
-	}
-	
-	@Override
-	public void getBytes(ByteBuffer buffer) {
-		if (prepared != null) {
-			buffer.put(prepared);
-		}
-		else {
-			int len = getDataLength();
+    private byte[] prepared;
 
-			if (buffer.remaining() >= len + 4) {
-				buffer.put((byte) getType().value());
-				buffer.put((byte) (len >> 16));
-				buffer.putShort((short) (len & 0xffff));
-				getData(buffer);
-				return;
-			}
-			throw new BufferOverflowException();
-		}
-	}
+    protected AbstractHandshake(HandshakeType type) {
+        this.type = type;
+    }
 
-	@Override
-	public boolean isPrepared() {
-		return prepared != null;
-	}
-	
-	@Override
-	public byte[] prepare() {
-		byte[] prepared = new byte[getLength()];
-		
-		this.prepared = null;
-		getBytes(ByteBuffer.wrap(prepared));
-		this.prepared = prepared;
-		return prepared;
-	}
+    @Override
+    public HandshakeType getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public byte[] getPrepared() {
-		if (prepared == null) {
-			return prepare();
-		}
-		return prepared;
-	}
-	
-	protected abstract void getData(ByteBuffer buffer);
+    @Override
+    public int getLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void getBytes(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isPrepared() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] prepare() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] getPrepared() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    protected abstract void getData(ByteBuffer buffer);
 }

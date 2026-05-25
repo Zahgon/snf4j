@@ -36,7 +36,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-
 import javax.crypto.KeyAgreement;
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
@@ -44,71 +43,63 @@ import javax.crypto.spec.DHPublicKeySpec;
 
 public class DHKeyExchange implements IDHKeyExchange {
 
-	public final static DHKeyExchange FFDHE2048 = new DHKeyExchange("ffdhe2048", DHGroups.FFDHE2048_P, DHGroups.FFDHE_G, DHGroups.FFDHE2048_P_LENGTH);
+    public final static DHKeyExchange FFDHE2048 = new DHKeyExchange("ffdhe2048", DHGroups.FFDHE2048_P, DHGroups.FFDHE_G, DHGroups.FFDHE2048_P_LENGTH);
 
-	public final static DHKeyExchange FFDHE3072 = new DHKeyExchange("ffdhe3072", DHGroups.FFDHE3072_P, DHGroups.FFDHE_G, DHGroups.FFDHE3072_P_LENGTH);
+    public final static DHKeyExchange FFDHE3072 = new DHKeyExchange("ffdhe3072", DHGroups.FFDHE3072_P, DHGroups.FFDHE_G, DHGroups.FFDHE3072_P_LENGTH);
 
-	public final static DHKeyExchange FFDHE4096 = new DHKeyExchange("ffdhe4096", DHGroups.FFDHE4096_P, DHGroups.FFDHE_G, DHGroups.FFDHE4096_P_LENGTH);
+    public final static DHKeyExchange FFDHE4096 = new DHKeyExchange("ffdhe4096", DHGroups.FFDHE4096_P, DHGroups.FFDHE_G, DHGroups.FFDHE4096_P_LENGTH);
 
-	public final static DHKeyExchange FFDHE6144 = new DHKeyExchange("ffdhe6144", DHGroups.FFDHE6144_P, DHGroups.FFDHE_G, DHGroups.FFDHE6144_P_LENGTH);
+    public final static DHKeyExchange FFDHE6144 = new DHKeyExchange("ffdhe6144", DHGroups.FFDHE6144_P, DHGroups.FFDHE_G, DHGroups.FFDHE6144_P_LENGTH);
 
-	public final static DHKeyExchange FFDHE8192 = new DHKeyExchange("ffdhe8192", DHGroups.FFDHE8192_P, DHGroups.FFDHE_G, DHGroups.FFDHE8192_P_LENGTH);
-	
-	private final String algorithm;
+    public final static DHKeyExchange FFDHE8192 = new DHKeyExchange("ffdhe8192", DHGroups.FFDHE8192_P, DHGroups.FFDHE_G, DHGroups.FFDHE8192_P_LENGTH);
 
-	private final BigInteger p;
-	
-	private final BigInteger g;
-	
-	private final int pLength;
-	
-	public DHKeyExchange(String algorithm, BigInteger p, BigInteger g, int pLength) {
-		this.algorithm = algorithm;
-		this.p = p;
-		this.g = g;
-		this.pLength = pLength;
-	}
-	
-	@Override
-	public String getAlgorithm() {
-		return algorithm;
-	}
+    private final String algorithm;
 
-	@Override
-	public boolean isImplemented() {
-		return true;
-	}
+    private final BigInteger p;
 
-	@Override
-	public int getPLength() {
-		return pLength;
-	}
-	
-	@Override
-	public byte[] generateSecret(PrivateKey privateKey, PublicKey publicKey, SecureRandom random) throws NoSuchAlgorithmException, InvalidKeyException {
-        KeyAgreement keyAgreement = KeyAgreement.getInstance("DH");
-        
-        keyAgreement.init(privateKey, random);
-        keyAgreement.doPhase(publicKey, true);
-        return keyAgreement.generateSecret();
-	}
+    private final BigInteger g;
 
-	@Override
-	public KeyPair generateKeyPair(SecureRandom random) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("DH");
-		
-		keyPairGenerator.initialize(new DHParameterSpec(p,g), random);
-		return keyPairGenerator.generateKeyPair();
-	}
-	
-	@Override
-	public PublicKey generatePublicKey(BigInteger y) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		return KeyFactory.getInstance("DH").generatePublic(new DHPublicKeySpec(y, p, g));
-	}
+    private final int pLength;
 
-	@Override
-	public BigInteger getY(PublicKey key) {
-		return ((DHPublicKey)key).getY();
-	}
+    public DHKeyExchange(String algorithm, BigInteger p, BigInteger g, int pLength) {
+        this.algorithm = algorithm;
+        this.p = p;
+        this.g = g;
+        this.pLength = pLength;
+    }
 
+    @Override
+    public String getAlgorithm() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getPLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] generateSecret(PrivateKey privateKey, PublicKey publicKey, SecureRandom random) throws NoSuchAlgorithmException, InvalidKeyException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public KeyPair generateKeyPair(SecureRandom random) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public PublicKey generatePublicKey(BigInteger y) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public BigInteger getY(PublicKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

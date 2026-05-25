@@ -32,115 +32,86 @@ import java.util.concurrent.atomic.AtomicInteger;
  * {@link IFastThreadLocalThread}. For other threads it can provide thread-local
  * variables or none if the class is created with the {@code forAllThreads}
  * argument set to {@code false}.
- * 
- * @param <T> the type of the fast thread-local variable
- * 
- * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  *
+ * @param <T> the type of the fast thread-local variable
+ *
+ * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class FastThreadLocal<T> extends ThreadLocal<T> {
-	
-	private static AtomicInteger nextIndex = new AtomicInteger(-1);
-	
-	private final int index = nextIndex.incrementAndGet();
-	
-	private final boolean forAllThreads;
-	
-	/**
-	 * Creates a fast thread-local variable.
-	 * 
-	 * @param forAllThreads determines if the variable will be provided for all
-	 *                      threads or only for threads implementing
-	 *                      {@link IFastThreadLocalThread}.
-	 */
-	public FastThreadLocal(boolean forAllThreads) {
-		this.forAllThreads = forAllThreads;
-	}
-	
-	/**
-	 * Creates a fast thread-local variable for all threads.
-	 */
-	public FastThreadLocal() {
-		forAllThreads = true;
-	}
-	
-	/**
-	 * Informs if the variable is provided for all threads or only for threads
-	 * implementing {@link IFastThreadLocalThread}.
-	 * 
-	 * @return {@code true} if the variable is provided for all threads
-	 */
-	public boolean isForAllThreads() {
-		return forAllThreads;
-	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * It does nothing if the current thread does not implement
-	 * {@link IFastThreadLocalThread} and the fast thread-local was created to
-	 * provide the variable not for all threads.
-	 * 
-	 * @return the current thread's value of this fast thread-local or {@code null}
-	 *         if the current thread does not implement
-	 *         {@link IFastThreadLocalThread} and the fast thread-local was created
-	 *         to provide the variable not for all threads.
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public T get() {
-		Thread t = Thread.currentThread();
-		
-		if (t instanceof IFastThreadLocalThread) {
-			IFastThreadLocalThread ft = (IFastThreadLocalThread)t;
-			Object value = ft.getFastThreadLocal(index);
-			
-			if (value == null) {
-				value = initialValue();
-				ft.setFastThreadLocal(index, value);
-			}
-			return (T)value;
-		}
-		return forAllThreads ? super.get() : null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * It does nothing if the current thread does not implement
-	 * {@link IFastThreadLocalThread} and the fast thread-local was created to
-	 * provide the variable not for all threads.
-	 */
-	@Override
-	public void set(T value) {
-		Thread t = Thread.currentThread();
+    private static AtomicInteger nextIndex = new AtomicInteger(-1);
 
-		if (t instanceof IFastThreadLocalThread) {
-			((IFastThreadLocalThread)t).setFastThreadLocal(index, value);
-			return;
-		}	
-		else if (forAllThreads) {
-			super.set(value);
-		}
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * It does nothing if the current thread does not implement
-	 * {@link IFastThreadLocalThread} and the fast thread-local was created to
-	 * provide the variable not for all threads.
-	 */
-	@Override
-	public void remove() {
-		Thread t = Thread.currentThread();
+    private final int index = nextIndex.incrementAndGet();
 
-		if (t instanceof IFastThreadLocalThread) {
-			((IFastThreadLocalThread)t).removeFastThreadLocal(index);
-			return;
-		}
-		else if (forAllThreads) {
-			super.remove();
-		}
-	}
+    private final boolean forAllThreads;
+
+    /**
+     * Creates a fast thread-local variable.
+     *
+     * @param forAllThreads determines if the variable will be provided for all
+     *                      threads or only for threads implementing
+     *                      {@link IFastThreadLocalThread}.
+     */
+    public FastThreadLocal(boolean forAllThreads) {
+        this.forAllThreads = forAllThreads;
+    }
+
+    /**
+     * Creates a fast thread-local variable for all threads.
+     */
+    public FastThreadLocal() {
+        forAllThreads = true;
+    }
+
+    /**
+     * Informs if the variable is provided for all threads or only for threads
+     * implementing {@link IFastThreadLocalThread}.
+     *
+     * @return {@code true} if the variable is provided for all threads
+     */
+    public boolean isForAllThreads() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It does nothing if the current thread does not implement
+     * {@link IFastThreadLocalThread} and the fast thread-local was created to
+     * provide the variable not for all threads.
+     *
+     * @return the current thread's value of this fast thread-local or {@code null}
+     *         if the current thread does not implement
+     *         {@link IFastThreadLocalThread} and the fast thread-local was created
+     *         to provide the variable not for all threads.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public T get() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It does nothing if the current thread does not implement
+     * {@link IFastThreadLocalThread} and the fast thread-local was created to
+     * provide the variable not for all threads.
+     */
+    @Override
+    public void set(T value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It does nothing if the current thread does not implement
+     * {@link IFastThreadLocalThread} and the fast thread-local was created to
+     * provide the variable not for all threads.
+     */
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

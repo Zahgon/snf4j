@@ -30,37 +30,37 @@ import java.nio.channels.SelectableChannel;
 /**
  * Default controller that determines behavior of the associated selector loop. It permits
  * all controlled operations.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class DefaultSelectorLoopController implements ISelectorLoopController {
 
-	/**
-	 * Default controller that permits all controlled operations.
-	 */
-	public static final DefaultSelectorLoopController DEFAULT = new DefaultSelectorLoopController();
-	
-	/**
-	 * Constructs the default controller.
-	 */
-	protected DefaultSelectorLoopController() {
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * @return always <code>true</code>
-	 */
-	@Override
-	public boolean processAccepted(SelectableChannel channel) {
-		return true;
-	}
+    /**
+     * Default controller that permits all controlled operations.
+     */
+    public static final DefaultSelectorLoopController DEFAULT = new DefaultSelectorLoopController();
 
-	/**
-	 * {@inheritDoc}
-	 * @return always <code>true</code>
-	 */
-	@Override
-	public boolean processConnection(SelectableChannel channel) {
-		return true;
-	}
+    /**
+     * Constructs the default controller.
+     */
+    protected DefaultSelectorLoopController() {
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return always <code>true</code>
+     */
+    @Override
+    public boolean processAccepted(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return always <code>true</code>
+     */
+    @Override
+    public boolean processConnection(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

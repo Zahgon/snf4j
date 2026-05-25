@@ -26,56 +26,39 @@
 package org.snf4j.core.codec.bytes;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.codec.ICodec;
 
 /**
  * A base {@code class} for encoders and decoders transforming a {@link ByteBuffer}
  * into an array of bytes.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public class BufferToArrayCodec implements ICodec<ByteBuffer,byte[]> {
+public class BufferToArrayCodec implements ICodec<ByteBuffer, byte[]> {
 
-	/**
-	 * Converts a {@link ByteBuffer} into an array of bytes. If the passed buffer is
-	 * backed by an accessible byte array and the number of remaining bytes in the
-	 * buffer equals the length of the backing array then it simply returns the
-	 * backing array. In other cases it returns a newly created array filled with
-	 * the bytes remaining in the buffer.
-	 * <p>
-	 * The passed buffer should be no longer used after calling this method.
-	 * 
-	 * @param buffer the buffer to convert
-	 * @return an array of bytes
-	 */
-	public static byte[] toArray(ByteBuffer buffer) {
-		byte[] array;
-		int remaining = buffer.remaining();
-		
-		if (buffer.hasArray()) {
-			array = buffer.array();
-			if (array.length > remaining) {
-				byte[] tmp = new byte[remaining];
-				System.arraycopy(array, buffer.arrayOffset()+buffer.position(), tmp, 0, remaining);
-				array = tmp;
-			}
-		}
-		else {
-			array = new byte[remaining];
-			buffer.get(array);
-		}
-		return array;
-	}
-	
-	@Override
-	public Class<ByteBuffer> getInboundType() {
-		return ByteBuffer.class;
-	}
+    /**
+     * Converts a {@link ByteBuffer} into an array of bytes. If the passed buffer is
+     * backed by an accessible byte array and the number of remaining bytes in the
+     * buffer equals the length of the backing array then it simply returns the
+     * backing array. In other cases it returns a newly created array filled with
+     * the bytes remaining in the buffer.
+     * <p>
+     * The passed buffer should be no longer used after calling this method.
+     *
+     * @param buffer the buffer to convert
+     * @return an array of bytes
+     */
+    public static byte[] toArray(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Class<byte[]> getOutboundType() {
-		return byte[].class;
-	}
+    @Override
+    public Class<ByteBuffer> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public Class<byte[]> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

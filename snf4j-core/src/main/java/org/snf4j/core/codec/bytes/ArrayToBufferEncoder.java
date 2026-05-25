@@ -27,48 +27,38 @@ package org.snf4j.core.codec.bytes;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.codec.IEncoder;
 import org.snf4j.core.session.ISession;
 
 /**
  * An encoder transforming an array of bytes into a {@link ByteBuffer}.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public class ArrayToBufferEncoder extends ArrayToBufferCodec implements IEncoder<byte[],ByteBuffer> {
+public class ArrayToBufferEncoder extends ArrayToBufferCodec implements IEncoder<byte[], ByteBuffer> {
 
-	private final boolean allocate;
+    private final boolean allocate;
 
-	/**
-	 * Constructs an encoder with a specified allocation mode.
-	 * 
-	 * @param allocate the allocation mode determining if the output buffer should
-	 *                 be allocated by the session's allocator or the buffer should
-	 *                 wrap the input array.
-	 */
-	public ArrayToBufferEncoder(boolean allocate) {
-		this.allocate = allocate;
-	}
-	
-	/**
-	 * Constructs an encoder with no buffer allocation (only by wrapping the input array)
-	 */
-	public ArrayToBufferEncoder() {
-		allocate = false;
-	}
-	
-	@Override
-	public void encode(ISession session, byte[] data, List<ByteBuffer> out) throws Exception {
-		if (allocate) {
-			ByteBuffer b = session.allocate(data.length);
-			
-			b.put(data).flip();
-			out.add(b);
-		}
-		else {
-			out.add(ByteBuffer.wrap(data));
-		}
-	}
+    /**
+     * Constructs an encoder with a specified allocation mode.
+     *
+     * @param allocate the allocation mode determining if the output buffer should
+     *                 be allocated by the session's allocator or the buffer should
+     *                 wrap the input array.
+     */
+    public ArrayToBufferEncoder(boolean allocate) {
+        this.allocate = allocate;
+    }
 
+    /**
+     * Constructs an encoder with no buffer allocation (only by wrapping the input array)
+     */
+    public ArrayToBufferEncoder() {
+        allocate = false;
+    }
+
+    @Override
+    public void encode(ISession session, byte[] data, List<ByteBuffer> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -25,35 +25,34 @@
  */
 package org.snf4j.core.session;
 
-
 /**
  * Unchecked exception thrown when an attempt is made to perform an operation
- * when a session is in an illegal state. 
- * 
+ * when a session is in an illegal state.
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class IllegalSessionStateException extends IllegalStateException {
 
-	private static final long serialVersionUID = -1536585977966419427L;
-	
-	private final SessionState illegalState;
-	
-	/**
-	 * Constructs an instance of this exception.
-	 * 
-	 * @param illegalState
-	 *            the illegal state of a session that caused this exception
-	 */
-	public IllegalSessionStateException(SessionState illegalState) {
-		this.illegalState = illegalState;
-	}
-	
-	/**
-	 * Returns the illegal state of a session that caused this exception.
-	 * 
-	 * @return the illegal state
-	 */
-	public SessionState getIllegalState() {
-		return illegalState;
-	}
+    private static final long serialVersionUID = -1536585977966419427L;
+
+    private final SessionState illegalState;
+
+    /**
+     * Constructs an instance of this exception.
+     *
+     * @param illegalState
+     *            the illegal state of a session that caused this exception
+     */
+    public IllegalSessionStateException(SessionState illegalState) {
+        this.illegalState = illegalState;
+    }
+
+    /**
+     * Returns the illegal state of a session that caused this exception.
+     *
+     * @return the illegal state
+     */
+    public SessionState getIllegalState() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

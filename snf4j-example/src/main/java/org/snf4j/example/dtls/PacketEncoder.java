@@ -26,26 +26,23 @@
 package org.snf4j.example.dtls;
 
 import java.util.List;
-
 import org.snf4j.core.codec.IEncoder;
 import org.snf4j.core.session.ISession;
 
-public class PacketEncoder implements IEncoder<Packet, byte[]>{
+public class PacketEncoder implements IEncoder<Packet, byte[]> {
 
-	@Override
-	public Class<Packet> getInboundType() {
-		return Packet.class;
-	}
+    @Override
+    public Class<Packet> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Class<byte[]> getOutboundType() {
-		return byte[].class;
-	}
+    @Override
+    public Class<byte[]> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void encode(ISession session, Packet data, List<byte[]> out)
-			throws Exception {
-		out.add(data.toBytes());
-	}
-
+    @Override
+    public void encode(ISession session, Packet data, List<byte[]> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

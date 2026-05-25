@@ -26,12 +26,12 @@
 package org.snf4j.example.earlydata;
 
 public class Logger {
-	
-	public static void inf(String msg) {
-		System.out.println("[INF] " + msg);		
-	}
-	
-	public static void err(String msg) {
-		System.out.println("[ERR] " + msg);		
-	}
+
+    public static void inf(String msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static void err(String msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -29,115 +29,75 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 class Cache {
-	
-	final int maxSize;
-	
-	final int minSize;
-	
-	final int ageThreshold;
-	
-	final int capacity;
-	
-	final Cache[] group;
-	
-	ByteBuffer[] cache;
-	
-	int size;
-	
-	long age;
-	
-	long touchThreshold;
-	
-	Cache(int capacity, int minSize, int maxSize, int ageThreshold, Cache[] group) {
-		this.capacity = capacity;
-		this.minSize = minSize;
-		this.maxSize = maxSize;
-		this.ageThreshold = ageThreshold;
-		this.group = group;
-		touchThreshold = ageThreshold * 2;
-	}
-	
-	final boolean prePut(long touch) {
-		if (cache == null) {
-			cache = new ByteBuffer[maxSize];
-		}
-		
-		if (size == 0) {
-			age = touch;
-		}
-		else if (touch - age > ageThreshold) {
-			reduce(touch);
-		}
-		
-		if (size == cache.length) {
-			return false;
-		}
-		return true;
-	}
-	
-	int capacity() {
-		return capacity;
-	}
-	
-	private final void reduce(long touch) {
-		int prevSize = size;
-		
-		if (prevSize > minSize) {
-			size = Math.max(prevSize >> 1, minSize);
-			for (int i=size; i<prevSize; ++i) {
-				cache[i] = null;
-			}
-			age = touch;
-		}
-	}
-	
-	void purge() {
-		cache = null;
-		size = 0;
-	}
-	
-	private final void touch(long touch) {
-		if (cache != null) {
-			long threshold = touch - age;
-			
-			if (threshold > ageThreshold) {
-				reduce(touch);
-			}
-		}
-	}
-	
-	final void touchAll(long touch, long touchThreshold) {
-		if (touchThreshold > this.touchThreshold) {
-			this.touchThreshold = touchThreshold;
-			for (int i=0; i<group.length; ++i) {
-				group[i].touch(touch);
-			}
-		}
-	}
-	
-	boolean put(ByteBuffer b, long touch, long touchAll) {
-		touchAll(touch, touchAll);
-		if (capacity != b.capacity()) {
-			return false;
-		}
-		if (prePut(touch)) {			
-			cache[size++] = b;
-			return true;
-		}
-		return false;
-	}
-	
-	ByteBuffer get(int capacity, long touch, long touchAll) {
-		if (size > 0) {
-			ByteBuffer b = cache[--size];
-			
-			cache[size] = null;
-			b.clear();
-			b.order(ByteOrder.BIG_ENDIAN);
-			touchAll(touch, touchAll);
-			return b;
-		}
-		touchAll(touch, touchAll);
-		return null;
-	}
+
+    final int maxSize;
+
+    final int minSize;
+
+    final int ageThreshold;
+
+    final int capacity;
+
+    final Cache[] group;
+
+    ByteBuffer[] cache;
+
+    int size;
+
+    long age;
+
+    long touchThreshold;
+
+    Cache(int capacity, int minSize, int maxSize, int ageThreshold, Cache[] group) {
+        this.capacity = capacity;
+        this.minSize = minSize;
+        this.maxSize = maxSize;
+        this.ageThreshold = ageThreshold;
+        this.group = group;
+        touchThreshold = ageThreshold * 2;
+    }
+
+    final boolean prePut(long touch) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    int capacity() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private final void reduce(long touch) {
+        int prevSize = size;
+        if (prevSize > minSize) {
+            size = Math.max(prevSize >> 1, minSize);
+            for (int i = size; i < prevSize; ++i) {
+                cache[i] = null;
+            }
+            age = touch;
+        }
+    }
+
+    void purge() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private final void touch(long touch) {
+        if (cache != null) {
+            long threshold = touch - age;
+            if (threshold > ageThreshold) {
+                reduce(touch);
+            }
+        }
+    }
+
+    final void touchAll(long touch, long touchThreshold) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    boolean put(ByteBuffer b, long touch, long touchAll) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    ByteBuffer get(int capacity, long touch, long touchAll) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

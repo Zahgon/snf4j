@@ -27,26 +27,28 @@ package org.snf4j.tls.engine;
 
 public class NoEarlyDataHandler implements IEarlyDataHandler {
 
-	public final static IEarlyDataHandler INSTANCE = new NoEarlyDataHandler();
-	
-	private NoEarlyDataHandler() {}
-	
-	@Override
-	public boolean hasEarlyData() {
-		return false;
-	}
+    public final static IEarlyDataHandler INSTANCE = new NoEarlyDataHandler();
 
-	@Override
-	public byte[] nextEarlyData(String protocol) {
-		return null;
-	}
-	
-	@Override
-	public void acceptedEarlyData() {
-	}
-	
-	@Override
-	public void rejectedEarlyData() {
-	}
+    private NoEarlyDataHandler() {
+    }
 
+    @Override
+    public boolean hasEarlyData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] nextEarlyData(String protocol) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void acceptedEarlyData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void rejectedEarlyData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

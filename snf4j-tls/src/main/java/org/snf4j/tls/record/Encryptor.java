@@ -29,26 +29,24 @@ import org.snf4j.tls.crypto.IAeadEncrypt;
 
 public class Encryptor extends Cryptor {
 
-	private final IAeadEncrypt aead;
-	
-	public Encryptor(IAeadEncrypt aead, byte[] iv, long keyLimit) {
-		super(iv, aead.getAead().getTagLength(), keyLimit);
-		this.aead = aead;
-	}
+    private final IAeadEncrypt aead;
 
-	public Encryptor(IAeadEncrypt aead, byte[] iv) {
-		super(iv, aead.getAead().getTagLength(), aead.getAead().getKeyLimit());
-		this.aead = aead;
-	}
-	
-	public IAeadEncrypt getAead() {
-		return aead;
-	}
+    public Encryptor(IAeadEncrypt aead, byte[] iv, long keyLimit) {
+        super(iv, aead.getAead().getTagLength(), keyLimit);
+        this.aead = aead;
+    }
 
-	@Override
-	public void erase() {
-		super.erase();
-		aead.erase();
-	}	
-	
+    public Encryptor(IAeadEncrypt aead, byte[] iv) {
+        super(iv, aead.getAead().getTagLength(), aead.getAead().getKeyLimit());
+        this.aead = aead;
+    }
+
+    public IAeadEncrypt getAead() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void erase() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

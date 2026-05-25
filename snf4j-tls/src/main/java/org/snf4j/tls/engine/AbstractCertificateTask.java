@@ -27,37 +27,34 @@ package org.snf4j.tls.engine;
 
 abstract public class AbstractCertificateTask extends AbstractEngineTask {
 
-	private final ICertificateSelector selector;
-	
-	private final CertificateCriteria criteria;
-	
-	protected volatile SelectedCertificates certificates;
-	
-	AbstractCertificateTask(ICertificateSelector selector, CertificateCriteria criteria) {
-		this.selector = selector;
-		this.criteria = criteria;
-	}
+    private final ICertificateSelector selector;
 
-	AbstractCertificateTask() {
-		this.selector = null;
-		this.criteria = null;
-	}
-	
-	@Override
-	public boolean isProducing() {
-		return true;
-	}
+    private final CertificateCriteria criteria;
 
-	@Override
-	public String name() {
-		return "Certificate";
-	}
+    protected volatile SelectedCertificates certificates;
 
-	@Override
-	void execute() throws Exception {
-		if (selector != null) {
-			certificates = selector.selectCertificates(criteria);
-		}
-	}
+    AbstractCertificateTask(ICertificateSelector selector, CertificateCriteria criteria) {
+        this.selector = selector;
+        this.criteria = criteria;
+    }
 
+    AbstractCertificateTask() {
+        this.selector = null;
+        this.criteria = null;
+    }
+
+    @Override
+    public boolean isProducing() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String name() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    void execute() throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

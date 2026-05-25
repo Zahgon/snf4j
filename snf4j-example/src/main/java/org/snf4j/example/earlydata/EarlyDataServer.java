@@ -35,49 +35,12 @@ import org.snf4j.tls.engine.EngineParameters;
 import org.snf4j.tls.engine.EngineParametersBuilder;
 
 public class EarlyDataServer {
-	
-	static final String PREFIX = "org.snf4j.";	
-	static final int PORT = Integer.getInteger(PREFIX+"Port", 8001);
 
-	public static void main(String[] args) throws Exception {
-		SelectorLoop loop = new SelectorLoop();
-		ISelectorLoopPool pool = null;
-		
-		try {
-			loop.start();
-					
-			// Initialize the listener
-			ServerSocketChannel channel = ServerSocketChannel.open();
-			channel.configureBlocking(false);
-			channel.socket().bind(new InetSocketAddress(PORT));
-			
-			// Configure TLS connection
-			EngineParameters params = new EngineParametersBuilder()
-					.delegatedTaskMode(DelegatedTaskMode.ALL)
-					.applicationProtocols("p1","p2","p3")
-					.build();
-			EngineHandlerBuilder builder = new EngineHandlerBuilder(
-					KeyStoreLoader.keyManager(),
-					KeyStoreLoader.trustManager())
-					.ticketInfos(1024)
-					.maxEarlyDataSize(1024)
-					.padding(1);
-			
-			// Register the listener
-			loop.register(channel, new SessionFactory(params, builder));
-			
-			// Wait till the loop ends
-			loop.join();
-		}
-		finally {
-			
-			// Gently stop the loop
-			loop.stop();
-			
-			// Gently stop the pool
-			if (pool != null) {
-				pool.stop();
-			}
-		}
-	}
+    static final String PREFIX = "org.snf4j.";
+
+    static final int PORT = Integer.getInteger(PREFIX + "Port", 8001);
+
+    public static void main(String[] args) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

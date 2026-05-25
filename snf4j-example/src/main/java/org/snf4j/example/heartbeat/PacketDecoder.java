@@ -26,30 +26,23 @@
 package org.snf4j.example.heartbeat;
 
 import java.util.List;
-
 import org.snf4j.core.codec.IDecoder;
 import org.snf4j.core.session.ISession;
 
 public class PacketDecoder implements IDecoder<byte[], Packet> {
 
-	@Override
-	public Class<byte[]> getInboundType() {
-		return byte[].class;
-	}
+    @Override
+    public Class<byte[]> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Class<Packet> getOutboundType() {
-		return Packet.class;
-	}
+    @Override
+    public Class<Packet> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void decode(ISession session, byte[] data, List<Packet> out)
-			throws Exception {
-		Packet packet = Packet.parse(data);
-		
-		if (packet != null) {
-			out.add(packet);
-		}
-	}
-
+    @Override
+    public void decode(ISession session, byte[] data, List<Packet> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -29,7 +29,6 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.List;
-
 import org.snf4j.core.codec.IBaseDecoder;
 import org.snf4j.core.codec.ICodecExecutor;
 import org.snf4j.core.handler.IDatagramHandler;
@@ -38,218 +37,119 @@ import org.snf4j.core.session.IDatagramSession;
 import org.snf4j.core.session.ISession;
 
 class CodecExecutorAdapter implements IStreamReader, IDatagramReader {
-	
-	final ICodecExecutor executor;
-	
-	ISession session;
-	
-	private final boolean datagram;
-	
-	CodecExecutorAdapter(ICodecExecutor executor, ISession session) {
-		this.executor = executor;
-		this.session = session;
-		datagram = session instanceof IDatagramSession;
-	}
-	
-	protected CodecExecutorAdapter(ICodecExecutor executor) {
-		this.executor = executor;
-		datagram = false;
-	}
-	
-	final List<Object> encode(ByteBuffer data) throws Exception {
-		executor.syncEncoders(session);
-		return executor.encode(session, data);
-	}
 
-	final List<Object> encode(IByteBufferHolder data) throws Exception {
-		executor.syncEncoders(session);
-		return executor.encode(session, data);
-	}
+    final ICodecExecutor executor;
 
-	final List<Object> encode(byte[] data) throws Exception {
-		executor.syncEncoders(session);
-		return executor.encode(session, data);
-	}
+    ISession session;
 
-	final List<Object> encode(Object msg) throws Exception {
-		executor.syncEncoders(session);
-		return executor.encode(session, msg);
-	}
-	
-	final ICodecExecutor getExecutor() {
-		return executor;
-	}
-	
-	@Override
-	public int available(ByteBuffer buffer, boolean flipped) {
-		executor.syncDecoders(session);
+    private final boolean datagram;
 
-		IBaseDecoder<?,?> base = executor.getBaseDecoder();
-		
-		if (base != null) {
-			return base.available(session, buffer, flipped);
-		}
-		if (executor.hasDecoders()) {
-			return flipped ? buffer.remaining() : buffer.position();
-		}
-		return ((IStreamReader)session.getHandler()).available(buffer, flipped);
-	}
-
-	@Override
-	public int available(byte[] buffer, int off, int len) {
-		executor.syncDecoders(session);
-		
-		IBaseDecoder<?,?> base = executor.getBaseDecoder();
-		
-		if (base != null) {
-			return base.available(session, buffer, off, len);
-		}
-		if (executor.hasDecoders()) {
-			return len;
-		}
-		return ((IStreamReader)session.getHandler()).available(buffer, off, len);
-	}
-
-
-	@Override
-	public void read(byte[] data) throws PipelineDecodeException {
-		List<Object> out;
-		
-		if (datagram) {
-			executor.syncDecoders(session);
-		}
-		try {
-			out = executor.decode(session, data);
-		}
-		catch (Exception e) {
-			throw new PipelineDecodeException((InternalSession) session, e);
-		}
-		
-		IHandler handler = session.getHandler();
-		
-		if (out == null) {
-			handler.read(data);
-			return;
-		}
-		read(out, handler);
-	}
-	
-	@Override
-	public void read(ByteBuffer data) {
-		List<Object> out;
-		
-		executor.syncDecoders(session);
-		try {
-			out = executor.decode(session, data);
-		}
-		catch (Exception e) {
-			throw new PipelineDecodeException((InternalSession) session, e);
-		}
-		
-		IHandler handler = session.getHandler();
-		
-		if (out == null) {
-			handler.read(data);
-			return;
-		}
-		read(out, handler);
-	}
-	
-	@Override
-	public void read(SocketAddress remoteAddress, byte[] datagram) throws PipelineDecodeException {
-		List<Object> out;
-		
-		executor.syncDecoders(session);
-		try {
-			out = executor.decode(session, datagram);
-		}
-		catch (Exception e) {
-			throw new PipelineDecodeException((InternalSession) session, e);
-		}
-		
-		IDatagramHandler handler = (IDatagramHandler) session.getHandler();
-		
-		if (out == null) {
-			handler.read(remoteAddress, datagram);
-			return;
-		}
-		read(remoteAddress, out, handler);
-	}	
-    
-	@Override
-	public void read(SocketAddress remoteAddress, ByteBuffer datagram) {
-		List<Object> out;
-		
-		executor.syncDecoders(session);
-		try {
-			out = executor.decode(session, datagram);
-		}
-		catch (Exception e) {
-			throw new PipelineDecodeException((InternalSession) session, e);
-		}
-		
-		IDatagramHandler handler = (IDatagramHandler) session.getHandler();
-		
-		if (out == null) {
-			handler.read(remoteAddress, datagram);
-			return;
-		}
-		read(remoteAddress, out, handler);
-	}	
-	
-	private void read(SocketAddress remoteAddress, List<Object> out, IDatagramHandler handler) {
-		if (out.isEmpty()) {
-			return;
-		}
-		
-		Iterator<Object> i = out.iterator();
-		Object o = i.next();
-		
-		if (o.getClass() == byte[].class) {
-			handler.read(remoteAddress, (byte[])o);
-			while (i.hasNext()) {
-				handler.read(remoteAddress, (byte[])i.next());
-			}
-		}
-		else if (o instanceof ByteBuffer) {
-			handler.read(remoteAddress, (ByteBuffer)o);
-			while (i.hasNext()) {
-				handler.read(remoteAddress, (ByteBuffer)i.next());
-			}
-		}
-		else {
-			handler.read(remoteAddress, o);
-			while (i.hasNext()) {
-				handler.read(remoteAddress, i.next());
-			}
-		}	
+    CodecExecutorAdapter(ICodecExecutor executor, ISession session) {
+        this.executor = executor;
+        this.session = session;
+        datagram = session instanceof IDatagramSession;
     }
-    
+
+    protected CodecExecutorAdapter(ICodecExecutor executor) {
+        this.executor = executor;
+        datagram = false;
+    }
+
+    final List<Object> encode(ByteBuffer data) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final List<Object> encode(IByteBufferHolder data) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final List<Object> encode(byte[] data) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final List<Object> encode(Object msg) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final ICodecExecutor getExecutor() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int available(ByteBuffer buffer, boolean flipped) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int available(byte[] buffer, int off, int len) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(byte[] data) throws PipelineDecodeException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(ByteBuffer data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(SocketAddress remoteAddress, byte[] datagram) throws PipelineDecodeException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(SocketAddress remoteAddress, ByteBuffer datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private void read(SocketAddress remoteAddress, List<Object> out, IDatagramHandler handler) {
+        if (out.isEmpty()) {
+            return;
+        }
+        Iterator<Object> i = out.iterator();
+        Object o = i.next();
+        if (o.getClass() == byte[].class) {
+            handler.read(remoteAddress, (byte[]) o);
+            while (i.hasNext()) {
+                handler.read(remoteAddress, (byte[]) i.next());
+            }
+        } else if (o instanceof ByteBuffer) {
+            handler.read(remoteAddress, (ByteBuffer) o);
+            while (i.hasNext()) {
+                handler.read(remoteAddress, (ByteBuffer) i.next());
+            }
+        } else {
+            handler.read(remoteAddress, o);
+            while (i.hasNext()) {
+                handler.read(remoteAddress, i.next());
+            }
+        }
+    }
+
     private void read(List<Object> out, IHandler handler) {
-		if (out.isEmpty()) {
-			return;
-		}
-		
-		Iterator<Object> i = out.iterator();
-		Object o = i.next();
-		
-		if (o.getClass() == byte[].class) {
-			handler.read((byte[])o);
-			while (i.hasNext()) {
-				handler.read((byte[])i.next());
-			}
-		}
-		else if (o instanceof ByteBuffer) {
-			handler.read((ByteBuffer)o);
-			while (i.hasNext()) {
-				handler.read((ByteBuffer)i.next());
-			}
-		}
-		else {
-			handler.read(o);
-			while (i.hasNext()) {
-				handler.read(i.next());
-			}
-		}
+        if (out.isEmpty()) {
+            return;
+        }
+        Iterator<Object> i = out.iterator();
+        Object o = i.next();
+        if (o.getClass() == byte[].class) {
+            handler.read((byte[]) o);
+            while (i.hasNext()) {
+                handler.read((byte[]) i.next());
+            }
+        } else if (o instanceof ByteBuffer) {
+            handler.read((ByteBuffer) o);
+            while (i.hasNext()) {
+                handler.read((ByteBuffer) i.next());
+            }
+        } else {
+            handler.read(o);
+            while (i.hasNext()) {
+                handler.read(i.next());
+            }
+        }
     }
 }

@@ -26,7 +26,6 @@
 package org.snf4j.tls.engine;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.InternalErrorAlert;
 import org.snf4j.tls.alert.UnexpectedMessageAlert;
@@ -36,25 +35,13 @@ import org.snf4j.tls.record.RecordType;
 
 public class EndOfEarlyDataConsumer implements IHandshakeConsumer {
 
-	@Override
-	public HandshakeType getType() {
-		return HandshakeType.END_OF_EARLY_DATA;
-	}
+    @Override
+    public HandshakeType getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
-		if (state.getState() != MachineState.SRV_WAIT_EOED) {
-			throw new UnexpectedMessageAlert("Unexpected EndOfEarlyData");
-		}
-		
-		state.getListener().onNewReceivingTraficKey(state, RecordType.HANDSHAKE);
-		try {
-			state.getTranscriptHash().update(handshake.getType(), data);
-		} catch (Exception e) {
-			throw new InternalErrorAlert("Failed to complete early data", e);
-		}
-		state.getEarlyDataContext().complete();
-		state.changeState(MachineState.SRV_WAIT_FINISHED);
-	}
-
+    @Override
+    public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

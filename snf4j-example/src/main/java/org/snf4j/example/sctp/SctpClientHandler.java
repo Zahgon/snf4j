@@ -26,76 +26,38 @@
 package org.snf4j.example.sctp;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.EndingAction;
 import org.snf4j.core.handler.SessionEvent;
 import org.snf4j.core.session.ISctpSessionConfig;
-
 import com.sun.nio.sctp.MessageInfo;
 
 public class SctpClientHandler extends SctpServerHandler {
-	
-	private int statsCount;
-	
-	private int msgCounter;
-	
-	private int[] msgCounters = new int[3];
-	
-	private final static String[] streams = new String[] {"compressed", "encoded(unordered)", "other"};
-	
-	@SuppressWarnings("incomplete-switch")
-	@Override
-	public void event(SessionEvent event) {
-		switch (event) {
-		case READY:
-			getSession().writenf(msg(), randomStream());
-			break;
-			
-		}
-	}
-	@Override
-	public void read(Object msg, MessageInfo msgInfo) {
-		stats(((ByteBuffer) msg).remaining(), msgInfo);
-		super.read(msg, msgInfo);
-	}
-	
-	void stats(int msgSize, MessageInfo msgInfo) {
-		msgCounter++;
-		if (msgInfo.streamNumber() == SessionConfig.CODEC_STREAM_NUMBER) {
-			if (msgInfo.isUnordered()) {
-				msgCounters[1]++;
-			}
-			else {
-				msgCounters[0]++;
-			}
-		}
-		else {
-			msgCounters[2]++;
-		}
-		
-		if (statsCount++ > 10000) {
-			StringBuilder sb = new StringBuilder();
 
-			sb.append("messages: ");
-			sb.append("total=");
-			sb.append(msgCounter/1000);
-			sb.append("K\t");
-			for (int i=0; i<streams.length; ++i) {
-				sb.append(streams[i]);
-				sb.append("=");
-				sb.append(msgCounters[i]/1000);
-				sb.append("K\t");
-			}
-			System.out.println(sb);
-			statsCount = 0;
-		}
-	}
-	
-	@Override
-	public ISctpSessionConfig getConfig() {
-		return (ISctpSessionConfig) new SessionConfig()
-				.setEndingAction(EndingAction.STOP)
-				.setOptimizeDataCopying(true)
-				.setMinOutBufferCapacity(SctpClient.SIZE << 1);
-	}
+    private int statsCount;
+
+    private int msgCounter;
+
+    private int[] msgCounters = new int[3];
+
+    private final static String[] streams = new String[] { "compressed", "encoded(unordered)", "other" };
+
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(Object msg, MessageInfo msgInfo) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void stats(int msgSize, MessageInfo msgInfo) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISctpSessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -30,55 +30,58 @@ import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 
 abstract class ChannelContext<T> {
-	
-	final T context;
-	
-	ChannelContext(T context) {
-		this.context = context;
-	}
-	
-	abstract boolean isServer();
-	
-	abstract boolean isSession();
-	
-	abstract InternalSession getSession();
-	
-	abstract ChannelContext<?> wrap(InternalSession session);
-	
-	abstract SelectableChannel accept(SelectableChannel channel) throws Exception;
-	
-	abstract InternalSession create(SelectableChannel channel) throws Exception;
-	
-	abstract void shutdown(SelectableChannel channel) throws Exception;
 
-	abstract boolean exceptionOnDecodingFailure();
-	
-	void close(SelectableChannel channel) throws IOException {	
-		channel.close();
-	}
-	
-	void postClose(SelectableChannel channel) {
-	}
-	
-	void postRegistration(SelectableChannel channel) {
-	}
-	
-	boolean finishConnect(SelectableChannel channel) throws Exception {
-		return true;
-	}
-	
-	boolean completeRegistration(SelectorLoop loop, SelectionKey key, SelectableChannel channel) throws Exception {
-		return true;
-	}
-	
-	void handle(SelectorLoop loop, SelectionKey key) {	
-	}
-	
-	void exception(SelectableChannel channel, Throwable t) {
-	}
-	
-	String toString(SelectableChannel channel) {
-		return channel != null ? channel.toString() : null;
-	}
-	
+    final T context;
+
+    ChannelContext(T context) {
+        this.context = context;
+    }
+
+    abstract boolean isServer();
+
+    abstract boolean isSession();
+
+    abstract InternalSession getSession();
+
+    abstract ChannelContext<?> wrap(InternalSession session);
+
+    abstract SelectableChannel accept(SelectableChannel channel) throws Exception;
+
+    abstract InternalSession create(SelectableChannel channel) throws Exception;
+
+    abstract void shutdown(SelectableChannel channel) throws Exception;
+
+    abstract boolean exceptionOnDecodingFailure();
+
+    void close(SelectableChannel channel) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void postClose(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void postRegistration(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    boolean finishConnect(SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    boolean completeRegistration(SelectorLoop loop, SelectionKey key, SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void handle(SelectorLoop loop, SelectionKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void exception(SelectableChannel channel, Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    String toString(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

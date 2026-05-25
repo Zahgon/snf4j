@@ -28,102 +28,121 @@ package org.snf4j.core.logger;
 /**
  * Default implementation of the {@link ILogger} interface that is
  * used by the API. This implementation simply does not log any messages.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class NopLogger implements ILogger {
 
-	NopLogger() {
-	}
-	
-	@Override
-	public boolean isDebugEnabled() {
-		return false;
-	}
+    NopLogger() {
+    }
 
-	@Override
-	public boolean isTraceEnabled() {
-		return false;
-	}
+    @Override
+    public boolean isDebugEnabled() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void debug(String msg) {
-	}
+    @Override
+    public boolean isTraceEnabled() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void debug(String msg, Object arg) {
-	}
+    @Override
+    public void debug(String msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void debug(String msg, Object arg1, Object arg2) {
-	}
+    @Override
+    public void debug(String msg, Object arg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void debug(String msg, Object... args) {
-	}
+    @Override
+    public void debug(String msg, Object arg1, Object arg2) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void trace(String msg) {
-	}
+    @Override
+    public void debug(String msg, Object... args) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void trace(String msg, Object arg) {
-	}
+    @Override
+    public void trace(String msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void trace(String msg, Object arg1, Object arg2) {
-	}
+    @Override
+    public void trace(String msg, Object arg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void trace(String msg, Object... args) {
-	}
+    @Override
+    public void trace(String msg, Object arg1, Object arg2) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void warn(String msg) {
-	}
+    @Override
+    public void trace(String msg, Object... args) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void warn(String msg, Object arg) {
-	}
+    @Override
+    public void warn(String msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void warn(String msg, Object arg1, Object arg2) {
-	}
+    @Override
+    public void warn(String msg, Object arg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void warn(String msg, Object... args) {
-	}
+    @Override
+    public void warn(String msg, Object arg1, Object arg2) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void error(String msg) {
-	}
+    @Override
+    public void warn(String msg, Object... args) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void error(String msg, Object arg) {
-	}
+    @Override
+    public void error(String msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void error(String msg, Object arg1, Object arg2) {
-	}
+    @Override
+    public void error(String msg, Object arg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void error(String msg, Object... args) {
-	}
+    @Override
+    public void error(String msg, Object arg1, Object arg2) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void info(String msg) {
-	}
+    @Override
+    public void error(String msg, Object... args) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void info(String msg, Object arg) {
-	}
+    @Override
+    public void info(String msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void info(String msg, Object arg1, Object arg2) {
-	}
+    @Override
+    public void info(String msg, Object arg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void info(String msg, Object... args) {
-	}
+    @Override
+    public void info(String msg, Object arg1, Object arg2) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public void info(String msg, Object... args) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

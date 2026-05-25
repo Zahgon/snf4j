@@ -27,7 +27,6 @@ package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -38,128 +37,79 @@ import org.snf4j.tls.extension.IExtensionDecoder;
 
 public class NewSessionTicket extends KnownHandshake implements INewSessionTicket {
 
-	private final static HandshakeType TYPE = HandshakeType.NEW_SESSION_TICKET;
-	
-	private final long lifetime;
-	
-	private final long ageAdd;
-	
-	private final byte[] nonce;
-	
-	private final byte[] ticket;
-	
-	private final List<IExtension> extensions;
+    private final static HandshakeType TYPE = HandshakeType.NEW_SESSION_TICKET;
 
-	private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
+    private final long lifetime;
 
-		@Override
-		public HandshakeType getType() {
-			return TYPE;
-		}
+    private final long ageAdd;
 
-		@Override
-		public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
-			if (remaining > 9) {
-				long lifetime = srcs.getUnsignedInt();
-				long ageAdd = srcs.getUnsignedInt();
-				int len = srcs.getUnsigned();
-				
-				remaining -= 9;
-				if (remaining > len + 2) {
-					byte[] nonce = new byte[len];
-					
-					srcs.get(nonce);
-					remaining -= len + 2;
-					len = srcs.getUnsignedShort();
-					if (len > 0) {
-						if (remaining >= len + 2) {
-							byte[] ticket = new byte[len];
+    private final byte[] nonce;
 
-							srcs.get(ticket);
-							remaining -= len;
+    private final byte[] ticket;
 
-							ExtensionsParser parser = new ExtensionsParser(0, 0xffff, decoder);
+    private final List<IExtension> extensions;
 
-							parser.parse(TYPE, srcs, remaining);
-							if (parser.isComplete() && remaining == parser.getConsumedBytes()) {
-								return new NewSessionTicket(ticket, nonce, lifetime, ageAdd, parser.getExtensions());
-							}
-						}
-					}
-					else {
-						throw decodeError("Empty ticket");
-					}
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}
-		
-	};
-	
-	public NewSessionTicket(byte[] ticket, byte[] nonce, long lifetime, long ageAdd, List<IExtension> extensions) {
-		super(TYPE);
-		Args.checkMin(ticket, 1, "ticket");
-		Args.checkNull(nonce, "nonce");
-		Args.checkNull(extensions, "extensions");
-		this.ticket = ticket;
-		this.nonce = nonce;
-		this.lifetime = lifetime;
-		this.ageAdd = ageAdd;
-		this.extensions = extensions;
-	}
+    private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
 
-	@Override
-	public long getLifetime() {
-		return lifetime;
-	}
+        @Override
+        public HandshakeType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	@Override
-	public long getAgeAdd() {
-		return ageAdd;
-	}
+        @Override
+        public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	@Override
-	public byte[] getNonce() {
-		return nonce;
-	}
+    public NewSessionTicket(byte[] ticket, byte[] nonce, long lifetime, long ageAdd, List<IExtension> extensions) {
+        super(TYPE);
+        Args.checkMin(ticket, 1, "ticket");
+        Args.checkNull(nonce, "nonce");
+        Args.checkNull(extensions, "extensions");
+        this.ticket = ticket;
+        this.nonce = nonce;
+        this.lifetime = lifetime;
+        this.ageAdd = ageAdd;
+        this.extensions = extensions;
+    }
 
-	@Override
-	public byte[] getTicket() {
-		return ticket;
-	}
+    @Override
+    public long getLifetime() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public List<IExtension> getExtensions() {
-		return extensions;
-	}
+    @Override
+    public long getAgeAdd() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public static IHandshakeParser getParser() {
-		return PARSER;
-	}
-	
-	@Override
-	public int getDataLength() {
-		return 4 + 4 
-				+ 1 
-				+ nonce.length 
-				+ 2 
-				+ ticket.length 
-				+ 2 
-				+ ExtensionsUtil.calculateLength(extensions);
-	}
+    @Override
+    public byte[] getNonce() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.putInt((int) lifetime);
-		buffer.putInt((int) ageAdd);
-		buffer.put((byte) nonce.length);
-		buffer.put(nonce);
-		buffer.putShort((short) ticket.length);
-		buffer.put(ticket);
-		buffer.putShort((short) ExtensionsUtil.calculateLength(extensions));
-		for (IExtension e: extensions) {
-			e.getBytes(buffer);
-		}
-	}
-	
+    @Override
+    public byte[] getTicket() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IHandshakeParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

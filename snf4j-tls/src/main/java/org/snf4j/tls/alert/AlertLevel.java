@@ -28,32 +28,23 @@ package org.snf4j.tls.alert;
 import org.snf4j.tls.IntConstant;
 
 public class AlertLevel extends IntConstant {
-	
-	public static final AlertLevel WARNING = new AlertLevel("warning", 1);
 
-	public static final AlertLevel FATAL = new AlertLevel("fatal", 2);
-	
-	@SuppressWarnings("unused")
-	private final static AlertLevel[] KNOWN = new AlertLevel[] {null, WARNING, FATAL};
+    public static final AlertLevel WARNING = new AlertLevel("warning", 1);
 
-	protected AlertLevel(String name, int value) {
-		super(name, value);
-	}
+    public static final AlertLevel FATAL = new AlertLevel("fatal", 2);
 
-	protected AlertLevel(int value) {
-		super(value);
-	}
-	
-	public static AlertLevel of(int value) {
-		switch (value) {
-		case 1: 
-			return WARNING;
-		
-		case 2: 
-			return FATAL;
-		
-		default: 
-			return new AlertLevel(value);
-		}
-	}
+    @SuppressWarnings("unused")
+    private final static AlertLevel[] KNOWN = new AlertLevel[] { null, WARNING, FATAL };
+
+    protected AlertLevel(String name, int value) {
+        super(name, value);
+    }
+
+    protected AlertLevel(int value) {
+        super(value);
+    }
+
+    public static AlertLevel of(int value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -29,34 +29,38 @@ import org.snf4j.tls.cipher.CipherSuite;
 
 public class NoEarlyDataContext implements IEarlyDataContext {
 
-	public static final IEarlyDataContext INSTANCE = new NoEarlyDataContext();
-	
-	private NoEarlyDataContext() {}
-	
-	@Override
-	public EarlyDataState getState() {
-		return EarlyDataState.NONE;
-	}
-	
-	@Override
-	public void complete() {
-	}
-	
-	@Override
-	public void rejecting() {
-	}
+    public static final IEarlyDataContext INSTANCE = new NoEarlyDataContext();
 
-	@Override
-	public void incProcessedBytes(int amount) {
-	}
+    private NoEarlyDataContext() {
+    }
 
-	@Override
-	public boolean isSizeLimitExceeded() {
-		return false;
-	}
+    @Override
+    public EarlyDataState getState() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public CipherSuite getCipherSuite() {
-		return null;
-	}
+    @Override
+    public void complete() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void rejecting() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void incProcessedBytes(int amount) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isSizeLimitExceeded() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public CipherSuite getCipherSuite() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -35,31 +35,18 @@ import org.snf4j.tls.session.ISession;
 
 public class TLSSession extends EngineStreamSession {
 
-	private final static ILogger LOGGER = LoggerFactory.getLogger(TLSSession.class);
-	
-	public TLSSession(String name, IEngineParameters tlsParameters, IEngineHandler tlsHandler, IStreamHandler handler, boolean clientMode) {
-		super(name, new TLSEngine(
-				clientMode, 
-				tlsParameters, 
-				tlsHandler, 
-				handler.getConfig().getMaxSSLApplicationBufferSizeRatio(),
-				handler.getConfig().getMaxSSLNetworkBufferSizeRatio()), 
-			handler, LOGGER);
-	}
+    private final static ILogger LOGGER = LoggerFactory.getLogger(TLSSession.class);
 
-	public TLSSession(IEngineParameters tlsParameters, IEngineHandler tlsHandler, IStreamHandler handler, boolean clientMode) {
-		super(new TLSEngine(
-				clientMode, 
-				tlsParameters, 
-				tlsHandler, 
-				handler.getConfig().getMaxSSLApplicationBufferSizeRatio(),
-				handler.getConfig().getMaxSSLNetworkBufferSizeRatio()), 
-			handler, LOGGER);
-	}
-	
-	@Override
-	public ISession getEngineSession() {
-		return (ISession) super.getEngineSession();
-	}
-	
+    public TLSSession(String name, IEngineParameters tlsParameters, IEngineHandler tlsHandler, IStreamHandler handler, boolean clientMode) {
+        super(name, new TLSEngine(clientMode, tlsParameters, tlsHandler, handler.getConfig().getMaxSSLApplicationBufferSizeRatio(), handler.getConfig().getMaxSSLNetworkBufferSizeRatio()), handler, LOGGER);
+    }
+
+    public TLSSession(IEngineParameters tlsParameters, IEngineHandler tlsHandler, IStreamHandler handler, boolean clientMode) {
+        super(new TLSEngine(clientMode, tlsParameters, tlsHandler, handler.getConfig().getMaxSSLApplicationBufferSizeRatio(), handler.getConfig().getMaxSSLNetworkBufferSizeRatio()), handler, LOGGER);
+    }
+
+    @Override
+    public ISession getEngineSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

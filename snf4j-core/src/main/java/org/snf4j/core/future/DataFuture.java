@@ -26,39 +26,29 @@
 package org.snf4j.core.future;
 
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.snf4j.core.session.ISession;
 
 class DataFuture<V> extends AbstractBlockingFuture<V> {
 
-	AtomicLong size = new AtomicLong(0);
-	
-	DataFuture(ISession session) {
-		super(session);
-	}
-	
-	void cancel() {
-		if (setState(FutureState.CANCELLED)) {
-			notifyWaiters();
-		}		
-	}
-	
-	void failure(Throwable cause) {
-		if (setState(FutureState.FAILED)) {
-			this.cause = cause;
-			notifyWaiters();
-		}		
-	}
-	
-	void add(long length) {
-		if (length > 0) {
-			size.addAndGet(length);
-			notifyWaiters();
-		}
-	}
-	
-	long size() {
-		return size.get();
-	}
+    AtomicLong size = new AtomicLong(0);
 
+    DataFuture(ISession session) {
+        super(session);
+    }
+
+    void cancel() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void failure(Throwable cause) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void add(long length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    long size() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

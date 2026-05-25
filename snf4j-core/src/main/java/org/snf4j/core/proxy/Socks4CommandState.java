@@ -28,97 +28,44 @@ package org.snf4j.core.proxy;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-
 import org.snf4j.core.util.NetworkUtil;
 
 class Socks4CommandState extends AbstractSocksState implements ISocks4 {
 
-	private final static byte REPLY_VERSION = 0;
+    private final static byte REPLY_VERSION = 0;
 
-	private final static int RESPONSE_SIZE = 8;
-	
-	private final static byte[] DOMAIN_MARKER = new byte[] {0,0,0,1};
-	
-	final static int STATUS_INDEX = 1;
+    private final static int RESPONSE_SIZE = 8;
 
-	final static int IP_INDEX = 4;
+    private final static byte[] DOMAIN_MARKER = new byte[] { 0, 0, 0, 1 };
 
-	final static int PORT_INDEX = 2;
-	
-	private final Socks4Command command;
-	
-	private final String username;
-	
-	Socks4CommandState(Socks4ProxyHandler handler, Socks4Command command, String username) {
-		super(handler);
-		this.command = command;
-		this.username = username == null ? "" : username;
-	}
+    final static int STATUS_INDEX = 1;
 
-	@Override
-	int responseSize() {
-		return RESPONSE_SIZE;
-	}
+    final static int IP_INDEX = 4;
 
-	@Override
-	AbstractSocksState read(byte[] data) {
-		if (data[VER_INDEX] != REPLY_VERSION) {
-			throw new ProxyConnectionException("Unsupported SOCKS4 reply version: " + data[0] + " (expected: 0)");
-		}
-		
-		int statusCode = (int)data[STATUS_INDEX] & 0xff;
-		Socks4Status status = Socks4Status.valueOf(statusCode);
-		int replyCount = handler.reply(new Socks4Reply(
-				statusCode, NetworkUtil.ipv4ToString(data, IP_INDEX), NetworkUtil.toPort(data,PORT_INDEX)));
-		
-		if (status != Socks4Status.SUCCESS) {
-			throw new ProxyConnectionException("SOCKS4 proxy response status code: " + statusCode);
-		}
-		if (command == Socks4Command.CONNECT || replyCount == 2) {
-			return null;
-		}
-		return this;
-	}
+    final static int PORT_INDEX = 2;
 
-	@Override
-	void handleReady() {
-		InetSocketAddress address = handler.getAddress();
-		byte[] usernameBytes = username.getBytes(StandardCharsets.US_ASCII);
-		String host;
-		byte[] ipv4, hostBytes;
-		int len;
-		
-		if (address.isUnresolved()) {
-			host = address.getHostString();
-		}
-		else {
-			host = address.getAddress().getHostAddress();
-		}
-		
-		ipv4 = NetworkUtil.ipv4ToBytes(host);
-		len = 1+1+2+4+usernameBytes.length+1;
-		if (ipv4 != null) {
-			hostBytes = null;
-		}
-		else {
-			hostBytes = host.getBytes(StandardCharsets.US_ASCII);
-			ipv4 = DOMAIN_MARKER;
-			len += hostBytes.length + 1;
-		}
-		
-		ByteBuffer buf = handler.getSession().allocate(len);
-		
-		buf.put(VERSION);
-		buf.put(command.code());
-		buf.putShort((short)address.getPort());
-		buf.put(ipv4);
-		buf.put(usernameBytes);
-		buf.put((byte)0);
-		if (hostBytes != null) {
-			buf.put(hostBytes);
-			buf.put((byte)0);
-		}
-		handler.flipAndWrite(buf);
-	}
+    private final Socks4Command command;
 
+    private final String username;
+
+    Socks4CommandState(Socks4ProxyHandler handler, Socks4Command command, String username) {
+        super(handler);
+        this.command = command;
+        this.username = username == null ? "" : username;
+    }
+
+    @Override
+    int responseSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    AbstractSocksState read(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    void handleReady() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

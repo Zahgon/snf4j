@@ -27,33 +27,34 @@ package org.snf4j.core.timer;
 
 /**
  * Interface used to implement models of timing out operations.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
- * 
  */
 public interface ITimeoutModel {
-	
-	/**
-	 * Returns the next timeout value.
-	 * 
-	 * @return the timeout value in milliseconds.
-	 */
-	long next();
-	
-	/**
-	 * Resets the model. After calling this method the {@link #next()} method 
-	 * should return the initial value.
-	 */
-	void reset();
-	
-	/**
-	 * Tells if this timeout model is enabled or not. When the model is disabled
-	 * all associated operation should never be timed out.
-	 * <p>
-	 * The default value is {@code true}
-	 * 
-	 * @return {@code true} to enable this timeout model
-	 * @since 1.12
-	 */
-	default boolean isEnabled() { return true; }
+
+    /**
+     * Returns the next timeout value.
+     *
+     * @return the timeout value in milliseconds.
+     */
+    long next();
+
+    /**
+     * Resets the model. After calling this method the {@link #next()} method
+     * should return the initial value.
+     */
+    void reset();
+
+    /**
+     * Tells if this timeout model is enabled or not. When the model is disabled
+     * all associated operation should never be timed out.
+     * <p>
+     * The default value is {@code true}
+     *
+     * @return {@code true} to enable this timeout model
+     * @since 1.12
+     */
+    default boolean isEnabled() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

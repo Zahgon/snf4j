@@ -26,105 +26,97 @@
 package org.snf4j.core.handler;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.session.ISession;
 import org.snf4j.core.session.ISessionConfig;
 import org.snf4j.core.session.IStreamSession;
 
 /**
  * Base implementation of the {@link IStreamHandler} interface.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 abstract public class AbstractStreamHandler extends AbstractHandler implements IStreamHandler {
 
-	/**
-	 * Default constructor creating an unnamed stream-oriented handler.
-	 */
-	protected AbstractStreamHandler() {
-	}
-	
-	/**
-	 * Constructor creating an unnamed stream-oriented handler with given session
-	 * configuration object.
-	 * 
-	 * @param config 
-	 *            the session configuration object, or {@code null} to
-	 *            use the default configuration
-	 */	
-	 protected AbstractStreamHandler(ISessionConfig config) {
-		super(config);
-	}
-	
-	/**
-	 * Constructor creating a named stream-oriented handler.
-	 * 
-	 * @param name
-	 *            the name for this handler
-	 */
-	protected AbstractStreamHandler(String name) {
-		super(name);
-	}
-	
-	/**
-	 * Constructor creating a named stream-oriented handler with given session
-	 * configuration object.
-	 * 
-	 * @param name
-	 *            the name for this handler
-	 * @param config 
-	 *            the session configuration object, or {@code null} to
-	 *            use the default configuration
-	 */
-	protected AbstractStreamHandler(String name, ISessionConfig config) {
-		super(name, config);
-	}
-	
-	
-	/**
-	 * Sets the stream-oriented session that will be associated with this
-	 * handler.
-	 * 
-	 * @param session
-	 *            the session
-	 * @throws IllegalArgumentException
-	 *             if the session argument is not an instance of the
-	 *             {@link IStreamSession} interface.
-	 */
-	@Override
-	public void setSession(ISession session) {
-		if (session instanceof IStreamSession) {
-			super.setSession(session);
-		}
-		else {
-			throw new IllegalArgumentException("session is not an instance of IStreamSession");
-		}
-	}
+    /**
+     * Default constructor creating an unnamed stream-oriented handler.
+     */
+    protected AbstractStreamHandler() {
+    }
 
-	@Override
-	public IStreamSession getSession() {
-		return (IStreamSession) super.getSession();
-	}
+    /**
+     * Constructor creating an unnamed stream-oriented handler with given session
+     * configuration object.
+     *
+     * @param config
+     *            the session configuration object, or {@code null} to
+     *            use the default configuration
+     */
+    protected AbstractStreamHandler(ISessionConfig config) {
+        super(config);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * This implementation always returns total number of bytes in the buffer.
-	 */
-	@Override
-	public int available(ByteBuffer buffer, boolean flipped) {
-		return flipped ? buffer.remaining() : buffer.position();
-	}
+    /**
+     * Constructor creating a named stream-oriented handler.
+     *
+     * @param name
+     *            the name for this handler
+     */
+    protected AbstractStreamHandler(String name) {
+        super(name);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * This implementation always returns total number of bytes in the array 
-	 * (i.e. the <code>len</code> value).
-	 */
-	@Override
-	public int available(byte[] buffer, int off, int len) {
-		return len;
-	}
-	
+    /**
+     * Constructor creating a named stream-oriented handler with given session
+     * configuration object.
+     *
+     * @param name
+     *            the name for this handler
+     * @param config
+     *            the session configuration object, or {@code null} to
+     *            use the default configuration
+     */
+    protected AbstractStreamHandler(String name, ISessionConfig config) {
+        super(name, config);
+    }
+
+    /**
+     * Sets the stream-oriented session that will be associated with this
+     * handler.
+     *
+     * @param session
+     *            the session
+     * @throws IllegalArgumentException
+     *             if the session argument is not an instance of the
+     *             {@link IStreamSession} interface.
+     */
+    @Override
+    public void setSession(ISession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IStreamSession getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * This implementation always returns total number of bytes in the buffer.
+     */
+    @Override
+    public int available(ByteBuffer buffer, boolean flipped) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * This implementation always returns total number of bytes in the array
+     * (i.e. the <code>len</code> value).
+     */
+    @Override
+    public int available(byte[] buffer, int off, int len) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

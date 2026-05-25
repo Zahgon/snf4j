@@ -28,7 +28,6 @@ package org.snf4j.example.heartbeat;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.channels.DatagramChannel;
-
 import org.snf4j.core.DatagramServerHandler;
 import org.snf4j.core.SelectorLoop;
 import org.snf4j.core.factory.IDatagramHandlerFactory;
@@ -36,40 +35,16 @@ import org.snf4j.core.handler.IDatagramHandler;
 import org.snf4j.core.timer.DefaultTimer;
 
 public class HeartbeatServer {
-	static final String PREFIX = "org.snf4j.";
-	static final int PORT = Integer.getInteger(PREFIX+"Port", 8001);
-	static final int BEAT_PERIOD = Integer.getInteger(PREFIX+"BeatPeriod", 3000);
-	static final int DOWN_PERIOD = Integer.getInteger(PREFIX+"DownPeriod", 10000);
 
-	public static void main(String[] args) throws Exception {
-		SelectorLoop loop = new SelectorLoop();
-		final DefaultTimer timer = new DefaultTimer(true);
-		
-		try {
-			loop.start();
-			
-			// Initialize the connection
-			DatagramChannel channel = DatagramChannel.open();
-			channel.configureBlocking(false);
-			channel.socket().bind(new InetSocketAddress(PORT));
+    static final String PREFIX = "org.snf4j.";
 
-			// Register the channel
-			loop.register(channel, new DatagramServerHandler(new IDatagramHandlerFactory() {
+    static final int PORT = Integer.getInteger(PREFIX + "Port", 8001);
 
-				@Override
-				public IDatagramHandler create(SocketAddress remoteAddress) {
-					return new HeartbeatHandler(timer, BEAT_PERIOD, DOWN_PERIOD);
-				}
-				
-			},
-			new SessionConfig()));
-			
-			// Wait till the loop ends
-			loop.join();
-		}
-		finally {
-			loop.stop();
-		}
-		
-	}
+    static final int BEAT_PERIOD = Integer.getInteger(PREFIX + "BeatPeriod", 3000);
+
+    static final int DOWN_PERIOD = Integer.getInteger(PREFIX + "DownPeriod", 10000);
+
+    public static void main(String[] args) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

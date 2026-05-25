@@ -30,39 +30,36 @@ import org.snf4j.core.session.IStreamSession;
 
 class StreamSessionPipeline extends SessionPipeline<StreamSession> implements ISessionPipeline<IStreamSession> {
 
-	StreamSessionPipeline(StreamSession owner) {
-		super(owner);
-	}
+    StreamSessionPipeline(StreamSession owner) {
+        super(owner);
+    }
 
-	StreamSession check(IStreamSession session) {
-		if (session instanceof StreamSession) {
-			return (StreamSession) session;
-		}
-		throw new IllegalArgumentException("session is not an instance of StreamSession class");
-	}
-	
-	@Override
-	public void addFirst(Object key, IStreamSession session) {
-		super.addFirst(key, check(session));
-	}
+    StreamSession check(IStreamSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void addAfter(Object baseKey, Object key, IStreamSession session) {
-		super.addAfter(baseKey, key, check(session));
-	}
+    @Override
+    public void addFirst(Object key, IStreamSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void add(Object key, IStreamSession session) {
-		super.add(key, check(session));
-	}
+    @Override
+    public void addAfter(Object baseKey, Object key, IStreamSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void addBefore(Object baseKey, Object key, IStreamSession session) {
-		super.addBefore(baseKey, key, check(session));
-	}
+    @Override
+    public void add(Object key, IStreamSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public IStreamSession replace(Object oldKey, Object key, IStreamSession session) {
-		return super.replace(oldKey, key, check(session));
-	}
+    @Override
+    public void addBefore(Object baseKey, Object key, IStreamSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IStreamSession replace(Object oldKey, Object key, IStreamSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

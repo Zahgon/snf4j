@@ -34,37 +34,22 @@ import javax.net.ssl.X509TrustManager;
 
 public class KeyStoreLoader {
 
-	static final char[] PASSWORD = "password".toCharArray();
-	
-	private static void load(KeyStore ks, String fileName, char[] password) throws Exception {
-		InputStream in = KeyStoreLoader.class.getResourceAsStream(fileName);
-		
-		try {
-			ks.load(in, password);
-		}
-		finally {
-			in.close();
-		}
-	}
+    static final char[] PASSWORD = "password".toCharArray();
 
-	static X509KeyManager keyManager() throws Exception {
-		KeyStore ks = KeyStore.getInstance("JKS");
-		KeyManagerFactory kmf;
-		
-		load(ks, "/keystore.jks", PASSWORD);
-		kmf = KeyManagerFactory.getInstance("SunX509");
-		kmf.init(ks, PASSWORD);
-		return (X509KeyManager) kmf.getKeyManagers()[0];
-	}
+    private static void load(KeyStore ks, String fileName, char[] password) throws Exception {
+        InputStream in = KeyStoreLoader.class.getResourceAsStream(fileName);
+        try {
+            ks.load(in, password);
+        } finally {
+            in.close();
+        }
+    }
 
-	static X509TrustManager trustManager() throws Exception {
-		KeyStore ks = KeyStore.getInstance("JKS");
-		TrustManagerFactory tmf;
-		
-		load(ks, "/keystore.jks", PASSWORD);
-		tmf = TrustManagerFactory.getInstance("SunX509");
-		tmf.init(ks);
-		return (X509TrustManager) tmf.getTrustManagers()[0];
-	}
+    static X509KeyManager keyManager() throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    static X509TrustManager trustManager() throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

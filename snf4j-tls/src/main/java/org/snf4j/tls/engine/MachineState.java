@@ -26,83 +26,90 @@
 package org.snf4j.tls.engine;
 
 public enum MachineState {
-	
-	/** Client handshake engine is created but has not been started yet */
-	CLI_INIT(true, false, false),
 
-	/** Client handshake engine is waiting for the first ServerHello message */
-	CLI_WAIT_1_SH(true),
-	
-	/** Client handshake engine is waiting for execution of task(s) */
-	CLI_WAIT_TASK(true), 
+    /**
+     * Client handshake engine is created but has not been started yet
+     */
+    CLI_INIT(true, false, false),
+    /**
+     * Client handshake engine is waiting for the first ServerHello message
+     */
+    CLI_WAIT_1_SH(true),
+    /**
+     * Client handshake engine is waiting for execution of task(s)
+     */
+    CLI_WAIT_TASK(true),
+    /**
+     * Client handshake engine is waiting for the second ServerHello message
+     */
+    CLI_WAIT_2_SH(true),
+    CLI_WAIT_EE(true),
+    CLI_WAIT_CERT_CR(true),
+    CLI_WAIT_CERT(true),
+    CLI_WAIT_CV(true),
+    CLI_WAIT_FINISHED(true),
+    CLI_CONNECTED(true, true),
+    /**
+     * Server handshake engine is created but has not been started yet
+     */
+    SRV_INIT(false, false, false),
+    /**
+     * Server handshake engine is waiting for the first ClientHello message
+     */
+    SRV_WAIT_1_CH(false),
+    /**
+     * Server handshake engine is waiting for the second ClientHello message
+     */
+    SRV_WAIT_2_CH(false),
+    /**
+     * Server handshake engine is waiting for execution of task(s)
+     */
+    SRV_WAIT_TASK(false),
+    SRV_WAIT_EOED(false),
+    SRV_WAIT_CERT(false),
+    SRV_WAIT_CV(false),
+    SRV_WAIT_FINISHED(false),
+    SRV_CONNECTED(false, true);
 
-	/** Client handshake engine is waiting for the second ServerHello message */
-	CLI_WAIT_2_SH(true),
-	
-	CLI_WAIT_EE(true), 
-	CLI_WAIT_CERT_CR(true), 
-	CLI_WAIT_CERT(true), 
-	CLI_WAIT_CV(true), 
-	CLI_WAIT_FINISHED(true),
-	CLI_CONNECTED(true, true),
-	
-	/** Server handshake engine is created but has not been started yet */
-	SRV_INIT(false, false, false),
+    private final boolean clientMode;
 
-	/** Server handshake engine is waiting for the first ClientHello message */
-	SRV_WAIT_1_CH(false),
+    private final boolean connected;
 
-	/** Server handshake engine is waiting for the second ClientHello message */
-	SRV_WAIT_2_CH(false),
-	
-	/** Server handshake engine is waiting for execution of task(s) */
-	SRV_WAIT_TASK(false),
+    private final boolean started;
 
-	SRV_WAIT_EOED(false),
-	SRV_WAIT_CERT(false),
-	SRV_WAIT_CV(false),
-	SRV_WAIT_FINISHED(false),
-	SRV_CONNECTED(false, true);
-	
-	private final boolean clientMode;
-	
-	private final boolean connected;
-	
-	private final boolean started;
+    private final int bitMask;
 
-	private final int bitMask;
-	
-	MachineState(boolean clientMode, boolean connected, boolean started) {
-		this.clientMode = clientMode;
-		this.connected = connected;
-		this.started = started;
-		bitMask = 1 << ordinal();
-	}
-	
-	MachineState(boolean clientMode, boolean connected) {
-		this.clientMode = clientMode;
-		this.connected = connected;
-		started = true;
-		bitMask = 1 << ordinal();
-	}
+    MachineState(boolean clientMode, boolean connected, boolean started) {
+        this.clientMode = clientMode;
+        this.connected = connected;
+        this.started = started;
+        bitMask = 1 << ordinal();
+    }
 
-	MachineState(boolean clientMode) {
-		this(clientMode, false);
-	}
-	
-	public boolean clientMode() {
-		return clientMode;
-	}
+    MachineState(boolean clientMode, boolean connected) {
+        this.clientMode = clientMode;
+        this.connected = connected;
+        started = true;
+        bitMask = 1 << ordinal();
+    }
 
-	public boolean isConnected() {
-		return connected;
-	}
-	
-	public boolean isStarted() {
-		return started;
-	}
-	
-	public int bitMask() {
-		return bitMask;
-	}
+    MachineState(boolean clientMode) {
+        this(clientMode, false);
+    }
+
+    public boolean clientMode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean isConnected() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean isStarted() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public int bitMask() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -27,7 +27,6 @@ package org.snf4j.core.codec.bytes;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.IByteBufferHolder;
 import org.snf4j.core.SingleByteBufferHolder;
 import org.snf4j.core.codec.IDecoder;
@@ -35,14 +34,13 @@ import org.snf4j.core.session.ISession;
 
 /**
  * A decoder transforming a {@link ByteBuffer} into an {@link IByteBufferHolder}.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public class BufferToBufferHolderDecoder extends BufferToBufferHolderCodec implements IDecoder<ByteBuffer,IByteBufferHolder> {
+public class BufferToBufferHolderDecoder extends BufferToBufferHolderCodec implements IDecoder<ByteBuffer, IByteBufferHolder> {
 
-	@Override
-	public void decode(ISession session, ByteBuffer data, List<IByteBufferHolder> out) throws Exception {
-		out.add(new SingleByteBufferHolder(data));
-	}
-
+    @Override
+    public void decode(ISession session, ByteBuffer data, List<IByteBufferHolder> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

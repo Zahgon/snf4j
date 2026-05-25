@@ -28,61 +28,30 @@ package org.snf4j.example.file;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
-
 import org.snf4j.core.SSLSession;
 import org.snf4j.core.SelectorLoop;
 import org.snf4j.core.session.ssl.SSLContextBuilder;
 import org.snf4j.core.session.ssl.SSLEngineBuilder;
 
 public class FileClient {
-	static final String PREFIX = "org.snf4j.";
-	static final String HOST = System.getProperty(PREFIX+"Host", "127.0.0.1");
-	static final int PORT = Integer.getInteger(PREFIX+"Port", 8001);
-	static final boolean SECURE = System.getProperty(PREFIX+"Secure") != null;
-	static final String DOWNLOAD_DIR = System.getProperty(PREFIX+"DownloadDir", ".");
-	static final boolean DELETE_IF_EXISTS = System.getProperty(PREFIX+"DeleteIfExists") != null;
-	static final boolean DISCARD = System.getProperty(PREFIX+"Discard") != null;
-	static final int BUFFER_SIZE = Integer.getInteger(PREFIX+"BufferSize", 4096);
-	
-	public static void main(String[] args) throws Exception {
-		if (args.length == 0) {
-			Logger.error("No path specified");
-			return;
-		}
-		
-		SelectorLoop loop = new SelectorLoop();
 
-		try {
-			loop.start();
-			
-			// Initialize the connection
-			SocketChannel channel = SocketChannel.open();
-			channel.configureBlocking(false);
-			channel.connect(new InetSocketAddress(InetAddress.getByName(HOST), PORT));
-			
-			// Register the channel
-			if (SECURE) {
-				
-				// Configure SSL connection
-				SSLEngineBuilder builder = SSLContextBuilder.forClient()
-					.keyManager(KeyStoreLoader.keyManagerFactory())
-					.trustManager(KeyStoreLoader.trustManagerFactory())
-					.engineBuilder();
-				
-				loop.register(channel, new SSLSession(new FileClientHandler(builder, args[0]), true));
-			}
-			else {
-				loop.register(channel, new FileClientHandler(null, args[0]));
-			}
-			
-			// Wait till the loop ends
-			loop.join();
-		}
-		finally {
+    static final String PREFIX = "org.snf4j.";
 
-			// Gently stop the loop
-			loop.stop();
-		}
-	}
+    static final String HOST = System.getProperty(PREFIX + "Host", "127.0.0.1");
 
+    static final int PORT = Integer.getInteger(PREFIX + "Port", 8001);
+
+    static final boolean SECURE = System.getProperty(PREFIX + "Secure") != null;
+
+    static final String DOWNLOAD_DIR = System.getProperty(PREFIX + "DownloadDir", ".");
+
+    static final boolean DELETE_IF_EXISTS = System.getProperty(PREFIX + "DeleteIfExists") != null;
+
+    static final boolean DISCARD = System.getProperty(PREFIX + "Discard") != null;
+
+    static final int BUFFER_SIZE = Integer.getInteger(PREFIX + "BufferSize", 4096);
+
+    public static void main(String[] args) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

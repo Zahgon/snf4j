@@ -30,27 +30,15 @@ import org.snf4j.core.codec.ICodecExecutor;
 import org.snf4j.core.session.DefaultSessionConfig;
 
 public class SessionConfig extends DefaultSessionConfig {
-	
-	private final int pipelineSize;
-	
-	SessionConfig(int pipelineSize) {
-		this.pipelineSize = pipelineSize;
-	}
 
-	@Override
-	public ICodecExecutor createCodecExecutor() {
-		if (pipelineSize <= 0) {
-			return null;
-		}
-		
-		DefaultCodecExecutor executor = new DefaultCodecExecutor();
+    private final int pipelineSize;
 
-		for (int i=0; i<pipelineSize; ++i) {
-			executor.getPipeline().add("DECODER"+i, new Decoder());
-			executor.getPipeline().add("ENCODER"+i, new Encoder());
-		}
-		return executor;
-	}
+    SessionConfig(int pipelineSize) {
+        this.pipelineSize = pipelineSize;
+    }
 
-	
+    @Override
+    public ICodecExecutor createCodecExecutor() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

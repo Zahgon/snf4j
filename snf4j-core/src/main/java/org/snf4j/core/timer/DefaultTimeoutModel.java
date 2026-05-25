@@ -31,54 +31,43 @@ package org.snf4j.core.timer;
  * initial value and double the value at each consecutive execution of the
  * {@link #next()} method. After reaching the max value the {@link #next()}
  * method keeps returning the max value until the {@link #reset()} is called.
- * 
- * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  *
+ * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class DefaultTimeoutModel implements ITimeoutModel {
 
-	private final int initial;
-	
-	private final long max;
-	
-	private long current;
-	
-	/**
-	 * Constructs the model with given initial value and max value.
-	 * 
-	 * @param initial the initial value in milliseconds
-	 * @param max     the max value in milliseconds
-	 */
-	public DefaultTimeoutModel(int initial, long max) {
-		this.initial = initial;
-		this.max = max;
-		current = initial;
-	}
-	
-	/**
-	 * Constructs the model with default values: initial = 1000 and max = 60000 
-	 */
-	public DefaultTimeoutModel() {
-		this(1000, 60000);
-	}
-	
-	@Override
-	public long next() {
-		long n = current;
-		
-		if (n < max) {
-			current <<= 1;
-			if (current > max) {
-				current = max;
-			}
-		}
-		return n;
-	}
-	
-	@Override
-	public void reset() {
-		current = initial;
-	}
+    private final int initial;
 
+    private final long max;
 
+    private long current;
+
+    /**
+     * Constructs the model with given initial value and max value.
+     *
+     * @param initial the initial value in milliseconds
+     * @param max     the max value in milliseconds
+     */
+    public DefaultTimeoutModel(int initial, long max) {
+        this.initial = initial;
+        this.max = max;
+        current = initial;
+    }
+
+    /**
+     * Constructs the model with default values: initial = 1000 and max = 60000
+     */
+    public DefaultTimeoutModel() {
+        this(1000, 60000);
+    }
+
+    @Override
+    public long next() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void reset() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

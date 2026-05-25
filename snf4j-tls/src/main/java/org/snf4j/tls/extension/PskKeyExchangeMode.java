@@ -29,52 +29,25 @@ import org.snf4j.tls.IntConstant;
 
 public class PskKeyExchangeMode extends IntConstant {
 
-	private static final PskKeyExchangeMode[] EMPTY = new PskKeyExchangeMode[0];
-	
-	public static final PskKeyExchangeMode PSK_KE = new PskKeyExchangeMode("psk_ke", 0);
+    private static final PskKeyExchangeMode[] EMPTY = new PskKeyExchangeMode[0];
 
-	public static final PskKeyExchangeMode PSK_DHE_KE = new PskKeyExchangeMode("psk_dhe_ke", 1);
-	
-	protected PskKeyExchangeMode(String name, int value) {
-		super(name, value);
-	}
+    public static final PskKeyExchangeMode PSK_KE = new PskKeyExchangeMode("psk_ke", 0);
 
-	protected PskKeyExchangeMode(int value) {
-		super(value);
-	}
+    public static final PskKeyExchangeMode PSK_DHE_KE = new PskKeyExchangeMode("psk_dhe_ke", 1);
 
-	public static PskKeyExchangeMode of(int value) {
-		switch (value) {
-		case 0:
-			return PSK_KE;
-			
-		case 1:
-			return PSK_DHE_KE;
-			
-		default:
-			return new PskKeyExchangeMode(value);
-		}
-	}
+    protected PskKeyExchangeMode(String name, int value) {
+        super(name, value);
+    }
 
-	public static PskKeyExchangeMode[] implemented(PskKeyExchangeMode[] modes) {
-		if (modes.length > 0) {
-			boolean found = false;
-			
-			for (PskKeyExchangeMode mode: modes) {
-				if (mode == PskKeyExchangeMode.PSK_DHE_KE) {
-					found = true;
-					break;
-				}
-			}
-			if (found) {
-				if (modes.length > 1) {
-					modes = new PskKeyExchangeMode[] { PskKeyExchangeMode.PSK_DHE_KE };
-				}
-			}
-			else {
-				modes = EMPTY;
-			}
-		}
-		return modes;
-	}
+    protected PskKeyExchangeMode(int value) {
+        super(value);
+    }
+
+    public static PskKeyExchangeMode of(int value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static PskKeyExchangeMode[] implemented(PskKeyExchangeMode[] modes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

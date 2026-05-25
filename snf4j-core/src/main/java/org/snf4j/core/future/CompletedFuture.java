@@ -28,202 +28,200 @@ package org.snf4j.core.future;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
 import org.snf4j.core.session.ISession;
 
 /**
  * A completed future.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class CompletedFuture<V> extends AbstractFuture<V> {
 
-	/**
-	 * Constructs a completed future with the specified session.
-	 * 
-	 * @param session
-	 *            the session this future is associated with
-	 * @param state
-	 *            the state of this future
-	 * @throws IllegalArgumentException
-	 *             if the <code>state</code> argument is <code>null</code>
-	 */
-	public CompletedFuture(ISession session, FutureState state) {
-		super(session);
-		if (state == null) {
-			throw new IllegalArgumentException("state is null");
-		}
-		this.state.set(state);
-	}
-	
-	/**
-	 * Does nothing.
-	 * 
-	 * @return <code>true</code>
-	 */
-	@Override
-	public boolean cancel(boolean arg0) {
-		return false;
-	}
+    /**
+     * Constructs a completed future with the specified session.
+     *
+     * @param session
+     *            the session this future is associated with
+     * @param state
+     *            the state of this future
+     * @throws IllegalArgumentException
+     *             if the <code>state</code> argument is <code>null</code>
+     */
+    public CompletedFuture(ISession session, FutureState state) {
+        super(session);
+        if (state == null) {
+            throw new IllegalArgumentException("state is null");
+        }
+        this.state.set(state);
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return <code>null</code>
-	 */
-	@Override
-	public V get() throws InterruptedException, ExecutionException {
-		return null;
-	}
+    /**
+     * Does nothing.
+     *
+     * @return <code>true</code>
+     */
+    @Override
+    public boolean cancel(boolean arg0) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return <code>null</code>
-	 */
-	@Override
-	public V get(long arg0, TimeUnit arg1) throws InterruptedException, ExecutionException, TimeoutException {
-		return null;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return <code>null</code>
+     */
+    @Override
+    public V get() throws InterruptedException, ExecutionException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Tells that this future is completed
-	 * 
-	 * @return <code>true</code>
-	 */
-	@Override
-	public boolean isDone() {
-		return true;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return <code>null</code>
+     */
+    @Override
+    public V get(long arg0, TimeUnit arg1) throws InterruptedException, ExecutionException, TimeoutException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> await() {
-		return this;
-	}
+    /**
+     * Tells that this future is completed
+     *
+     * @return <code>true</code>
+     */
+    @Override
+    public boolean isDone() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> await(long timeoutMillis) {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> await() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> await(long timeout, TimeUnit unit) {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> await(long timeoutMillis) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> awaitUninterruptibly() {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> await(long timeout, TimeUnit unit) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> awaitUninterruptibly(long timeoutMillis) {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> awaitUninterruptibly() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> awaitUninterruptibly(long timeout, TimeUnit unit) {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> awaitUninterruptibly(long timeoutMillis) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> sync() {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> awaitUninterruptibly(long timeout, TimeUnit unit) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> sync(long timeoutMillis) {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> sync() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> sync(long timeout, TimeUnit unit) {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> sync(long timeoutMillis) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> syncUninterruptibly() {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> sync(long timeout, TimeUnit unit) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> syncUninterruptibly(long timeoutMillis) {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> syncUninterruptibly() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns immediately
-	 * 
-	 * @return this future
-	 */
-	@Override
-	public IFuture<V> syncUninterruptibly(long timeout, TimeUnit unit) {
-		return this;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> syncUninterruptibly(long timeoutMillis) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * Returns <code>null</code>
-	 * 
-	 * @return <code>null</code>
-	 */
-	@Override
-	public Throwable cause() {
-		return null;
-	}
+    /**
+     * Returns immediately
+     *
+     * @return this future
+     */
+    @Override
+    public IFuture<V> syncUninterruptibly(long timeout, TimeUnit unit) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    /**
+     * Returns <code>null</code>
+     *
+     * @return <code>null</code>
+     */
+    @Override
+    public Throwable cause() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

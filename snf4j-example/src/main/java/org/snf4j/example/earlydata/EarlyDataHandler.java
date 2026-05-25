@@ -39,53 +39,43 @@ import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.engine.IApplicationProtocolHandler;
 
 public abstract class EarlyDataHandler extends AbstractStreamHandler implements IApplicationProtocolHandler {
-	
-	private static final IByteBufferAllocator ALLOCATOR = new ThreadLocalCachingAllocator(true);
-	
-	protected DefaultSessionConfig config = new SessionConfig()
-			.setOptimizeDataCopying(true)
-			.setWaitForInboundCloseMessage(true);
-	
-	@Override
-	public String selectApplicationProtocol(String[] offeredProtocols, String[] supportedProtocols) throws Alert {
-		return null;
-	}
-	
-	@Override
-	public void selectedApplicationProtocol(String protocol) throws Alert {
-		Logger.inf("protocol: " + protocol);
-		SessionConfig.updateCodecPipeline(getSession().getCodecPipeline(), protocol);
-	}
-	
-	@Override
-	public void event(SessionEvent event) {
-		Logger.inf("session " + event.toString().toLowerCase());
-	}
-	
-	@Override
-	public void exception(Throwable e) {
-		Logger.err(e.toString());
-	}
-	
-	@Override
-	public boolean incident(SessionIncident incident, Throwable t) {
-		Logger.err(incident + ": " + t.toString());
-		return true;
-	}
 
-	@Override
-	public ISessionConfig getConfig() {
-		return config;
-	}
-	
-	@Override
-	public ISessionStructureFactory getFactory() {
-		return new DefaultSessionStructureFactory() {
-			
-			@Override
-			public IByteBufferAllocator getAllocator() {
-				return ALLOCATOR;
-			}
-		};
-	}
+    private static final IByteBufferAllocator ALLOCATOR = new ThreadLocalCachingAllocator(true);
+
+    protected DefaultSessionConfig config = new SessionConfig().setOptimizeDataCopying(true).setWaitForInboundCloseMessage(true);
+
+    @Override
+    public String selectApplicationProtocol(String[] offeredProtocols, String[] supportedProtocols) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void selectedApplicationProtocol(String protocol) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void exception(Throwable e) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean incident(SessionIncident incident, Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionStructureFactory getFactory() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

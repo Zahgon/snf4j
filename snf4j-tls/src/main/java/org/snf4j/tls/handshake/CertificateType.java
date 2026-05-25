@@ -28,29 +28,20 @@ package org.snf4j.tls.handshake;
 import org.snf4j.tls.IntConstant;
 
 public class CertificateType extends IntConstant {
-	
-	public static final CertificateType X509 = new CertificateType("X509",0);
-	
-	public static final CertificateType RAW_PUBLIC_KEY = new CertificateType("RawPublicKey",2);
-	
-	protected CertificateType(String name, int value) {
-		super(name, value);
-	}
 
-	protected CertificateType(int value) {
-		super(value);
-	}
+    public static final CertificateType X509 = new CertificateType("X509", 0);
 
-	public static CertificateType of(int value) {
-		switch (value) {
-		case 0:
-			return X509;
-			
-		case 2:
-			return RAW_PUBLIC_KEY;
-			
-		default:
-			return new CertificateType(value);
-		}
-	}
+    public static final CertificateType RAW_PUBLIC_KEY = new CertificateType("RawPublicKey", 2);
+
+    protected CertificateType(String name, int value) {
+        super(name, value);
+    }
+
+    protected CertificateType(int value) {
+        super(value);
+    }
+
+    public static CertificateType of(int value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

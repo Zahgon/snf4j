@@ -26,56 +26,50 @@
 package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.tls.Args;
 
 abstract class AbstractHello extends KnownHandshake {
 
-	final static int RANDOM_LENGTH = 32;
-	
-	final static int SESSION_ID_MAX_LENGTH = 32;
+    final static int RANDOM_LENGTH = 32;
 
-	final static int COMMON_PART_MIN_LENGTH = 2 + RANDOM_LENGTH + 1;
+    final static int SESSION_ID_MAX_LENGTH = 32;
 
-	private final int legacyVersion;
-	
-	private final byte[] random;
-	
-	private final byte[] legacySessionId;
-	
-	public AbstractHello(HandshakeType type, int legacyVersion, byte[] random, byte[] legacySessionId) {
-		super(type);
-		Args.checkFixed(random, RANDOM_LENGTH, "random");
-		Args.checkMax(legacySessionId, SESSION_ID_MAX_LENGTH, "legacySessionId");
-		this.legacyVersion = legacyVersion;
-		this.random = random;
-		this.legacySessionId = legacySessionId;
-	}
+    final static int COMMON_PART_MIN_LENGTH = 2 + RANDOM_LENGTH + 1;
 
-	public int getLegacyVersion() {
-		return legacyVersion;
-	}
-	
-	public byte[] getRandom() {
-		return random;
-	}
+    private final int legacyVersion;
 
-	public byte[] getLegacySessionId() {
-		return legacySessionId;
-	}
-	
-	@Override
-	public int getDataLength() {
-		return COMMON_PART_MIN_LENGTH + legacySessionId.length;
-	}
+    private final byte[] random;
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.putShort((short) legacyVersion);
-		buffer.put(random);
-		buffer.put((byte) legacySessionId.length);
-		if (legacySessionId.length > 0) {
-			buffer.put(legacySessionId);
-		}
-	}
+    private final byte[] legacySessionId;
+
+    public AbstractHello(HandshakeType type, int legacyVersion, byte[] random, byte[] legacySessionId) {
+        super(type);
+        Args.checkFixed(random, RANDOM_LENGTH, "random");
+        Args.checkMax(legacySessionId, SESSION_ID_MAX_LENGTH, "legacySessionId");
+        this.legacyVersion = legacyVersion;
+        this.random = random;
+        this.legacySessionId = legacySessionId;
+    }
+
+    public int getLegacyVersion() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public byte[] getRandom() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public byte[] getLegacySessionId() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

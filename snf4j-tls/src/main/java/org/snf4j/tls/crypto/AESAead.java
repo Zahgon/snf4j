@@ -28,7 +28,6 @@ package org.snf4j.tls.crypto;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
@@ -37,83 +36,82 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class AESAead implements IAead {
 
-	public final static AESAead AEAD_AES_128_GCM = new AESAead(16, 16, 137438953472L, 12, AeadId.AES_128_GCM);
-	
-	public final static AESAead AEAD_AES_256_GCM = new AESAead(16, 32, 137438953472L, 12, AeadId.AES_256_GCM);
-	
-	private final static String TRANSFORMATION = "AES/GCM/NoPadding";
+    public final static AESAead AEAD_AES_128_GCM = new AESAead(16, 16, 137438953472L, 12, AeadId.AES_128_GCM);
 
-	private final static String ALGORITHM = "AES";
-	
-	private final int tagLength;
-	
-	private final int tagBits;
-	
-	private final int keyLength;
-	
-	private final long keyLimit;
-	
-	private final int ivLength;
-	
-	private final AeadId id;
-	
-	public AESAead(int tagLength, int keyLength, long keyLimit, int ivLength, AeadId id) {
-		this.tagLength = tagLength;
-		this.keyLength = keyLength;
-		this.keyLimit = keyLimit;
-		this.ivLength = ivLength;
-		this.id = id;
-		tagBits = tagLength*8;
-	}
+    public final static AESAead AEAD_AES_256_GCM = new AESAead(16, 32, 137438953472L, 12, AeadId.AES_256_GCM);
 
-	@Override
-	public int getTagLength() {
-		return tagLength;
-	}
+    private final static String TRANSFORMATION = "AES/GCM/NoPadding";
 
-	@Override
-	public int getKeyLength() {
-		return keyLength;
-	}
-	
-	@Override
-	public long getKeyLimit() {
-		return keyLimit;
-	}
-	
-	@Override
-	public int getIvLength() {
-		return ivLength;
-	}
-	
-	@Override
-	public boolean isImplemented() {
-		return true;
-	}
+    private final static String ALGORITHM = "AES";
 
-	@Override
-	public Cipher createCipher() throws NoSuchAlgorithmException, NoSuchPaddingException {
-		return Cipher.getInstance(TRANSFORMATION);
-	}
+    private final int tagLength;
 
-	@Override
-	public SecretKey createKey(byte[] key) {
-		return new SecretKeySpec(key, ALGORITHM);
-	}
+    private final int tagBits;
 
-	@Override
-	public void initDecrypt(Cipher cipher, SecretKey key, byte[] nonce) throws InvalidKeyException, InvalidAlgorithmParameterException {
-		cipher.init(Cipher.DECRYPT_MODE, key, new GCMParameterSpec(tagBits, nonce));
-	}
+    private final int keyLength;
 
-	@Override
-	public void initEncrypt(Cipher cipher, SecretKey key, byte[] nonce) throws InvalidKeyException, InvalidAlgorithmParameterException {
-		cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(tagBits, nonce));
-	}
+    private final long keyLimit;
 
-	@Override
-	public AeadId getId() {
-		return id;
-	}
+    private final int ivLength;
 
+    private final AeadId id;
+
+    public AESAead(int tagLength, int keyLength, long keyLimit, int ivLength, AeadId id) {
+        this.tagLength = tagLength;
+        this.keyLength = keyLength;
+        this.keyLimit = keyLimit;
+        this.ivLength = ivLength;
+        this.id = id;
+        tagBits = tagLength * 8;
+    }
+
+    @Override
+    public int getTagLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getKeyLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public long getKeyLimit() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getIvLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Cipher createCipher() throws NoSuchAlgorithmException, NoSuchPaddingException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SecretKey createKey(byte[] key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void initDecrypt(Cipher cipher, SecretKey key, byte[] nonce) throws InvalidKeyException, InvalidAlgorithmParameterException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void initEncrypt(Cipher cipher, SecretKey key, byte[] nonce) throws InvalidKeyException, InvalidAlgorithmParameterException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public AeadId getId() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

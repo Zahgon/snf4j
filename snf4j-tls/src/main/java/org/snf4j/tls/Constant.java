@@ -27,20 +27,23 @@ package org.snf4j.tls;
 
 public class Constant {
 
-	protected final static String UNKNOWN = new String("unknown");
-	
-	private final String name;
+    protected final static String UNKNOWN = new String("unknown");
 
-	protected Constant(String name) {
-		this.name = name;
-	}
+    private final String name;
 
-	protected Constant() {
-		this.name = UNKNOWN;
-	}
-	
-	public final String name() { return name; }
-	
-	public final boolean isKnown() { return name != UNKNOWN; }
-	
+    protected Constant(String name) {
+        this.name = name;
+    }
+
+    protected Constant() {
+        this.name = UNKNOWN;
+    }
+
+    public final String name() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public final boolean isKnown() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

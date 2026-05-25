@@ -26,60 +26,58 @@
 package org.snf4j.core.codec;
 
 import java.util.List;
-
 import org.snf4j.core.session.ISession;
 
 /**
  * A compound encoder that processes input data through a chain of the specified encoders.
- * 
+ *
  * @param <I>
  *            the type of the accepted inbound objects
  * @param <O>
  *            the type of the produced outbound objects
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public abstract class CompoundEncoder<I,O> extends CompoundCodec<IEncoder<?,?>,I,O> implements IEncoder<I,O> {
+public abstract class CompoundEncoder<I, O> extends CompoundCodec<IEncoder<?, ?>, I, O> implements IEncoder<I, O> {
 
-	/**
-	 * Constructs a compound encoder with a chain of the specified encoders.
-	 * <p>
-	 * The encoder chain is organized in the following way:
-	 * <pre>
-	 * {data} -&gt; encoder1 -&gt; encoder2 -&gt; ... -&gt; encoderN -&gt; {out}
-	 * </pre>
-	 * 
-	 * @param encoders
-	 *            the chain of encoders
-	 * @throws IllegalArgumentException
-	 *             if the specified encoders have incompatible inbound or
-	 *             outbound types
-	 * @throws IllegalStateException if the param O is {@code Void}
-	 */
-	public CompoundEncoder(IEncoder<?,?>... encoders) {
-		super(encoders);
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	final void process(ICodec<?,?> codec, ISession session, Object data, List<Object> out) throws Exception {
-		((IEncoder)codec).encode(session, data, out);
-	}
-	
-	@Override
-	final String type() {
-		return "encoder";
-	}
-	
-	/**
-	 * Encodes data from one type to another one.
-	 * 
-	 * @param out
-	 *            the {@link List} to which the encoded data should be added
-	 */
-	@Override
-	final public void encode(ISession session, I data, List<O> out) throws Exception {
-		process(session, data, out);
-	}
-	
+    /**
+     * Constructs a compound encoder with a chain of the specified encoders.
+     * <p>
+     * The encoder chain is organized in the following way:
+     * <pre>
+     * {data} -&gt; encoder1 -&gt; encoder2 -&gt; ... -&gt; encoderN -&gt; {out}
+     * </pre>
+     *
+     * @param encoders
+     *            the chain of encoders
+     * @throws IllegalArgumentException
+     *             if the specified encoders have incompatible inbound or
+     *             outbound types
+     * @throws IllegalStateException if the param O is {@code Void}
+     */
+    public CompoundEncoder(IEncoder<?, ?>... encoders) {
+        super(encoders);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    final void process(ICodec<?, ?> codec, ISession session, Object data, List<Object> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final String type() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Encodes data from one type to another one.
+     *
+     * @param out
+     *            the {@link List} to which the encoded data should be added
+     */
+    @Override
+    final public void encode(ISession session, I data, List<O> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

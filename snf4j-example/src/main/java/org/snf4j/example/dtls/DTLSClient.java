@@ -28,40 +28,20 @@ package org.snf4j.example.dtls;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.DatagramChannel;
-
 import org.snf4j.core.DTLSSession;
 import org.snf4j.core.SelectorLoop;
 
 public class DTLSClient {
-	static final String PREFIX = "org.snf4j.";
-	static final String HOST = System.getProperty(PREFIX+"Host", "127.0.0.1");
-	static final int PORT = Integer.getInteger(PREFIX+"Port", 8001);
-	static final int SECURE = Integer.getInteger(PREFIX+"Secure", 1);
 
-	public static void main(String[] args) throws Exception {
-		SelectorLoop loop = new SelectorLoop();
-		
-		try {
-			loop.start();
-			
-			// Initialize the connection
-			DatagramChannel channel = DatagramChannel.open();
-			channel.configureBlocking(false);
-			channel.connect(new InetSocketAddress(InetAddress.getByName(HOST), PORT));
+    static final String PREFIX = "org.snf4j.";
 
-			// Register the channel
-			if (SECURE == 0) {
-				loop.register(channel, new SessionHandler(true));
-			}
-			else {
-				loop.register(channel, new DTLSSession(new SessionHandler(true), true));
-			}
-			
-			// Wait till the loop ends
-			loop.join();
-		}
-		finally {
-			loop.stop();
-		}
-	}	
+    static final String HOST = System.getProperty(PREFIX + "Host", "127.0.0.1");
+
+    static final int PORT = Integer.getInteger(PREFIX + "Port", 8001);
+
+    static final int SECURE = Integer.getInteger(PREFIX + "Secure", 1);
+
+    public static void main(String[] args) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

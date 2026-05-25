@@ -29,89 +29,88 @@ import org.snf4j.core.ICloseControllingException;
 
 /**
  * Indicates problems with decoding or validation of Web Socket frames.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class InvalidFrameException extends RuntimeException implements ICloseControllingException {
 
-	private static final long serialVersionUID = -2404299620837161216L;
+    private static final long serialVersionUID = -2404299620837161216L;
 
-	private final CloseType closeType;
-	
-	/**
-	 * Constructs a new exception with the specified detail message, cause and
-	 * session closing type.
-	 *
-	 * @param message     the detail message.
-	 * @param cause       the cause
-	 * @param gentleClose the session closing type. If {@code true} the affected
-	 *                    session will be gently closed, or otherwise the default
-	 *                    closing will be performed
-	 */
-	public InvalidFrameException(String message, Throwable cause, boolean gentleClose) {
-		super(message, cause);
-		closeType = gentleClose ? CloseType.GENTLE : CloseType.DEFAULT; 
-	}
+    private final CloseType closeType;
 
-	/**
-	 * Constructs a new exception with the specified cause and session closing type.
-	 *
-	 * @param cause       the cause
-	 * @param gentleClose the session closing type. If {@code true} the affected
-	 *                    session will be gently closed, or otherwise the default
-	 *                    closing will be performed
-	 */
-	public InvalidFrameException(Throwable cause, boolean gentleClose) {
-		this(cause == null ? null : cause.getMessage(), cause, gentleClose);
-	}
-	
-	/**
-	 * Constructs a new exception with the specified detail message, cause and
-	 * with the gentle closing type.
-	 *
-	 * @param message     the detail message.
-	 * @param cause       the cause
-	 */
-	public InvalidFrameException(String message, Throwable cause) {
-		this(message, cause, true);
-	}
-	
-	/**
-	 * Constructs a new exception with the specified detail message and with the
-	 * gentle closing type.
-	 *
-	 * @param message the detail message.
-	 */
-	public InvalidFrameException(String message) {
-		this(message, null);
-	}
-	
-	/**
-	 * Constructs a new exception with the specified cause and with the gentle
-	 * closing type.
-	 *
-	 * @param cause the cause
-	 */
-	public InvalidFrameException(Throwable cause) {
-		this(cause == null ? null : cause.getMessage(), cause);
-	}
-	
-	/**
-	 * Constructs a new exception without the detail message and with the gentle
-	 * closing type.
-	 */
-	public InvalidFrameException() {
-		this(null, null);
-	}
-	
-	@Override
-	public CloseType getCloseType() {
-		return closeType;
-	}
+    /**
+     * Constructs a new exception with the specified detail message, cause and
+     * session closing type.
+     *
+     * @param message     the detail message.
+     * @param cause       the cause
+     * @param gentleClose the session closing type. If {@code true} the affected
+     *                    session will be gently closed, or otherwise the default
+     *                    closing will be performed
+     */
+    public InvalidFrameException(String message, Throwable cause, boolean gentleClose) {
+        super(message, cause);
+        closeType = gentleClose ? CloseType.GENTLE : CloseType.DEFAULT;
+    }
 
-	@Override
-	public Throwable getClosingCause() {
-		return this;
-	}
+    /**
+     * Constructs a new exception with the specified cause and session closing type.
+     *
+     * @param cause       the cause
+     * @param gentleClose the session closing type. If {@code true} the affected
+     *                    session will be gently closed, or otherwise the default
+     *                    closing will be performed
+     */
+    public InvalidFrameException(Throwable cause, boolean gentleClose) {
+        this(cause == null ? null : cause.getMessage(), cause, gentleClose);
+    }
 
+    /**
+     * Constructs a new exception with the specified detail message, cause and
+     * with the gentle closing type.
+     *
+     * @param message     the detail message.
+     * @param cause       the cause
+     */
+    public InvalidFrameException(String message, Throwable cause) {
+        this(message, cause, true);
+    }
+
+    /**
+     * Constructs a new exception with the specified detail message and with the
+     * gentle closing type.
+     *
+     * @param message the detail message.
+     */
+    public InvalidFrameException(String message) {
+        this(message, null);
+    }
+
+    /**
+     * Constructs a new exception with the specified cause and with the gentle
+     * closing type.
+     *
+     * @param cause the cause
+     */
+    public InvalidFrameException(Throwable cause) {
+        this(cause == null ? null : cause.getMessage(), cause);
+    }
+
+    /**
+     * Constructs a new exception without the detail message and with the gentle
+     * closing type.
+     */
+    public InvalidFrameException() {
+        this(null, null);
+    }
+
+    @Override
+    public CloseType getCloseType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Throwable getClosingCause() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

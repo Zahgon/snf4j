@@ -28,50 +28,51 @@ package org.snf4j.websocket.handshake;
 /**
  * A Web Socket handshake response frame. The content of this frame will be used
  * to format the HTTP response to a Web Socket handshake request.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class HandshakeResponse extends HandshakeFrame {
-	
-	private final int status;
-	
-	private final String reason;
-	
-	/**
-	 * Constructs a Web Socket handshake response frame.
-	 * 
-	 * @param status the status code of the HTTP response
-	 * @param reason the reason text of the HTTP response 
-	 */
-	public HandshakeResponse(int status, String reason) {
-		this.status = status;
-		this.reason = reason;
-	}
-	
-	HandshakeResponse(HttpStatus status) {
-		this.status = status.getStatus();
-		this.reason = status.getReason();
-	}
 
-	/**
-	 * Return the status code of the HTTP response
-	 * 
-	 * @return the status code
-	 */
-	public int getStatus() {
-		return status;
-	}
+    private final int status;
 
-	/**
-	 * Return the reason text of the HTTP response
-	 * 
-	 * @return the reason text
-	 */
-	public String getReason() {
-		return reason;
-	}
-	
-	@Override
-	int getLength() {
-		return super.getLength() + HandshakeUtils.RESPONSE_LENGTH + reason.length();
-	}}
+    private final String reason;
+
+    /**
+     * Constructs a Web Socket handshake response frame.
+     *
+     * @param status the status code of the HTTP response
+     * @param reason the reason text of the HTTP response
+     */
+    public HandshakeResponse(int status, String reason) {
+        this.status = status;
+        this.reason = reason;
+    }
+
+    HandshakeResponse(HttpStatus status) {
+        this.status = status.getStatus();
+        this.reason = status.getReason();
+    }
+
+    /**
+     * Return the status code of the HTTP response
+     *
+     * @return the status code
+     */
+    public int getStatus() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Return the reason text of the HTTP response
+     *
+     * @return the reason text
+     */
+    public String getReason() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    int getLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+}

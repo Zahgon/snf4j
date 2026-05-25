@@ -34,183 +34,172 @@ import java.util.ListIterator;
 
 /**
  * Default implementation of byte buffer holder.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class ByteBufferHolder implements IByteBufferHolder, List<ByteBuffer> {
 
-	private final List<ByteBuffer> buffers;
-	
-	/**
-	 * Constructs an empty byte buffer holder with an initial capacity of ten.
-	 */
-	public ByteBufferHolder() {
-		buffers = new ArrayList<ByteBuffer>();
-	}
+    private final List<ByteBuffer> buffers;
 
-	/**
-	 * Constructs an empty byte buffer holder with the specified initial capacity.
-	 * 
-	 * @param initialCapacity the initial capacity
-	 */
-	public ByteBufferHolder(int initialCapacity) {
-		buffers = new ArrayList<ByteBuffer>(initialCapacity);
-	}
+    /**
+     * Constructs an empty byte buffer holder with an initial capacity of ten.
+     */
+    public ByteBufferHolder() {
+        buffers = new ArrayList<ByteBuffer>();
+    }
 
-	/**
-	 * Constructs a byte buffer holder containing the byte buffers of the specified
-	 * collection, in the order they are returned by the collection's iterator.
-	 * 
-	 * @param c the collection whose byte buffers are to be placed into this byte
-	 *          buffer holder
-	 */
-	public ByteBufferHolder(Collection<ByteBuffer> c) {
-		buffers = new ArrayList<ByteBuffer>(c);
-	}
-	
-	@Override
-	public boolean hasRemaining() {
-		for (ByteBuffer buffer: buffers) {
-			if (buffer.hasRemaining()) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Constructs an empty byte buffer holder with the specified initial capacity.
+     *
+     * @param initialCapacity the initial capacity
+     */
+    public ByteBufferHolder(int initialCapacity) {
+        buffers = new ArrayList<ByteBuffer>(initialCapacity);
+    }
 
-	@Override
-	public int remaining() {
-		int remaining = 0;
-		
-		for (ByteBuffer buffer: buffers) {
-			remaining += buffer.remaining();
-		}
-		return remaining;
-	}
+    /**
+     * Constructs a byte buffer holder containing the byte buffers of the specified
+     * collection, in the order they are returned by the collection's iterator.
+     *
+     * @param c the collection whose byte buffers are to be placed into this byte
+     *          buffer holder
+     */
+    public ByteBufferHolder(Collection<ByteBuffer> c) {
+        buffers = new ArrayList<ByteBuffer>(c);
+    }
 
-	@Override
-	public ByteBuffer[] toArray() {
-		return buffers.toArray(new ByteBuffer[buffers.size()]);
-	}
+    @Override
+    public boolean hasRemaining() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return {@code false}
-	 */
-	@Override
-	public boolean isMessage() {
-		return false;
-	}
-	
-	@Override
-	public int size() {
-		return buffers.size();
-	}
+    @Override
+    public int remaining() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isEmpty() {
-		return buffers.isEmpty();
-	}
+    @Override
+    public ByteBuffer[] toArray() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean contains(Object o) {
-		return buffers.contains(o);
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@code false}
+     */
+    @Override
+    public boolean isMessage() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Iterator<ByteBuffer> iterator() {
-		return buffers.iterator();
-	}
+    @Override
+    public int size() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public <T> T[] toArray(T[] a) {
-		return buffers.toArray(a);
-	}
+    @Override
+    public boolean isEmpty() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean add(ByteBuffer e) {
-		return buffers.add(e);
-	}
+    @Override
+    public boolean contains(Object o) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean remove(Object o) {
-		return buffers.remove(o);
-	}
+    @Override
+    public Iterator<ByteBuffer> iterator() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		return buffers.containsAll(c);
-	}
+    @Override
+    public <T> T[] toArray(T[] a) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean addAll(Collection<? extends ByteBuffer> c) {
-		return buffers.addAll(c);
-	}
+    @Override
+    public boolean add(ByteBuffer e) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean addAll(int index, Collection<? extends ByteBuffer> c) {
-		return buffers.addAll(index, c);
-	}
+    @Override
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		return buffers.removeAll(c);
-	}
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		return buffers.retainAll(c);
-	}
+    @Override
+    public boolean addAll(Collection<? extends ByteBuffer> c) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void clear() {
-		buffers.clear();
-	}
+    @Override
+    public boolean addAll(int index, Collection<? extends ByteBuffer> c) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public ByteBuffer get(int index) {
-		return buffers.get(index);
-	}
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public ByteBuffer set(int index, ByteBuffer element) {
-		return buffers.set(index, element);
-	}
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void add(int index, ByteBuffer element) {
-		buffers.add(index, element);
-	}
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public ByteBuffer remove(int index) {
-		return buffers.remove(index);
-	}
+    @Override
+    public ByteBuffer get(int index) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int indexOf(Object o) {
-		return buffers.indexOf(o);
-	}
+    @Override
+    public ByteBuffer set(int index, ByteBuffer element) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int lastIndexOf(Object o) {
-		return buffers.lastIndexOf(o);
-	}
+    @Override
+    public void add(int index, ByteBuffer element) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public ListIterator<ByteBuffer> listIterator() {
-		return buffers.listIterator();
-	}
+    @Override
+    public ByteBuffer remove(int index) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public ListIterator<ByteBuffer> listIterator(int index) {
-		return buffers.listIterator(index);
-	}
+    @Override
+    public int indexOf(Object o) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public List<ByteBuffer> subList(int fromIndex, int toIndex) {
-		return buffers.subList(fromIndex, toIndex);
-	}
+    @Override
+    public int lastIndexOf(Object o) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public ListIterator<ByteBuffer> listIterator() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ListIterator<ByteBuffer> listIterator(int index) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public List<ByteBuffer> subList(int fromIndex, int toIndex) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

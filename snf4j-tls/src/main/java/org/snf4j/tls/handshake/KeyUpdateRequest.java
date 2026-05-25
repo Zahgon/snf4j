@@ -28,32 +28,23 @@ package org.snf4j.tls.handshake;
 import org.snf4j.tls.IntConstant;
 
 public class KeyUpdateRequest extends IntConstant {
-	
-	public static final KeyUpdateRequest UPDATE_NOT_REQUESTED = new KeyUpdateRequest("update_not_requested", 0);
 
-	public static final KeyUpdateRequest UPDATE_REQUESTED = new KeyUpdateRequest("update_requested", 1);
-	
-	@SuppressWarnings("unused")
-	private final static KeyUpdateRequest[] KNOWN = new KeyUpdateRequest[] {UPDATE_NOT_REQUESTED, UPDATE_REQUESTED};
+    public static final KeyUpdateRequest UPDATE_NOT_REQUESTED = new KeyUpdateRequest("update_not_requested", 0);
 
-	protected KeyUpdateRequest(String name, int value) {
-		super(name, value);
-	}
+    public static final KeyUpdateRequest UPDATE_REQUESTED = new KeyUpdateRequest("update_requested", 1);
 
-	protected KeyUpdateRequest(int value) {
-		super(value);
-	}
+    @SuppressWarnings("unused")
+    private final static KeyUpdateRequest[] KNOWN = new KeyUpdateRequest[] { UPDATE_NOT_REQUESTED, UPDATE_REQUESTED };
 
-	public static KeyUpdateRequest of(int value) {
-		switch (value) {
-		case 0: 
-			return UPDATE_NOT_REQUESTED;
-		
-		case 1: 
-			return UPDATE_REQUESTED;
-		
-		default: 
-			return new KeyUpdateRequest(value);
-		}
-	}
+    protected KeyUpdateRequest(String name, int value) {
+        super(name, value);
+    }
+
+    protected KeyUpdateRequest(int value) {
+        super(value);
+    }
+
+    public static KeyUpdateRequest of(int value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

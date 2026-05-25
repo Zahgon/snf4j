@@ -26,7 +26,6 @@
 package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.DecodeErrorAlert;
@@ -34,23 +33,17 @@ import org.snf4j.tls.alert.UnsupportedExtensionAlert;
 import org.snf4j.tls.handshake.HandshakeType;
 
 public abstract class AbstractExtensionParser implements IExtensionParser {
-	
-	protected DecodeErrorAlert decodeError(String message) {
-		return new DecodeErrorAlert("Extension '" 
-				+ getType().name() 
-				+ "' parsing failure: " 
-				+ message);
-	}
 
-	protected UnsupportedExtensionAlert unsupportedExtension(HandshakeType handshakeType) {
-		return new UnsupportedExtensionAlert("Extension '" 
-				+ getType().name() 
-				+ "' is prohibited in " 
-				+ handshakeType.name());
-	}
-	
-	@Override
-	public IExtension parse(HandshakeType handshakeType, ByteBuffer[] srcs, int remaining) throws Alert  {
-		return parse(handshakeType, ByteBufferArray.wrap(srcs), remaining);
-	}
+    protected DecodeErrorAlert decodeError(String message) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    protected UnsupportedExtensionAlert unsupportedExtension(HandshakeType handshakeType) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IExtension parse(HandshakeType handshakeType, ByteBuffer[] srcs, int remaining) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

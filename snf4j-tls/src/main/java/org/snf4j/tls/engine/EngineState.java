@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.InternalErrorAlert;
 import org.snf4j.tls.cipher.CipherSuite;
@@ -43,404 +42,291 @@ import org.snf4j.tls.session.ISession;
 import org.snf4j.tls.session.SessionInfo;
 
 public class EngineState implements IEngineState, IEngineProducer {
-	
-	private final static ProducedHandshake[] NONE_PRODUCED = new ProducedHandshake[0];
-	
-	private final List<ProducedHandshake> produced = new ArrayList<ProducedHandshake>();
 
-	private final List<ProducedHandshake> prepared = new ArrayList<ProducedHandshake>();
-	
-	private final Queue<IEngineTask> tasks = new LinkedList<IEngineTask>();
-	
-	private final Queue<IEngineTask> runningTasks = new LinkedList<IEngineTask>();
-		
-	private final SessionInfo sessionInfo = new SessionInfo();
+    private final static ProducedHandshake[] NONE_PRODUCED = new ProducedHandshake[0];
 
-	private final IEngineParameters parameters;
-	
-	private final IEngineHandler handler;
-	
-	private final IEngineStateListener listener;
-	
-	private MachineState state;
-	
-	private int stateBits;
-	
-	private ISession session;
-	
-	private ITranscriptHash transcriptHash;
-	
-	private KeySchedule keySchedule;
-		
-	private IHandshake retained;
-		
-	private List<KeySharePrivateKey> privateKeys;
+    private final List<ProducedHandshake> produced = new ArrayList<ProducedHandshake>();
 
-	private List<PskContext> psks;
-	
-	private int pskModes;
-	
-	private CipherSuite cipherSuite;
-	
-	private String applicationProtocol;
-	
-	private NamedGroup namedGroup;
-	
-	private String hostName;
-	
-	private int version;
-	
-	private boolean producingTasks;
-	
-	private int maxFragmentLength = 16384;
-		
-	private CertificateCriteria certCryteria;
-	
-	private IEarlyDataContext earlyDataContext = NoEarlyDataContext.INSTANCE;
-	
-	public EngineState(MachineState state, IEngineParameters parameters, IEngineHandler handler, IEngineStateListener listener) {
-		this.state = state;
-		this.stateBits = state.bitMask();
-		this.parameters = parameters;
-		this.handler = handler;
-		this.listener = listener;
-	}
-	
-	@Override
-	public IEngineParameters getParameters() {
-		return parameters;
-	}
-	
-	@Override
-	public IEngineHandler getHandler() {
-		return handler;
-	}
+    private final List<ProducedHandshake> prepared = new ArrayList<ProducedHandshake>();
 
-	public IEngineStateListener getListener() {
-		return listener;
-	}
+    private final Queue<IEngineTask> tasks = new LinkedList<IEngineTask>();
 
-	@Override
-	public MachineState getState() {
-		return state;
-	}
-	
-	public void changeState(MachineState newState) throws Alert {
-		if (this.state.clientMode() != newState.clientMode()) {
-			throw new InternalErrorAlert("Invalid new machine state");
-		}
-		this.state = newState;
-		this.stateBits |= newState.bitMask();
-	}
-	
-	public boolean hadState(MachineState state) {
-		return (stateBits & state.bitMask()) != 0;
-	}
-	
-	@Override
-	public boolean isStarted() {
-		return state.isStarted();
-	}
-	
-	@Override
-	public boolean isConnected() {
-		return state.isConnected();
-	}
-	
-	@Override
-	public boolean isClientMode() {
-		return state.clientMode();
-	}
-	
-	public boolean isInitialized() {
-		return keySchedule != null;
-	}
-	
-	public void initialize(KeySchedule keySchedule, CipherSuite cipherSuite) {
-		this.keySchedule = keySchedule;
-		this.transcriptHash = keySchedule.getTranscriptHash();
-		this.cipherSuite = cipherSuite;
-	}
-	
-	public ITranscriptHash getTranscriptHash() {
-		return transcriptHash;
-	}
+    private final Queue<IEngineTask> runningTasks = new LinkedList<IEngineTask>();
 
-	public void setTranscriptHash(ITranscriptHash transcriptHash) {
-		this.transcriptHash = transcriptHash;
-	}
-	
-	@Override
-	public ISession getSession() {
-		return session;
-	}
-	
-	public void setSession(ISession session) {
-		this.session = session;
-	}
-	
-	public SessionInfo getSessionInfo() {
-		return sessionInfo;
-	}
-	
-	@Override
-	public KeySchedule getKeySchedule() {
-		return keySchedule;
-	}
+    private final SessionInfo sessionInfo = new SessionInfo();
 
-	@Override
-	public CipherSuite getCipherSuite() {
-		return cipherSuite;
-	}
-	
-	public NamedGroup getNamedGroup() {
-		return namedGroup;
-	}
+    private final IEngineParameters parameters;
 
-	public void setNamedGroup(NamedGroup namedGroup) {
-		this.namedGroup = namedGroup;
-	}
+    private final IEngineHandler handler;
 
-	@Override
-	public String getApplicationProtocol() {
-		return applicationProtocol;
-	}
+    private final IEngineStateListener listener;
 
-	public void setApplicationProtocol(String protocol) {
-		applicationProtocol = protocol;
-	}
-	
-	@Override
-	public String getHostName() {
-		return hostName;
-	}
+    private MachineState state;
 
-	public void setHostName(String hostName) {
-		this.hostName = hostName;
-	}
+    private int stateBits;
 
-	@Override
-	public int getVersion() {
-		return version;
-	}
+    private ISession session;
 
-	public void setVersion(int version) {
-		this.version = version;
-	}
+    private ITranscriptHash transcriptHash;
 
-	@SuppressWarnings("unchecked")
-	public <T extends IHandshake> T getRetainedHandshake() {
-		return (T) retained;
-	}
+    private KeySchedule keySchedule;
 
-	public void retainHandshake(IHandshake handshake) {
-		retained = handshake;
-	}
+    private IHandshake retained;
 
-	@Override
-	public void produce(ProducedHandshake handshake) {
-		if (prepared.isEmpty()) {
-			produced.add(handshake);
-		}
-		else {
-			prepare(handshake);
-		}
-	}
+    private List<KeySharePrivateKey> privateKeys;
 
-	@Override
-	public void prepare(ProducedHandshake handshake) {
-		prepared.add(handshake);
-	}
-	
-	public boolean hasProduced() {
-		return !produced.isEmpty();
-	}
-	
-	public ProducedHandshake[] getProduced() throws Alert {
-		updateTasks();
-		
-		int size = produced.size();
-		
-		if (size > 0) {
-			ProducedHandshake[] msgs = produced.toArray(new ProducedHandshake[size]);
-			
-			produced.clear();
-			return msgs;
-		}
-		return NONE_PRODUCED;
-	}
-	
-	public boolean updateTasks() throws Alert {
-		if (tasks.isEmpty()) {
-			if (runningTasks.isEmpty()) {
-				if (!prepared.isEmpty()) {
-					produced.addAll(prepared);
-					prepared.clear();
-				}
-				return false;
-			}
-			
-			IEngineTask task;
-			
-			while ((task = runningTasks.peek()) != null) {
-				if (task.isDone()) {
-					runningTasks.poll();
-					if (task.isSuccessful()) {
-						task.finish(this);
-					}
-					else {
-						throw new InternalErrorAlert(task.name() + " task failed", task.cause());
-					}
-				}
-				else {
-					break;
-				}
-			}
+    private List<PskContext> psks;
 
-			if (task == null) {
-				producingTasks = false;
-				if (!prepared.isEmpty()) {
-					produced.addAll(prepared);
-					prepared.clear();
-				}
-				return false;
-			}
-		}
-		return true;
-	}
+    private int pskModes;
 
-	public boolean hasProducingTasks() {
-		return producingTasks;
-	}
-	
-	public boolean hasTasks() {
-		return !tasks.isEmpty();
-	}
-	
-	public boolean hasRunningTasks(boolean onlyUndone) {
-		boolean has = !runningTasks.isEmpty();
-		
-		if (has && onlyUndone) {
-			for (IEngineTask task: runningTasks) {
-				if (!task.isDone()) {
-					return true;
-				}
-			}
-			has = false;
-		}
-		return has;
-	}
-	
-	public Runnable getTask() {
-		if (tasks.isEmpty()) {
-			return null;
-		}
-		
-		IEngineTask task = tasks.poll();
-		
-		runningTasks.add(task);
-		return task;
-	}
-	
-	public void addTask(IEngineTask task) {
-		tasks.add(task);
-		if (task.isProducing()) {
-			producingTasks = true;
-		}
-	}
-	
-	public void addPrivateKey(NamedGroup group, PrivateKey key) {
-		if (privateKeys == null) {
-			privateKeys = new ArrayList<KeySharePrivateKey>();
-		}
-		privateKeys.add(new KeySharePrivateKey(group, key));
-	}
+    private CipherSuite cipherSuite;
 
-	public PrivateKey getPrivateKey(NamedGroup group, boolean clearAll) {
-		if (privateKeys != null) {
-			PrivateKey key = null;
-			
-			for (KeySharePrivateKey privateKey: privateKeys) {
-				if (privateKey.getGroup().equals(group)) {
-					key = privateKey.getKey();
-					break;
-				}
-			}
-			if (clearAll) {
-				clearPrivateKeys();
-			}
-			return key;
-		}
-		return null;
-	}
+    private String applicationProtocol;
 
-	public void clearPrivateKeys() {
-		if (privateKeys != null) {
-			privateKeys.clear();
-			privateKeys = null;
-		}
-	}
-	
-	@Override
-	public int getMaxFragmentLength() {
-		return maxFragmentLength;
-	}
-	
-	@Override
-	public IEarlyDataContext getEarlyDataContext() {
-		return earlyDataContext;
-	}
-	
-	public void setEarlyDataContext(IEarlyDataContext context) {
-		earlyDataContext = context == null ? NoEarlyDataContext.INSTANCE : context;
-	}
+    private NamedGroup namedGroup;
 
-	public void addPskContext(PskContext psk) {
-		if (psks == null) {
-			psks = new LinkedList<PskContext>();
-		}
-		psks.add(psk);
-	}
-	
-	public List<PskContext> getPskContexts() {
-		return psks;
-	}
-		
-	public void clearPskContexts() {
-		if (psks != null) {
-			for (PskContext psk: psks) {
-				psk.clear();
-			}
-			psks = null;
-		}
-	}
-	
-	public void setPskModes(PskKeyExchangeMode[] modes) {
-		pskModes = 0;
-		for (PskKeyExchangeMode mode: modes) {
-			pskModes |= 1 << mode.value();
-		}
-	}
-	
-	public boolean hasPskMode(PskKeyExchangeMode mode) {
-		return (pskModes & (1 << mode.value())) != 0;
-	}
-	
-	public CertificateCriteria getCertCryteria() {
-		return certCryteria;
-	}
+    private String hostName;
 
-	public void setCertCryteria(CertificateCriteria certCryteria) {
-		this.certCryteria = certCryteria;
-	}
+    private int version;
 
-	public void cleanup() {
-		clearPrivateKeys();
-		clearPskContexts();
-		if (keySchedule != null) {
-			keySchedule.eraseAll();
-		}
-		listener.onCleanup(this);
-		retainHandshake(null);
-	}
+    private boolean producingTasks;
+
+    private int maxFragmentLength = 16384;
+
+    private CertificateCriteria certCryteria;
+
+    private IEarlyDataContext earlyDataContext = NoEarlyDataContext.INSTANCE;
+
+    public EngineState(MachineState state, IEngineParameters parameters, IEngineHandler handler, IEngineStateListener listener) {
+        this.state = state;
+        this.stateBits = state.bitMask();
+        this.parameters = parameters;
+        this.handler = handler;
+        this.listener = listener;
+    }
+
+    @Override
+    public IEngineParameters getParameters() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IEngineHandler getHandler() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public IEngineStateListener getListener() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public MachineState getState() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void changeState(MachineState newState) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean hadState(MachineState state) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isStarted() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isConnected() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isClientMode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean isInitialized() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void initialize(KeySchedule keySchedule, CipherSuite cipherSuite) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public ITranscriptHash getTranscriptHash() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void setTranscriptHash(ITranscriptHash transcriptHash) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISession getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void setSession(ISession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SessionInfo getSessionInfo() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public KeySchedule getKeySchedule() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public CipherSuite getCipherSuite() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public NamedGroup getNamedGroup() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void setNamedGroup(NamedGroup namedGroup) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String getApplicationProtocol() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void setApplicationProtocol(String protocol) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String getHostName() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void setHostName(String hostName) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getVersion() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void setVersion(int version) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends IHandshake> T getRetainedHandshake() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void retainHandshake(IHandshake handshake) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void produce(ProducedHandshake handshake) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void prepare(ProducedHandshake handshake) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean hasProduced() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public ProducedHandshake[] getProduced() throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean updateTasks() throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean hasProducingTasks() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean hasTasks() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean hasRunningTasks(boolean onlyUndone) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public Runnable getTask() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void addTask(IEngineTask task) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void addPrivateKey(NamedGroup group, PrivateKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public PrivateKey getPrivateKey(NamedGroup group, boolean clearAll) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void clearPrivateKeys() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getMaxFragmentLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IEarlyDataContext getEarlyDataContext() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void setEarlyDataContext(IEarlyDataContext context) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void addPskContext(PskContext psk) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public List<PskContext> getPskContexts() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void clearPskContexts() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void setPskModes(PskKeyExchangeMode[] modes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean hasPskMode(PskKeyExchangeMode mode) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public CertificateCriteria getCertCryteria() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void setCertCryteria(CertificateCriteria certCryteria) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void cleanup() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

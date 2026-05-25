@@ -31,125 +31,114 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.snf4j.tls.cipher.CipherSuite;
 
 class Session implements ISession {
 
-	private final static AtomicLong ID = new AtomicLong();
-	
-	private final static SessionTicket[] EMPTY = new SessionTicket[0];
-	
-	private final long id;
-	
-	private final long creationTime;
-	
-	private final SessionManager manager;
+    private final static AtomicLong ID = new AtomicLong();
 
-	private final String host;
-	
-	private final int port;
-	
-	private final CipherSuite cipherSuite;
+    private final static SessionTicket[] EMPTY = new SessionTicket[0];
 
-	private final Certificate[] peerCertificates;
-	
-	private final Certificate[] localCertificates;
+    private final long id;
 
-	private final Object ticketsLock = new Object();
+    private final long creationTime;
 
-	private final List<SessionTicket> tickets = new LinkedList<SessionTicket>();
-	
-	private final AtomicBoolean valid = new AtomicBoolean(true);
-	
-	Session(SessionManager manager, CipherSuite cipherSuite, String host, int port, long creationTime, Certificate[] peerCertificates, Certificate[] localCertificates) {
-		this.id = ID.incrementAndGet();
-		this.creationTime = creationTime;
-		this.manager = manager;
-		this.cipherSuite = cipherSuite;
-		this.host = host;
-		this.port = port;
-		this.peerCertificates = peerCertificates;
-		this.localCertificates = localCertificates;
-	}
-	
-	@Override
-	public void invalidate() {
-		manager.invalidateSession(this);
-	}
-	
-	
-	boolean markInvalid() {
-		return valid.compareAndSet(true, false);
-	}
-	
-	@Override
-	public boolean isValid() {
-		return valid.get();
-	}
+    private final SessionManager manager;
 
-	@Override
-	public long getId() {
-		return id;
-	}
+    private final String host;
 
-	@Override
-	public long getCreationTime() {
-		return creationTime;
-	}
+    private final int port;
 
-	@Override
-	public String getPeerHost() {
-		return host;
-	}
+    private final CipherSuite cipherSuite;
 
-	@Override
-	public int getPeerPort() {
-		return port;
-	}
-	
-	@Override
-	public ISessionManager getManager() {
-		return manager;
-	}
+    private final Certificate[] peerCertificates;
 
-	@Override
-	public CipherSuite getCipherSuite() {
-		return cipherSuite;
-	}
+    private final Certificate[] localCertificates;
 
-	@Override
-	public Certificate[] getPeerCertificates() {
-		return peerCertificates == null ? null : peerCertificates.clone();
-	}
+    private final Object ticketsLock = new Object();
 
-	@Override
-	public Certificate[] getLocalCertificates() {
-		return localCertificates == null ? null : localCertificates.clone();
-	}
-	
-	void addTicket(SessionTicket ticket) {
-		tickets.add(ticket);
-	}
+    private final List<SessionTicket> tickets = new LinkedList<SessionTicket>();
 
-	SessionTicket[] getTickets(long currentTime) {
-		for (Iterator<SessionTicket> i = tickets.iterator(); i.hasNext();) {
-			if (!i.next().isValid(currentTime)) {
-				i.remove();
-			}
-		}
-		if (tickets.isEmpty()) {
-			return EMPTY;
-		}
-		return tickets.toArray(new SessionTicket[tickets.size()]);
-	}
-	
-	void removeTicket(SessionTicket ticket) {
-		tickets.remove(ticket);
-	}
-	
-	Object getTicketsLock() {
-		return ticketsLock;
-	}
+    private final AtomicBoolean valid = new AtomicBoolean(true);
 
+    Session(SessionManager manager, CipherSuite cipherSuite, String host, int port, long creationTime, Certificate[] peerCertificates, Certificate[] localCertificates) {
+        this.id = ID.incrementAndGet();
+        this.creationTime = creationTime;
+        this.manager = manager;
+        this.cipherSuite = cipherSuite;
+        this.host = host;
+        this.port = port;
+        this.peerCertificates = peerCertificates;
+        this.localCertificates = localCertificates;
+    }
+
+    @Override
+    public void invalidate() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    boolean markInvalid() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isValid() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public long getId() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public long getCreationTime() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String getPeerHost() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getPeerPort() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionManager getManager() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public CipherSuite getCipherSuite() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Certificate[] getPeerCertificates() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Certificate[] getLocalCertificates() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void addTicket(SessionTicket ticket) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    SessionTicket[] getTickets(long currentTime) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void removeTicket(SessionTicket ticket) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    Object getTicketsLock() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

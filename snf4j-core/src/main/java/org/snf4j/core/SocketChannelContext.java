@@ -31,74 +31,37 @@ import java.nio.channels.SocketChannel;
 
 class SocketChannelContext extends SessionChannelContext<StreamSession> {
 
-	SocketChannelContext(StreamSession session) {
-		super(session);
-	}
-	
-	@Override
-	public boolean finishConnect(SelectableChannel channel) throws Exception {
-		return ((SocketChannel)channel).finishConnect();
-	}
+    SocketChannelContext(StreamSession session) {
+        super(session);
+    }
 
-	@Override
-	final boolean completeRegistration(SelectorLoop loop, SelectionKey key, SelectableChannel channel) {
-		SocketChannel sc = (SocketChannel) channel;
+    @Override
+    public boolean finishConnect(SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		if (sc.isConnected()) {
-			key.interestOps(SelectionKey.OP_READ);
-		}
-		else if (sc.isConnectionPending() || sc.isOpen()) {
-			key.interestOps(SelectionKey.OP_CONNECT);
-			return false;
-		}
-		else {
-			//If the channel is closed notify session
-			loop.fireCreatedEvent(getSession(), channel);
-			loop.fireEndingEvent(getSession(), false);
-			return false;
-		}
-		return true;
-	}	
-	
-	@Override
-	final void handle(final SelectorLoop loop, final SelectionKey key) {	
-		boolean doWrite = false;
-		
-		if (key.isReadable()) {
-			loop.handleReading(context, key);
-			doWrite = key.isValid() && ((key.interestOps() & SelectionKey.OP_WRITE) != 0);
-		}
-		else if (key.isWritable()) {
-			doWrite = true;
-		}	
-		else if (key.isConnectable()) {
-			loop.handleConnecting(context, key);
-		}
-		if (doWrite) {
-			int spinCount = context.maxWriteSpinCount;
-			
-			do {
-				if (context.isSwitching) {
-					break;
-				}
-				spinCount = loop.handleWriting(context, key, spinCount);
-			} while (spinCount > 0 && key.isValid() && ((key.interestOps() & SelectionKey.OP_WRITE) != 0));
-		}
-	}
-	
-	@Override
-	final ChannelContext<StreamSession> wrap(InternalSession session) {
-		return new SocketChannelContext((StreamSession) session);
-	}
-	
-	@Override
-	final void shutdown(SelectableChannel channel) throws Exception {
-		((SocketChannel)channel).socket().shutdownOutput();	
-	}
-	
-	@Override
-	final boolean exceptionOnDecodingFailure() {
-		return true;
-	}
-	
+    @Override
+    final boolean completeRegistration(SelectorLoop loop, SelectionKey key, SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final void handle(final SelectorLoop loop, final SelectionKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final ChannelContext<StreamSession> wrap(InternalSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final void shutdown(SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final boolean exceptionOnDecodingFailure() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

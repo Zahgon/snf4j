@@ -26,20 +26,20 @@
 package org.snf4j.websocket.handshake;
 
 class HandshakeAcceptException extends Exception {
-	
-	private static final long serialVersionUID = 1692487641295015278L;
 
-	private final HandshakeResponse response;
-	
-	HandshakeAcceptException(HandshakeResponse response) {
-		this.response = response;
-	}
-	
-	HandshakeAcceptException(HttpStatus status) {
-		this.response = new HandshakeResponse(status);
-	}
-	
-	HandshakeResponse getResponse() {
-		return response;
-	}
+    private static final long serialVersionUID = 1692487641295015278L;
+
+    private final HandshakeResponse response;
+
+    HandshakeAcceptException(HandshakeResponse response) {
+        this.response = response;
+    }
+
+    HandshakeAcceptException(HttpStatus status) {
+        this.response = new HandshakeResponse(status);
+    }
+
+    HandshakeResponse getResponse() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

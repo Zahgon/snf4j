@@ -28,120 +28,55 @@ package org.snf4j.example.engine;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.zip.CRC32;
-
 import org.snf4j.core.ByteBufferArray;
 
 public class Packet {
-	
-	public final static int MAX_SIZE = 1024;
 
-	public final static int HEADER_SIZE = 4; 
+    public final static int MAX_SIZE = 1024;
 
-	public final static int CHECKSUM_SIZE = 8; 
+    public final static int HEADER_SIZE = 4;
 
-	public final static int MIN_SIZE = HEADER_SIZE + CHECKSUM_SIZE; 
-	
-	public final static int MAX_DATA = MAX_SIZE - MIN_SIZE; 
-	
-	private static byte[] byteArray = new byte[MAX_SIZE]; 
+    public final static int CHECKSUM_SIZE = 8;
 
-	private static ByteBuffer byteBuffer = ByteBuffer.wrap(byteArray); 
-	
-	private final static byte[] CLOSE_DATA = "Bye!".getBytes();
+    public final static int MIN_SIZE = HEADER_SIZE + CHECKSUM_SIZE;
 
-	public static int calculateMaxData(int remaining) {
-		return remaining - MIN_SIZE;
-	}
-	
-	public static boolean isClose(byte[] data) {
-		return Arrays.equals(CLOSE_DATA, data);
-	}
-	
-	public static byte[] getCloseData() {
-		return CLOSE_DATA;
-	}
-	
-	public static byte[] getBytes(ByteBuffer[] srcs, int maxSize) {
-		ByteBufferArray array = ByteBufferArray.wrap(srcs);
-		byte[] bytes = new byte[Math.min((int)array.remaining(), maxSize)];
-		array.get(bytes);
-		return bytes;
-	}	
+    public final static int MAX_DATA = MAX_SIZE - MIN_SIZE;
 
-	public static ByteBuffer encode(int offset, ByteBuffer[] data, int maxDataSize) {
-		byte[] bytes = getBytes(data, maxDataSize);
-		
-		if (bytes.length > 0) {
-			return encode(offset, bytes);
-		}
-		return null;
-	}
-	
-	public static ByteBuffer encode(int offset, byte[] data) {
-		CRC32 crc = new CRC32();
-		
-		byteBuffer.clear();
-		byteBuffer.putInt(data.length + MIN_SIZE);
-		byteBuffer.put(data);
-		crc.update(byteArray, 0, byteBuffer.position());
-		byteBuffer.putLong(crc.getValue());
-		byteBuffer.flip();
-		
-		//encrypt
-		int size = byteBuffer.limit();
-		for (int i=0; i<size; ++i) {
-			byteArray[i] += offset;
-		}
-		return byteBuffer;
-	}
+    private static byte[] byteArray = new byte[MAX_SIZE];
 
-	public static int decodeSize(int offset, ByteBuffer data) {
-		if (data.remaining() < MIN_SIZE) {
-			return -1;
-		}
-		
-		byteBuffer.clear();
-		byteBuffer.putInt(data.duplicate().getInt());
+    private static ByteBuffer byteBuffer = ByteBuffer.wrap(byteArray);
 
-		//decrypt size
-		for (int i=0; i<4; ++i) {
-			byteArray[i] -= offset;
-		}
+    private final static byte[] CLOSE_DATA = "Bye!".getBytes();
 
-		//check size
-		byteBuffer.flip();
-		int size = byteBuffer.getInt();
-		if (size > MAX_SIZE) {
-			throw new IllegalArgumentException();
-		}
-		if (size > data.remaining()) {
-			return -1;
-		}
-		return size;
-	}
-	
-	public static byte[] decode(int offset, ByteBuffer data, int size) {
-		ByteBuffer dataDuplicate = data.duplicate();
-		dataDuplicate.limit(dataDuplicate.position()+size);
-		byteBuffer.clear();
-		byteBuffer.put(dataDuplicate);
-		byteBuffer.flip();
-		data.position(dataDuplicate.position());
+    public static int calculateMaxData(int remaining) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		//decrypt
-		for (int i=0; i<size; ++i) {
-			byteArray[i] -= offset;
-		}
-		
-		//validate checksum
-		CRC32 crc = new CRC32();
-		crc.update(byteArray, 0, size - CHECKSUM_SIZE);
-		if (crc.getValue() != byteBuffer.getLong(size - CHECKSUM_SIZE)) {
-			throw new IllegalArgumentException();
-		}
-		
-		byte[] decoded = new byte[size - MIN_SIZE];
-		System.arraycopy(byteArray, HEADER_SIZE, decoded, 0, decoded.length);
-		return decoded;
-	}
+    public static boolean isClose(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static byte[] getCloseData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static byte[] getBytes(ByteBuffer[] srcs, int maxSize) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static ByteBuffer encode(int offset, ByteBuffer[] data, int maxDataSize) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static ByteBuffer encode(int offset, byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static int decodeSize(int offset, ByteBuffer data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static byte[] decode(int offset, ByteBuffer data, int size) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

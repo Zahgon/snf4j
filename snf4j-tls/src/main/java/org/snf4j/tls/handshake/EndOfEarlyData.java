@@ -27,7 +27,6 @@ package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.extension.IExtension;
@@ -35,45 +34,41 @@ import org.snf4j.tls.extension.IExtensionDecoder;
 
 public class EndOfEarlyData extends KnownHandshake implements IEndOfEarlyData {
 
-	private final static HandshakeType TYPE = HandshakeType.END_OF_EARLY_DATA;
-	
-	private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
+    private final static HandshakeType TYPE = HandshakeType.END_OF_EARLY_DATA;
 
-		@Override
-		public HandshakeType getType() {
-			return TYPE;
-		}
+    private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
 
-		@Override
-		public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
-			if (remaining == 0) {
-				return new EndOfEarlyData();
-			}
-			throw decodeError("Inconsistent length");
-		}
-		
-	};
-	
-	public EndOfEarlyData() {
-		super(TYPE);
-	}
+        @Override
+        public HandshakeType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	public static IHandshakeParser getParser() {
-		return PARSER;
-	}
+        @Override
+        public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	@Override
-	public int getDataLength() {
-		return 0;
-	}
+    public EndOfEarlyData() {
+        super(TYPE);
+    }
 
-	@Override
-	public List<IExtension> getExtensions() {
-		return null;
-	}
+    public static IHandshakeParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-	}
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

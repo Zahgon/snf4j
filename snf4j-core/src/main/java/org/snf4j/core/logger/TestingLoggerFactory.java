@@ -30,20 +30,10 @@ import java.util.concurrent.ConcurrentMap;
 
 class TestingLoggerFactory implements ILoggerFactory {
 
-	private final ConcurrentMap<String, ILogger> map = new ConcurrentHashMap<String, ILogger>();
+    private final ConcurrentMap<String, ILogger> map = new ConcurrentHashMap<String, ILogger>();
 
-	@Override
-	public ILogger getLogger(String name) {
-		ILogger logger = map.get(name);
-		
-		if (logger == null) {
-			logger = new TestingLogger(name);
-			ILogger prevLogger = map.putIfAbsent(name, logger);
-			if (prevLogger != null) {
-				return prevLogger;
-			}
-		}
-		return logger;
-	}
-
+    @Override
+    public ILogger getLogger(String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

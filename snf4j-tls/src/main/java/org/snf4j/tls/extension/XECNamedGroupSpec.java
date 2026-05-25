@@ -37,105 +37,73 @@ import org.snf4j.tls.crypto.IXDHKeyExchange;
 import org.snf4j.tls.crypto.XDHKeyExchange;
 
 public class XECNamedGroupSpec extends AbstractNamedGroupSpec {
-	
-	public final static XECNamedGroupSpec X25519 = new XECNamedGroupSpec(XDHKeyExchange.X25519, 32);
-	
-	public final static XECNamedGroupSpec X448 = new XECNamedGroupSpec(XDHKeyExchange.X448, 56);
-	
-	private final int contentLength;
-	
-	private final IXDHKeyExchange keyExchange;
-	
-	@Override
-	public boolean isImplemented() {
-		return keyExchange.isImplemented();
-	}
 
-	public XECNamedGroupSpec(IXDHKeyExchange keyExchange, int contentLength) {
-		this.contentLength = contentLength;
-		this.keyExchange = keyExchange;
-	}
+    public final static XECNamedGroupSpec X25519 = new XECNamedGroupSpec(XDHKeyExchange.X25519, 32);
 
-	@Override
-	public ParsedKey parse(ByteBufferArray srcs, int remaining) throws Alert {
-		if (remaining != getDataLength()) {
-			throw decodeError("XEC key exchange unexpected size");
-		}
-		
-		byte[] u = new byte[contentLength];
+    public final static XECNamedGroupSpec X448 = new XECNamedGroupSpec(XDHKeyExchange.X448, 56);
 
-		srcs.get(u);
-		return new XECParsedKey(u);
-	}
+    private final int contentLength;
 
-	@Override
-	public PublicKey generateKey(ParsedKey key) throws Alert {
-		byte[] u = ((XECParsedKey)key).getU().clone();
-		
-		reverse(u);
-		try {
-			return keyExchange.generatePublicKey(new BigInteger(1,u));
-		} catch (NoSuchAlgorithmException e) {
-			throw internalError("No XDH algorithm", e);
-		} catch (InvalidKeySpecException e) {
-			throw internalError("Invalid XEC key specification", e);
-		} catch (Exception e) {
-			throw internalError("XEC key generation failure", e);
-		}
-	}
-	
-	@Override
-	public int getDataLength() {
-		return contentLength;
-	}
+    private final IXDHKeyExchange keyExchange;
 
-	@Override
-	public void getData(ByteBuffer buffer, PublicKey key) {
-		byte[] u = keyExchange.getU(key).toByteArray();
-		
-		reverse(u);
-		getData(buffer, u);
-	}
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void getData(ByteBuffer buffer, ParsedKey key) {
-		getData(buffer, ((XECParsedKey)key).getU());
-	}
+    public XECNamedGroupSpec(IXDHKeyExchange keyExchange, int contentLength) {
+        this.contentLength = contentLength;
+        this.keyExchange = keyExchange;
+    }
 
-	void getData(ByteBuffer buffer, byte[] u) {
-		getDataWithRightPadding(buffer, u, contentLength);
-	}
-	
-	@Override
-	public IKeyExchange getKeyExchange() {
-		return keyExchange;
-	}
+    @Override
+    public ParsedKey parse(ByteBufferArray srcs, int remaining) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	static void reverse(byte[] data) {
-		int i = 0;
-		int j = data.length - 1;
-		byte tmp;
-		
-		while(j > i) {
-			tmp = data[j];
-			data[j] = data[i];
-			data[i] = tmp;
-			++i;
-			--j;
-		}
-	}
-	
-	private class XECParsedKey implements ParsedKey {
-		
-		private final byte[] u;
-		
-		XECParsedKey(byte[] u) {
-			this.u = u;
-		}
+    @Override
+    public PublicKey generateKey(ParsedKey key) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		public byte[] getU() {
-			return u;
-		}
-	}
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public void getData(ByteBuffer buffer, PublicKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void getData(ByteBuffer buffer, ParsedKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void getData(ByteBuffer buffer, byte[] u) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IKeyExchange getKeyExchange() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static void reverse(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private class XECParsedKey implements ParsedKey {
+
+        private final byte[] u;
+
+        XECParsedKey(byte[] u) {
+            this.u = u;
+        }
+
+        public byte[] getU() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    }
 }

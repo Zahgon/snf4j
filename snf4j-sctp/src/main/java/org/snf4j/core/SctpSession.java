@@ -31,13 +31,11 @@ import java.net.SocketAddress;
 import java.nio.channels.SelectableChannel;
 import java.util.Collections;
 import java.util.Set;
-
 import org.snf4j.core.handler.ISctpHandler;
 import org.snf4j.core.handler.SctpNotificationType;
 import org.snf4j.core.logger.ILogger;
 import org.snf4j.core.logger.LoggerFactory;
 import org.snf4j.core.session.ISctpSession;
-
 import com.sun.nio.sctp.Association;
 import com.sun.nio.sctp.AssociationChangeNotification;
 import com.sun.nio.sctp.AssociationChangeNotification.AssocChangeEvent;
@@ -50,100 +48,70 @@ import com.sun.nio.sctp.SctpChannel;
  * <p>
  * It uses the message-oriented connected SCTP socket as described in the IETF
  * RFC 4960 "Stream Control Transmission Protocol".
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class SctpSession extends InternalSctpSession implements ISctpSession {
-	
-	private final static ILogger LOGGER = LoggerFactory.getLogger(SctpSession.class);
-	
-	private boolean shutdown;
-	
-	/**
-	 * Constructs a named SCTP session associated with a handler.
-	 * 
-	 * @param name
-	 *            the name for this session, or <code>null</code> if the
-	 *            handler's name should be used for this session's name
-	 * @param handler
-	 *            the handler that should be associated with this session
-	 */
-	public SctpSession(String name, ISctpHandler handler) {
-		super(name, handler, LOGGER);
-	}
 
-	/**
-	 * Constructs an SCTP session associated with a handler. 
-	 * 
-	 * @param handler
-	 *            the handler that should be associated with this session
-	 */
-	public SctpSession(ISctpHandler handler) {
-		this(null, handler);
-	}
-	
-	@Override
-	SessionPipeline<?> createPipeline() {
-		return null;
-	}
-	
-	@Override
-	HandlerResult notification(Notification notification, SctpNotificationType type) {
-		if (type == SctpNotificationType.ASSOCIATION_CHANGE) {
-			if (((AssociationChangeNotification)notification).event() == AssocChangeEvent.SHUTDOWN) {
-				shutdown = true;
-			}
-		}
-		return super.notification(notification, type);
-	}
-	
-	@Override
-	boolean closeNow() {
-		return shutdown;
-	}
-	
-	@Override
-	public Association getAssociation() {
-		SelectableChannel channel = this.channel;
-		
-		if (channel != null && channel.isOpen()) {
-			try {
-				return ((SctpChannel)channel).association();
-			}
-			catch (IOException e) {
-				//Ignore
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	Set<SocketAddress> getAddresses(Association association, boolean local) {
-		SelectableChannel channel = this.channel;
-		
-		if (channel instanceof SctpChannel && channel.isOpen()) {
-			try {
-				if (local) {
-					return ((SctpChannel)channel).getAllLocalAddresses();
-				}
-				else {
-					return ((SctpChannel)channel).getRemoteAddresses();
-				}
-			} catch (IOException e) {
-				// Ignore
-			}
-		}
-		return Collections.emptySet();
-	}
-	
-	@Override
-	void bind(InetAddress address) throws IOException {
-		((SctpChannel) channel).bindAddress(address);		
-	}
-	
-	@Override
-	void unbind(InetAddress address) throws IOException {
-		((SctpChannel) channel).unbindAddress(address);
-	}
-	
+    private final static ILogger LOGGER = LoggerFactory.getLogger(SctpSession.class);
+
+    private boolean shutdown;
+
+    /**
+     * Constructs a named SCTP session associated with a handler.
+     *
+     * @param name
+     *            the name for this session, or <code>null</code> if the
+     *            handler's name should be used for this session's name
+     * @param handler
+     *            the handler that should be associated with this session
+     */
+    public SctpSession(String name, ISctpHandler handler) {
+        super(name, handler, LOGGER);
+    }
+
+    /**
+     * Constructs an SCTP session associated with a handler.
+     *
+     * @param handler
+     *            the handler that should be associated with this session
+     */
+    public SctpSession(ISctpHandler handler) {
+        this(null, handler);
+    }
+
+    @Override
+    SessionPipeline<?> createPipeline() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    HandlerResult notification(Notification notification, SctpNotificationType type) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    boolean closeNow() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Association getAssociation() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    Set<SocketAddress> getAddresses(Association association, boolean local) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    void bind(InetAddress address) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    void unbind(InetAddress address) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

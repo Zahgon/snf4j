@@ -29,35 +29,34 @@ import org.snf4j.core.EventType;
 
 /**
  * An <code>enum</code> that represents session events related with sending or receiving data.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public enum DataEvent {
-	
-	/**
-	 * Some data has just been received from the remote end.
-	 * @since 1.0
-	 */
-	RECEIVED(EventType.DATA_RECEIVED),
-	
-	/**
-	 * Some data has just been sent to the remote end.
-	 * @since 1.0
-	 */
-	SENT(EventType.DATA_SENT);
-	
-	private EventType type;
 
-	private DataEvent(EventType type) {
-		this.type = type;
-	}
-	
-	/**
-	 * Returns the event type associated with this event.
-	 * @return the event type.
-	 * @since 1.0
-	 */
-	public EventType type() {
-		return type;
-	}
+    /**
+     * Some data has just been received from the remote end.
+     * @since 1.0
+     */
+    RECEIVED(EventType.DATA_RECEIVED),
+    /**
+     * Some data has just been sent to the remote end.
+     * @since 1.0
+     */
+    SENT(EventType.DATA_SENT);
+
+    private EventType type;
+
+    private DataEvent(EventType type) {
+        this.type = type;
+    }
+
+    /**
+     * Returns the event type associated with this event.
+     * @return the event type.
+     * @since 1.0
+     */
+    public EventType type() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

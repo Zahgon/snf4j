@@ -27,38 +27,38 @@ package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.tls.extension.IExtension;
 
 public class UnknownHandshake extends AbstractHandshake {
 
-	private final byte[] data;
-	
-	public UnknownHandshake(HandshakeType type, byte[] data) {
-		super(type);
-		this.data = data;
-	}
+    private final byte[] data;
 
-	@Override
-	public int getDataLength() {
-		return data.length;
-	}
+    public UnknownHandshake(HandshakeType type, byte[] data) {
+        super(type);
+        this.data = data;
+    }
 
-	public byte[] getData() {
-		return data;
-	}
-	
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.put(data);
-	}
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public final boolean isKnown() { return false; }
+    public byte[] getData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public List<IExtension> getExtensions() {
-		return null;
-	}
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public final boolean isKnown() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -33,186 +33,154 @@ import org.snf4j.tls.extension.SignatureScheme;
 
 public class EngineParametersBuilder {
 
-	private CipherSuite[] cipherSuites = EngineDefaults.getDefaultCipherSuites();
-	
-	private NamedGroup[] namedGroups = EngineDefaults.getDefaultNamedGroups();
-	
-	private SignatureScheme[] signatureSchemes = EngineDefaults.getDefaulSignatureSchemes();
+    private CipherSuite[] cipherSuites = EngineDefaults.getDefaultCipherSuites();
 
-	private SignatureScheme[] certSignatureSchemes = EngineDefaults.getDefaulCertSignatureSchemes();
-	
-	private PskKeyExchangeMode[] pskKeyExchangeModes = EngineDefaults.getDefaultPskKeyExchangeModes();
-		
-	private boolean compatibilityMode;
-	
-	private int numberOfOfferedSharedKeys = 1;
-	
-	private String peerHost;
+    private NamedGroup[] namedGroups = EngineDefaults.getDefaultNamedGroups();
 
-	private int peerPort = -1;
-	
-	private boolean serverNameRequired;
-	
-	private DelegatedTaskMode delegatedTaskMode = DelegatedTaskMode.NONE;
-	
-	private ClientAuth clientAuth = ClientAuth.NONE;
-	
-	private String[] applicationProtocols;
-	
-	private boolean skipEndOfEarlyData;
-	
-	public EngineParametersBuilder() {}
-		
-	public EngineParametersBuilder cipherSuites(CipherSuite... cipherSuites) {
-		this.cipherSuites = cipherSuites.clone();
-		return this;
-	}
-	
-	public CipherSuite[] getCipherSuites() {
-		return cipherSuites;
-	}
-	
-	public EngineParametersBuilder namedGroups(NamedGroup... namedGroups) {
-		this.namedGroups = namedGroups.clone();
-		return this;
-	}
+    private SignatureScheme[] signatureSchemes = EngineDefaults.getDefaulSignatureSchemes();
 
-	public NamedGroup[] getNamedGroups() {
-		return namedGroups;
-	}
+    private SignatureScheme[] certSignatureSchemes = EngineDefaults.getDefaulCertSignatureSchemes();
 
-	public EngineParametersBuilder signatureSchemes(SignatureScheme... signatureSchemes) {
-		this.signatureSchemes = signatureSchemes.clone();
-		return this;
-	}
-	
-	public SignatureScheme[] getSignatureSchemes() {
-		return signatureSchemes;
-	}
+    private PskKeyExchangeMode[] pskKeyExchangeModes = EngineDefaults.getDefaultPskKeyExchangeModes();
 
-	public EngineParametersBuilder certSignatureSchemes(SignatureScheme... signatureSchemes) {
-		this.certSignatureSchemes = safeClone(signatureSchemes);
-		return this;
-	}
-	
-	public SignatureScheme[] getCertSignatureSchemes() {
-		return certSignatureSchemes;
-	}
-	
-	public EngineParametersBuilder pskKeyExchangeModes(PskKeyExchangeMode... pskKeyExchangeModes) {
-		this.pskKeyExchangeModes = pskKeyExchangeModes.clone();
-		return this;
-	}
-	
-	public PskKeyExchangeMode[] getPskKeyExchangeModes() {
-		return pskKeyExchangeModes;
-	}
+    private boolean compatibilityMode;
 
-	public EngineParametersBuilder compatibilityMode(boolean compatibilityMode) {
-		this.compatibilityMode = compatibilityMode;
-		return this;
-	}
+    private int numberOfOfferedSharedKeys = 1;
 
-	public boolean getCompatibilityMode() {
-		return compatibilityMode;
-	}
+    private String peerHost;
 
-	public EngineParametersBuilder numberOfOfferedSharedKeys(int numberOfOfferedSharedKeys) {
-		this.numberOfOfferedSharedKeys = numberOfOfferedSharedKeys;
-		return this;
-	}
+    private int peerPort = -1;
 
-	public int getNumberOfOfferedSharedKeys() {
-		return numberOfOfferedSharedKeys;
-	}
+    private boolean serverNameRequired;
 
-	public EngineParametersBuilder peerHost(String peerHost) {
-		this.peerHost = peerHost;
-		return this;
-	}
+    private DelegatedTaskMode delegatedTaskMode = DelegatedTaskMode.NONE;
 
-	public String getPeerHost() {
-		return peerHost;
-	}
+    private ClientAuth clientAuth = ClientAuth.NONE;
 
-	public EngineParametersBuilder peerPort(int peerPort) {
-		this.peerPort = peerPort;
-		return this;
-	}
-	
-	public int getPeerPort() {
-		return peerPort;
-	}
+    private String[] applicationProtocols;
 
-	public EngineParametersBuilder serverNameRequired(boolean serverNameRequired) {
-		this.serverNameRequired = serverNameRequired;
-		return this;
-	}
+    private boolean skipEndOfEarlyData;
 
-	public boolean getServerNameRequired() {
-		return serverNameRequired;
-	}
+    public EngineParametersBuilder() {
+    }
 
-	public EngineParametersBuilder delegatedTaskMode(DelegatedTaskMode delegatedTaskMode) {
-		this.delegatedTaskMode = delegatedTaskMode;
-		return this;
-	}
-	
-	public DelegatedTaskMode getDelegatedTaskMode() {
-		return delegatedTaskMode;
-	}
+    public EngineParametersBuilder cipherSuites(CipherSuite... cipherSuites) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public EngineParametersBuilder clientAuth(ClientAuth clientAuth) {
-		this.clientAuth = clientAuth;
-		return this;
-	}
-	
-	public ClientAuth getClientAuth() {
-		return clientAuth;
-	}
+    public CipherSuite[] getCipherSuites() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public EngineParametersBuilder applicationProtocols(String... protocols) {
-		if (protocols != null && protocols.length == 0) {
-			protocols = null;
-		}
-		this.applicationProtocols = safeClone(protocols);
-		return this;
-	}
-	
-	public String[] getApplicationProtocols() {
-		return applicationProtocols;
-	}
+    public EngineParametersBuilder namedGroups(NamedGroup... namedGroups) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public EngineParametersBuilder skipEndOfEarlyData(boolean skip) {
-		this.skipEndOfEarlyData = skip;
-		return this;
-	}
+    public NamedGroup[] getNamedGroups() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public boolean getSkipEndOfEarlyData() {
-		return skipEndOfEarlyData;
-	}
-	
-	private static <T> T[] safeClone(T[] array) {
-		return array == null ? null : array.clone();
-	}
-	
-	public EngineParameters build() {
-		return new EngineParameters(
-				cipherSuites.clone(),
-				namedGroups.clone(),
-				signatureSchemes.clone(),
-				safeClone(certSignatureSchemes),
-				pskKeyExchangeModes.clone(),
-				compatibilityMode,
-				numberOfOfferedSharedKeys,
-				peerHost,
-				peerPort,
-				serverNameRequired,
-				delegatedTaskMode,
-				clientAuth,
-				safeClone(applicationProtocols),
-				skipEndOfEarlyData
-				);
-	}
+    public EngineParametersBuilder signatureSchemes(SignatureScheme... signatureSchemes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    public SignatureScheme[] getSignatureSchemes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder certSignatureSchemes(SignatureScheme... signatureSchemes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SignatureScheme[] getCertSignatureSchemes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder pskKeyExchangeModes(PskKeyExchangeMode... pskKeyExchangeModes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public PskKeyExchangeMode[] getPskKeyExchangeModes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder compatibilityMode(boolean compatibilityMode) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean getCompatibilityMode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder numberOfOfferedSharedKeys(int numberOfOfferedSharedKeys) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public int getNumberOfOfferedSharedKeys() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder peerHost(String peerHost) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public String getPeerHost() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder peerPort(int peerPort) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public int getPeerPort() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder serverNameRequired(boolean serverNameRequired) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean getServerNameRequired() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder delegatedTaskMode(DelegatedTaskMode delegatedTaskMode) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public DelegatedTaskMode getDelegatedTaskMode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder clientAuth(ClientAuth clientAuth) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public ClientAuth getClientAuth() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder applicationProtocols(String... protocols) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public String[] getApplicationProtocols() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public EngineParametersBuilder skipEndOfEarlyData(boolean skip) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean getSkipEndOfEarlyData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private static <T> T[] safeClone(T[] array) {
+        return array == null ? null : array.clone();
+    }
+
+    public EngineParameters build() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

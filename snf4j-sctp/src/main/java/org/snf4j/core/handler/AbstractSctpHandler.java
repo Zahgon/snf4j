@@ -26,87 +26,80 @@
 package org.snf4j.core.handler;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.session.DefaultSctpSessionConfig;
 import org.snf4j.core.session.ISctpSession;
 import org.snf4j.core.session.ISctpSessionConfig;
 import org.snf4j.core.session.ISession;
-
 import com.sun.nio.sctp.HandlerResult;
 import com.sun.nio.sctp.MessageInfo;
 import com.sun.nio.sctp.Notification;
 
 /**
  * Base implementation of the {@link ISctpHandler} interface.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 abstract public class AbstractSctpHandler extends AbstractHandler implements ISctpHandler {
-	
-	/**
-	 * Default constructor creating an unnamed SCTP handler.
-	 */
-	protected AbstractSctpHandler() {
-		super(new DefaultSctpSessionConfig());
-	}
-	
-	/**
-	 * Constructor creating a named SCTP handler.
-	 * 
-	 * @param name
-	 *            the name for this handler
-	 */
-	protected AbstractSctpHandler(String name) {
-		super(name, new DefaultSctpSessionConfig());
-	}
 
-	@Override
-	public void setSession(ISession session) {
-		if (session instanceof ISctpSession) {
-			super.setSession(session);
-		}
-		else {
-			throw new IllegalArgumentException("session is not an instance of ISctpSession");
-		}
-	}
-	
-	@Override
-	public ISctpSession getSession() {
-		return (ISctpSession) super.getSession();
-	}
-	
-	@Override
-	public ISctpSessionConfig getConfig() {
-		return (ISctpSessionConfig) super.getConfig();
-	}
-	
-	@Override
-	public void read(byte[] msg, MessageInfo msgInfo) {
-		read((Object)msg, msgInfo);
-	}
+    /**
+     * Default constructor creating an unnamed SCTP handler.
+     */
+    protected AbstractSctpHandler() {
+        super(new DefaultSctpSessionConfig());
+    }
 
-	@Override
-	public void read(ByteBuffer msg, MessageInfo msgInfo) {
-		read((Object)msg, msgInfo);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * It does nothing by default.
-	 */
-	@Override
-	public void read(Object msg) {
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * It returns {@code HandlerResult.CONTINUE} by default.
-	 */
-	@Override
-	public HandlerResult notification(Notification notification, SctpNotificationType type) {
-		return HandlerResult.CONTINUE;
-	}
+    /**
+     * Constructor creating a named SCTP handler.
+     *
+     * @param name
+     *            the name for this handler
+     */
+    protected AbstractSctpHandler(String name) {
+        super(name, new DefaultSctpSessionConfig());
+    }
 
+    @Override
+    public void setSession(ISession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISctpSession getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISctpSessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(byte[] msg, MessageInfo msgInfo) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(ByteBuffer msg, MessageInfo msgInfo) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It does nothing by default.
+     */
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It returns {@code HandlerResult.CONTINUE} by default.
+     */
+    @Override
+    public HandlerResult notification(Notification notification, SctpNotificationType type) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

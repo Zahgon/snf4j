@@ -36,77 +36,36 @@ import org.snf4j.core.session.SSLEngineCreateException;
 import org.snf4j.websocket.DefaultWebSocketSessionConfig;
 
 public class SessionConfig extends DefaultWebSocketSessionConfig {
-	
-	final static String CHAT_PATH = "/chat";
-	
-	final static String ECHO_PATH = "/echo";
-	
-	static volatile SSLContext sslContext = null; 
-	
-	public SessionConfig(URI requestUri) {
-		super(requestUri);
-	}
-	
-	public SessionConfig() {
-		super();
-	}
 
-	void load(KeyStore ks, String fileName, char[] password) throws Exception {
-		InputStream in = getClass().getResourceAsStream(fileName);
-		
-		try {
-			ks.load(in, password);
-		}
-		finally {
-			in.close();
-		}
-	}
-	
-	SSLContext getSSLContext() throws SSLEngineCreateException {
-		if (sslContext == null) {
-			try {
-				synchronized (SessionConfig.class) {
-					if (sslContext == null) {
-						KeyStore ks = KeyStore.getInstance("JKS");
-						KeyStore ts = KeyStore.getInstance("JKS");
-						char[] password = "password".toCharArray();
+    final static String CHAT_PATH = "/chat";
 
-						load(ks, "/keystore.jks", password);
-						load(ts, "/keystore.jks", password);
+    final static String ECHO_PATH = "/echo";
 
-						KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-						kmf.init(ks, password);
-						TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-						tmf.init(ts);
+    static volatile SSLContext sslContext = null;
 
-						SSLContext ctx = SSLContext.getInstance("TLS");
-						ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-						sslContext = ctx;
-					}
-				}
-			}
-			catch (Exception e) {
-				throw new SSLEngineCreateException(e);
-			}
-		}
-		return sslContext;
-	}
+    public SessionConfig(URI requestUri) {
+        super(requestUri);
+    }
 
-	@Override
-	public SSLEngine createSSLEngine(boolean clientMode) throws SSLEngineCreateException {
-		SSLEngine engine = getSSLContext().createSSLEngine();
-		
-		engine.setUseClientMode(clientMode);
-		if (!clientMode) {
-			engine.setNeedClientAuth(true);
-		}
-		return engine;
-	}
-	
-	@Override
-	public boolean acceptRequestUri(URI uri) {
-		String path = uri.getPath();
-		
-		return ECHO_PATH.equalsIgnoreCase(path) || CHAT_PATH.equalsIgnoreCase(path);
-	}
+    public SessionConfig() {
+        super();
+    }
+
+    void load(KeyStore ks, String fileName, char[] password) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    SSLContext getSSLContext() throws SSLEngineCreateException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SSLEngine createSSLEngine(boolean clientMode) throws SSLEngineCreateException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean acceptRequestUri(URI uri) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

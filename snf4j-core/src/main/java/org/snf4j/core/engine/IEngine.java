@@ -26,7 +26,6 @@
 package org.snf4j.core.engine;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.handler.SessionIncidentException;
 import org.snf4j.core.session.ISession;
 import org.snf4j.core.session.ISessionTimer;
@@ -45,38 +44,38 @@ import org.snf4j.core.session.ISessionTimer;
  * <ol>
  * <li>Session Creation - The session object is being created and associated
  * with an engine implementation.
- * 
+ *
  * <li>Engine Initialization - The engine is being initialized. Once the
  * initialization is completed the session is ready for opening and the
  * {@link org.snf4j.core.handler.SessionEvent#CREATED SessionEvent.CREATED}
  * event is sent to the session's handler.
- * 
+ *
  * <li>Session Opening - The session is opening. Once the session is opened
  * (i.e. the connection is established with a peer) the
  * {@link org.snf4j.core.handler.SessionEvent#OPENED SessionEvent.OPENED}
  * event is sent to the session's handler and engine can begin the
  * initial handshaking.
- * 
+ *
  * <li>Engine Handshaking - The engine starts or skips the handshaking. Once the
  * handshake finishes the session is ready for transferring application data and
  * the {@link org.snf4j.core.handler.SessionEvent#READY SessionEvent.READY}
  * event is sent to the session's handler.
- * 
+ *
  * <li>Session Ready - The session is ready for transferring application data.
- * 
+ *
  * <li>Engine Closing - The engine is closing. The closing can be initiated by
  * both calling the {@link #closeOutbound()} method or by unwrapping a closing
  * message that was send by the peer.
- * 
+ *
  * <li>Session Closed - The session has been closed and the
  * {@link org.snf4j.core.handler.SessionEvent#CLOSED SessionEvent.CLOSED} event
  * is sent to the session's handler.
- * 
+ *
  * <li>Session Ending - The seesion is about to end and the
  * {@link org.snf4j.core.handler.SessionEvent#ENDING SessionEvent.ENDING} event
  * is sent to the session's handler.
- * 
- * <li>Engine Cleanup - The engine is being cleaned up. 
+ *
+ * <li>Engine Cleanup - The engine is being cleaned up.
  * </ol>
  * <p>
  * <b>Concurrency Notes</b>: Considering the way the interface is used by the
@@ -89,294 +88,302 @@ import org.snf4j.core.session.ISessionTimer;
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public interface IEngine {
-	
-	/**
-	 * Signals that an {@link IEngine} implementation can initialize, if
-	 * required, its internal state (e.g. allocate required resources). It is
-	 * called during pre-creation phase of an engine driven session (i.e. 
-	 * before the event {@link org.snf4j.core.handler.SessionEvent#CREATED 
-	 * SessionEvent.CREATED} is signaled to the session handler).
-	 */
-	void init();
-	
-	/**
-	 * Signals that an {@link IEngine} implementation can cleanup, if
-	 * required, its internal state (e.g. release allocated resources). It is
-	 * called during post-ending phase of an engine driven session (i.e. 
-	 * after the event {@link org.snf4j.core.handler.SessionEvent#ENDING 
-	 * SessionEvent.ENDING} is fully processed by the session handler).
-	 */
-	void cleanup();
-	
-	/**
-	 * Initiates handshaking on this {@link IEngine} implementation. This method
-	 * is not called by the SNF4J framework for a initial handshake, as the
-	 * initial handshake should be initiated by the <code>wrap()</code> and
-	 * <code>unwrap()</code> methods when they are called for the first time.
-	 * <p>
-	 * This method is never called by the SNF4J framework when another handshake
-	 * is still in progress on this engine. Any try to begin a new handshake
-	 * from an engine stream session will be silently ignored unless previously
-	 * started handshake is finished. The finishing is signaled by the
-	 * {@link org.snf4j.core.engine.HandshakeStatus#FINISHED
-	 * HandshakeStatus.FINISHED} status returned by the <code>wrap</code> or
-	 * <code>unwrap</code> method.
-	 * 
-	 * @throws Exception
-	 *             if a problem was encountered while signaling the beginning of
-	 *             a new handshake.
-	 */
-	void beginHandshake() throws Exception;
-	
-	/**
-	 * Returns whether {@link #wrap(ByteBuffer, ByteBuffer)} and
-	 * {@link #wrap(ByteBuffer[], ByteBuffer)} methods will produce 
-	 * any more outbound network data.
-	 * 
-	 * @return <code>true</code> if an {@link IEngine} implementation
-	 *         will not produce any more network data
-	 */
-	boolean isOutboundDone();
-	
-	/**
-	 * Returns whether {@link #unwrap(ByteBuffer, ByteBuffer)} method 
-	 * will accept any more inbound network data.
-	 * 
-	 * @return <code>true</code> if an {@link IEngine} implementation will not
-	 *         consume anymore network data
-	 * @see #closeInbound
-	 */
-	boolean isInboundDone();
-	
-	/**
-	 * Signals that no more outbound application data will be sent to an
-	 * {@link IEngine} implementation.
-	 * <p>
-	 * This method should be idempotent: if the outbound side has already been
-	 * closed, this method should not do anything.
-	 * 
-	 * @see #isOutboundDone
-	 */
-	void closeOutbound();
-	
-	/**
-	 * Signals that no more inbound network data will be sent to an
-	 * {@link IEngine} implementation.
-	 * <p>
-	 * This method should be idempotent: if the inbound side has already been
-	 * closed, this method should not do anything.
-	 * 
-	 * @throws SessionIncidentException
-	 *             if this engine implementation detected an incident that
-	 *             should be reported to the associated session's handler (e.g.
-	 *             when an engine has not received a proper close message from
-	 *             the peer).
-	 * @see #isInboundDone
-	 */
-	void closeInbound() throws SessionIncidentException;
-	
-	/**
-	 * Gets the current minimum size of the buffer holding application data. An
-	 * {@link IEngine} implementation may use application data (i.e. the
-	 * application data wrapped in one network packet) of any size up to and
-	 * including the value returned by this method.
-	 * 
-	 * @return the minimum buffer size
-	 */
-	int getMinApplicationBufferSize();
-	
-	/**
-	 * Gets the current minimum size of the buffer holding network data. An {@link IEngine} 
-	 * implementation may generate network packets of any size up to and including the value
-	 * returned by this method.  
-	 * 
-	 * @return the minimum buffer size
-	 */
-	int getMinNetworkBufferSize();
 
-	/**
-	 * Gets the current maximum size of the buffer holding application data
-	 * <p>
-	 * This method is only used by the {@link org.snf4j.core.EngineStreamSession
-	 * EngineStreamSession} class.
-	 * 
-	 * @return the maximum buffer size
-	 */
-	int getMaxApplicationBufferSize();
-	
-	/**
-	 * Gets the current maximum size of the buffer holding network data
-	 * <p>
-	 * This method is only used by the {@link org.snf4j.core.EngineStreamSession
-	 * EngineStreamSession} class.
-	 * 
-	 * @return the maximum buffer size
-	 */
-	int getMaxNetworkBufferSize();
-	
-	/**
-	 * Returns the current handshake status for an {@link IEngine}
-	 * implementation.
-	 * <p>
-	 * It should never return the {@link HandshakeStatus#FINISHED FINISHED} status.
-	 * 
-	 * @return the current handshake status
-	 */
-	HandshakeStatus getHandshakeStatus();
+    /**
+     * Signals that an {@link IEngine} implementation can initialize, if
+     * required, its internal state (e.g. allocate required resources). It is
+     * called during pre-creation phase of an engine driven session (i.e.
+     * before the event {@link org.snf4j.core.handler.SessionEvent#CREATED
+     * SessionEvent.CREATED} is signaled to the session handler).
+     */
+    void init();
 
-	/**
-	 * Returns an object representing a session in use in an {@link IEngine}
-	 * implementation.
-	 * 
-	 * @return an object representing a session.
-	 * @throws UnsupportedOperationException if the current implementation does not
-	 *                                       support a session.
-	 */
-	Object getSession();
-	
-	/**
-	 * Returns a delegated <code>Runnable</code> task for an {@link IEngine}
-	 * implementation.
-	 * <p>
-	 * <code>IEngine</code> operations may require the results of operations
-	 * that block, or may take an extended period of time to complete. This
-	 * method should be used to obtain a pending <code>Runnable</code> operation
-	 * (task). Each task will be assigned a thread to perform the run operation.
-	 * The assigned thread will be created by a thread factory configured in the 
-	 * selector loop that will handle the session associated with this {@link IEngine}
-	 * implementation.  
-	 * <p>
-	 * A call to this method should return each pending task exactly once.
-	 * <p>
-	 * Multiple tasks can be run in parallel.
-	 * 
-	 * @return a pending <code>Runnable,</code> task, or null if none are
-	 *         available.
-	 */
-	Runnable getDelegatedTask();
-	
-	/**
-	 * Attempts to encode outbound application data from a subsequence of data buffers
-	 * into outbound network data.
-	 * <p>
-	 * Depending on the state of an {@link IEngine} implementation, this method
-	 * can produce network data without consuming any application data (for
-	 * example, it may generate handshake data.)
-	 * <p>
-	 * If an {@link IEngine} implementation has not yet started its initial
-	 * handshake, this method should automatically start the handshake.
-	 * 
-	 * @param srcs
-	 *            an array of <code>ByteBuffers</code> containing the outbound
-	 *            application data
-	 * @param dst
-	 *            a <code>ByteBuffer</code> to hold outbound network data
-	 * @return an {@link EngineResult} describing the result of this operation.
-	 * @throws Exception
-	 *             when a problem occurred. Once it is thrown the associated
-	 *             session will be quickly closed
-	 */
-	IEngineResult wrap(ByteBuffer[] srcs, ByteBuffer dst) throws Exception;	
+    /**
+     * Signals that an {@link IEngine} implementation can cleanup, if
+     * required, its internal state (e.g. release allocated resources). It is
+     * called during post-ending phase of an engine driven session (i.e.
+     * after the event {@link org.snf4j.core.handler.SessionEvent#ENDING
+     * SessionEvent.ENDING} is fully processed by the session handler).
+     */
+    void cleanup();
 
-	/**
-	 * Attempts to encode outbound application data from a data buffer into outbound 
-	 * network data.
-	 * <p>
-	 * Depending on the state of an {@link IEngine} implementation, this method
-	 * can produce network data without consuming any application data (for
-	 * example, it may generate handshake data.)
-	 * <p>
-	 * If an {@link IEngine} implementation has not yet started its initial
-	 * handshake, this method should automatically start the handshake.
-	 * 
-	 * @param src
-	 *            a <code>ByteBuffer</code> containing the outbound
-	 *            application data
-	 * @param dst
-	 *            a <code>ByteBuffer</code> to hold outbound network data
-	 * @return an {@link EngineResult} describing the result of this operation.
-	 * @throws Exception
-	 *             when a problem occurred. Once it is thrown the associated
-	 *             session will be quickly closed
-	 */
-	IEngineResult wrap(ByteBuffer src, ByteBuffer dst) throws Exception;
+    /**
+     * Initiates handshaking on this {@link IEngine} implementation. This method
+     * is not called by the SNF4J framework for a initial handshake, as the
+     * initial handshake should be initiated by the <code>wrap()</code> and
+     * <code>unwrap()</code> methods when they are called for the first time.
+     * <p>
+     * This method is never called by the SNF4J framework when another handshake
+     * is still in progress on this engine. Any try to begin a new handshake
+     * from an engine stream session will be silently ignored unless previously
+     * started handshake is finished. The finishing is signaled by the
+     * {@link org.snf4j.core.engine.HandshakeStatus#FINISHED
+     * HandshakeStatus.FINISHED} status returned by the <code>wrap</code> or
+     * <code>unwrap</code> method.
+     *
+     * @throws Exception
+     *             if a problem was encountered while signaling the beginning of
+     *             a new handshake.
+     */
+    void beginHandshake() throws Exception;
 
-	/**
-	 * Attempts to decode inbound network data from a data buffer into inbound 
-	 * application data.
-	 * <p>
-	 * Depending on the state of an {@link IEngine} implementation, this method
-	 * can consume network data without producing any application data (for
-	 * example, it may generate handshake data.)
-	 * <p>
-	 * If an {@link IEngine} implementation has not yet started its initial
-	 * handshake, this method should automatically start the handshake.
-	 * 
-	 * @param src
-	 *            a <code>ByteBuffer</code> containing the inbound
-	 *            application data
-	 * @param dst
-	 *            a <code>ByteBuffer</code> to hold inbound application data
-	 * @return an {@link EngineResult} describing the result of this operation.
-	 * @throws Exception
-	 *             when a problem occurred. Once it is thrown the associated
-	 *             session will be quickly closed
-	 */
-	IEngineResult unwrap(ByteBuffer src, ByteBuffer dst) throws Exception;
-	
-	/**
-	 * Provides a session timer that can be used by an {@link IEngine}
-	 * implementation to schedule a task.
-	 * <p>
-	 * For a scheduled task to be executed by the engine handler the task must
-	 * implement the {@link IEngineTimerTask} interface, otherwise the task will be
-	 * passed to the session's handler.
-	 * <p>
-	 * <b>Concurrency Notes</b>: The handler awakening task must be always run in
-	 * the engine handler's thread. To schedule a task that will be run in the
-	 * engine handler's thread always set the {@code inHandler} parameter to
-	 * {@code true} in the timer's schedule methods.
-	 *
-	 * @param timer         a session timer for scheduling a task
-	 * @param awakeningTask a task that can be used for awakening the engine handler
-	 *                      associated with this engine. It can be run after
-	 *                      completing of a scheduled task to pass the control back
-	 *                      to the engine handler.
-	 * @throws Exception when a problem occurred. Once it is thrown the associated
-	 *                   session will be quickly closed
-	 * @since 1.12
-	 */
-	default void timer(ISessionTimer timer, Runnable awakeningTask) throws Exception {};
-	
-	/**
-	 * Links an {@link IEngine} implementation with the given session.
-	 * 
-	 * @param session the session
-	 * @since 1.12
-	 */
-	default void link(ISession session) {}
-	
-	/**
-	 * Called only in the {@link HandshakeStatus#NOT_HANDSHAKING NOT_HANDSHAKING}
-	 * state to check whether there is a need to wrap new data that is not the
-	 * result of outgoing application data. (e.g. after expiration of a timer).
-	 * <p>
-	 * It returns {@code false} by default.
-	 * 
-	 * @return {@code true} if there is a need to wrap
-	 * @since 1.12
-	 */
-	default boolean needWrap() { return false; }
-	
-	/**
-	 * Called only in the {@link HandshakeStatus#NOT_HANDSHAKING NOT_HANDSHAKING}
-	 * state to check whether there is a need to unwrap again data that has been
-	 * previously received but no longer stored as the inbound network data.
-	 * <p>
-	 * It returns {@code false} by default.
-	 * 
-	 * @return {@code true} if there is a need to unwrap again
-	 * @since 1.12
-	 */
-	default boolean needUnwrap() { return false; }
+    /**
+     * Returns whether {@link #wrap(ByteBuffer, ByteBuffer)} and
+     * {@link #wrap(ByteBuffer[], ByteBuffer)} methods will produce
+     * any more outbound network data.
+     *
+     * @return <code>true</code> if an {@link IEngine} implementation
+     *         will not produce any more network data
+     */
+    boolean isOutboundDone();
+
+    /**
+     * Returns whether {@link #unwrap(ByteBuffer, ByteBuffer)} method
+     * will accept any more inbound network data.
+     *
+     * @return <code>true</code> if an {@link IEngine} implementation will not
+     *         consume anymore network data
+     * @see #closeInbound
+     */
+    boolean isInboundDone();
+
+    /**
+     * Signals that no more outbound application data will be sent to an
+     * {@link IEngine} implementation.
+     * <p>
+     * This method should be idempotent: if the outbound side has already been
+     * closed, this method should not do anything.
+     *
+     * @see #isOutboundDone
+     */
+    void closeOutbound();
+
+    /**
+     * Signals that no more inbound network data will be sent to an
+     * {@link IEngine} implementation.
+     * <p>
+     * This method should be idempotent: if the inbound side has already been
+     * closed, this method should not do anything.
+     *
+     * @throws SessionIncidentException
+     *             if this engine implementation detected an incident that
+     *             should be reported to the associated session's handler (e.g.
+     *             when an engine has not received a proper close message from
+     *             the peer).
+     * @see #isInboundDone
+     */
+    void closeInbound() throws SessionIncidentException;
+
+    /**
+     * Gets the current minimum size of the buffer holding application data. An
+     * {@link IEngine} implementation may use application data (i.e. the
+     * application data wrapped in one network packet) of any size up to and
+     * including the value returned by this method.
+     *
+     * @return the minimum buffer size
+     */
+    int getMinApplicationBufferSize();
+
+    /**
+     * Gets the current minimum size of the buffer holding network data. An {@link IEngine}
+     * implementation may generate network packets of any size up to and including the value
+     * returned by this method.
+     *
+     * @return the minimum buffer size
+     */
+    int getMinNetworkBufferSize();
+
+    /**
+     * Gets the current maximum size of the buffer holding application data
+     * <p>
+     * This method is only used by the {@link org.snf4j.core.EngineStreamSession
+     * EngineStreamSession} class.
+     *
+     * @return the maximum buffer size
+     */
+    int getMaxApplicationBufferSize();
+
+    /**
+     * Gets the current maximum size of the buffer holding network data
+     * <p>
+     * This method is only used by the {@link org.snf4j.core.EngineStreamSession
+     * EngineStreamSession} class.
+     *
+     * @return the maximum buffer size
+     */
+    int getMaxNetworkBufferSize();
+
+    /**
+     * Returns the current handshake status for an {@link IEngine}
+     * implementation.
+     * <p>
+     * It should never return the {@link HandshakeStatus#FINISHED FINISHED} status.
+     *
+     * @return the current handshake status
+     */
+    HandshakeStatus getHandshakeStatus();
+
+    /**
+     * Returns an object representing a session in use in an {@link IEngine}
+     * implementation.
+     *
+     * @return an object representing a session.
+     * @throws UnsupportedOperationException if the current implementation does not
+     *                                       support a session.
+     */
+    Object getSession();
+
+    /**
+     * Returns a delegated <code>Runnable</code> task for an {@link IEngine}
+     * implementation.
+     * <p>
+     * <code>IEngine</code> operations may require the results of operations
+     * that block, or may take an extended period of time to complete. This
+     * method should be used to obtain a pending <code>Runnable</code> operation
+     * (task). Each task will be assigned a thread to perform the run operation.
+     * The assigned thread will be created by a thread factory configured in the
+     * selector loop that will handle the session associated with this {@link IEngine}
+     * implementation.
+     * <p>
+     * A call to this method should return each pending task exactly once.
+     * <p>
+     * Multiple tasks can be run in parallel.
+     *
+     * @return a pending <code>Runnable,</code> task, or null if none are
+     *         available.
+     */
+    Runnable getDelegatedTask();
+
+    /**
+     * Attempts to encode outbound application data from a subsequence of data buffers
+     * into outbound network data.
+     * <p>
+     * Depending on the state of an {@link IEngine} implementation, this method
+     * can produce network data without consuming any application data (for
+     * example, it may generate handshake data.)
+     * <p>
+     * If an {@link IEngine} implementation has not yet started its initial
+     * handshake, this method should automatically start the handshake.
+     *
+     * @param srcs
+     *            an array of <code>ByteBuffers</code> containing the outbound
+     *            application data
+     * @param dst
+     *            a <code>ByteBuffer</code> to hold outbound network data
+     * @return an {@link EngineResult} describing the result of this operation.
+     * @throws Exception
+     *             when a problem occurred. Once it is thrown the associated
+     *             session will be quickly closed
+     */
+    IEngineResult wrap(ByteBuffer[] srcs, ByteBuffer dst) throws Exception;
+
+    /**
+     * Attempts to encode outbound application data from a data buffer into outbound
+     * network data.
+     * <p>
+     * Depending on the state of an {@link IEngine} implementation, this method
+     * can produce network data without consuming any application data (for
+     * example, it may generate handshake data.)
+     * <p>
+     * If an {@link IEngine} implementation has not yet started its initial
+     * handshake, this method should automatically start the handshake.
+     *
+     * @param src
+     *            a <code>ByteBuffer</code> containing the outbound
+     *            application data
+     * @param dst
+     *            a <code>ByteBuffer</code> to hold outbound network data
+     * @return an {@link EngineResult} describing the result of this operation.
+     * @throws Exception
+     *             when a problem occurred. Once it is thrown the associated
+     *             session will be quickly closed
+     */
+    IEngineResult wrap(ByteBuffer src, ByteBuffer dst) throws Exception;
+
+    /**
+     * Attempts to decode inbound network data from a data buffer into inbound
+     * application data.
+     * <p>
+     * Depending on the state of an {@link IEngine} implementation, this method
+     * can consume network data without producing any application data (for
+     * example, it may generate handshake data.)
+     * <p>
+     * If an {@link IEngine} implementation has not yet started its initial
+     * handshake, this method should automatically start the handshake.
+     *
+     * @param src
+     *            a <code>ByteBuffer</code> containing the inbound
+     *            application data
+     * @param dst
+     *            a <code>ByteBuffer</code> to hold inbound application data
+     * @return an {@link EngineResult} describing the result of this operation.
+     * @throws Exception
+     *             when a problem occurred. Once it is thrown the associated
+     *             session will be quickly closed
+     */
+    IEngineResult unwrap(ByteBuffer src, ByteBuffer dst) throws Exception;
+
+    /**
+     * Provides a session timer that can be used by an {@link IEngine}
+     * implementation to schedule a task.
+     * <p>
+     * For a scheduled task to be executed by the engine handler the task must
+     * implement the {@link IEngineTimerTask} interface, otherwise the task will be
+     * passed to the session's handler.
+     * <p>
+     * <b>Concurrency Notes</b>: The handler awakening task must be always run in
+     * the engine handler's thread. To schedule a task that will be run in the
+     * engine handler's thread always set the {@code inHandler} parameter to
+     * {@code true} in the timer's schedule methods.
+     *
+     * @param timer         a session timer for scheduling a task
+     * @param awakeningTask a task that can be used for awakening the engine handler
+     *                      associated with this engine. It can be run after
+     *                      completing of a scheduled task to pass the control back
+     *                      to the engine handler.
+     * @throws Exception when a problem occurred. Once it is thrown the associated
+     *                   session will be quickly closed
+     * @since 1.12
+     */
+    default void timer(ISessionTimer timer, Runnable awakeningTask) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Links an {@link IEngine} implementation with the given session.
+     *
+     * @param session the session
+     * @since 1.12
+     */
+    default void link(ISession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Called only in the {@link HandshakeStatus#NOT_HANDSHAKING NOT_HANDSHAKING}
+     * state to check whether there is a need to wrap new data that is not the
+     * result of outgoing application data. (e.g. after expiration of a timer).
+     * <p>
+     * It returns {@code false} by default.
+     *
+     * @return {@code true} if there is a need to wrap
+     * @since 1.12
+     */
+    default boolean needWrap() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Called only in the {@link HandshakeStatus#NOT_HANDSHAKING NOT_HANDSHAKING}
+     * state to check whether there is a need to unwrap again data that has been
+     * previously received but no longer stored as the inbound network data.
+     * <p>
+     * It returns {@code false} by default.
+     *
+     * @return {@code true} if there is a need to unwrap again
+     * @since 1.12
+     */
+    default boolean needUnwrap() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

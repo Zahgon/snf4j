@@ -28,33 +28,33 @@ package org.snf4j.websocket.handshake;
 /**
  * A Web Socket handshake request frame. The content of this frame will be used
  * to format the GET method in the HTTP request.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class HandshakeRequest extends HandshakeFrame {
-	
-	private final String uri;
-	
-	/**
-	 * Constructs a Web Socket handshake request frame.
-	 * 
-	 * @param uri the request URI of the GET method in the HTTP request frame
-	 */
-	public HandshakeRequest(String uri) {
-		this.uri = uri;
-	}
 
-	/**
-	 * Returns the request URI of the GET method in the HTTP request frame.
-	 * 
-	 * @return the request URI
-	 */
-	public String getUri() {
-		return uri;
-	}
-	
-	@Override
-	int getLength() {
-		return super.getLength() + HandshakeUtils.REQUEST_LENGTH + uri.length();
-	}
+    private final String uri;
+
+    /**
+     * Constructs a Web Socket handshake request frame.
+     *
+     * @param uri the request URI of the GET method in the HTTP request frame
+     */
+    public HandshakeRequest(String uri) {
+        this.uri = uri;
+    }
+
+    /**
+     * Returns the request URI of the GET method in the HTTP request frame.
+     *
+     * @return the request URI
+     */
+    public String getUri() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    int getLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

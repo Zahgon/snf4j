@@ -37,33 +37,33 @@ import org.snf4j.core.logger.ILoggerFactory;
  * used by the API for logging purposes.
  * <p>
  * This class is not implemented by the core API.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class LoggerFactoryBinder {
-	
-	private final static LoggerFactoryBinder INSTANCE = new LoggerFactoryBinder();
-	
-	/**
-	 * Gets the singleton of this class.
-	 * 
-	 * @return the singleton of this class
-	 */
-	public final static LoggerFactoryBinder getInstance() {
-		return INSTANCE;
-	}
-	
-	private LoggerFactoryBinder() {
-	}
-	
-	/**
-	 * Gets the actual implementation of the
-	 * {@link org.snf4j.core.logger.ILoggerFactory ILoggerFactory} interface
-	 * that should be used by the API for logging purposes.
-	 * 
-	 * @return the logger factory
-	 */
-	public ILoggerFactory getFactory() {
-		throw new UnsupportedOperationException("This code should have never been incorporated into the API");
-	}
+
+    private final static LoggerFactoryBinder INSTANCE = new LoggerFactoryBinder();
+
+    /**
+     * Gets the singleton of this class.
+     *
+     * @return the singleton of this class
+     */
+    public final static LoggerFactoryBinder getInstance() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private LoggerFactoryBinder() {
+    }
+
+    /**
+     * Gets the actual implementation of the
+     * {@link org.snf4j.core.logger.ILoggerFactory ILoggerFactory} interface
+     * that should be used by the API for logging purposes.
+     *
+     * @return the logger factory
+     */
+    public ILoggerFactory getFactory() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

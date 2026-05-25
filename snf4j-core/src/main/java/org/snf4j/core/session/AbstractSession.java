@@ -27,56 +27,41 @@ package org.snf4j.core.session;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
 import org.snf4j.core.IdentifiableObject;
 
 /**
  * Base implementation of the {@link ISession} interface.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 abstract public class AbstractSession extends IdentifiableObject implements ISession {
 
-	private volatile ConcurrentMap<Object,Object> attributes;
+    private volatile ConcurrentMap<Object, Object> attributes;
 
-	private final Object attributesLock = new Object();
+    private final Object attributesLock = new Object();
 
-	/**
-	 * Constructs the base implementation of the {@link ISession} interface.
-	 *
-	 * @param prefix
-	 *            the prefix used to generate string representation of this
-	 *            object
-	 * @param id
-	 *            the id of the object
-	 * @param name
-	 *            the name of the object or <code>null</code> if the name should
-	 *            be auto generated
-	 * @param attributes
-	 *            the attributes for this session, or <code>null</code> if this
-	 *            session should have its own copy of attributes
-	 */
-	protected AbstractSession(String prefix, long id, String name, ConcurrentMap<Object,Object> attributes) {
-		super(prefix, id, name);
-		this.attributes = attributes;
-	}
+    /**
+     * Constructs the base implementation of the {@link ISession} interface.
+     *
+     * @param prefix
+     *            the prefix used to generate string representation of this
+     *            object
+     * @param id
+     *            the id of the object
+     * @param name
+     *            the name of the object or <code>null</code> if the name should
+     *            be auto generated
+     * @param attributes
+     *            the attributes for this session, or <code>null</code> if this
+     *            session should have its own copy of attributes
+     */
+    protected AbstractSession(String prefix, long id, String name, ConcurrentMap<Object, Object> attributes) {
+        super(prefix, id, name);
+        this.attributes = attributes;
+    }
 
-	@Override
-	public ConcurrentMap<Object, Object> getAttributes() {
-		ConcurrentMap<Object, Object> attributes = this.attributes;
-		
-		if (attributes == null) {
-			synchronized (attributesLock) {
-				if (this.attributes == null) {
-					attributes = new ConcurrentHashMap<Object, Object>();
-					this.attributes = attributes;
-				}
-				else {
-					attributes = this.attributes;
-				}
-			}
-		}
-		return attributes;
-	}
-	
+    @Override
+    public ConcurrentMap<Object, Object> getAttributes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

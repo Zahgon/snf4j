@@ -30,29 +30,27 @@ import java.nio.channels.Selector;
 
 /**
  * Default factory used to configure the internal structure of the selector loop.
- * 
- * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  *
+ * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class DefaultSelectorLoopStructureFactory implements ISelectorLoopStructureFactory {
 
-	/**
-	 * Default selector loop's structure factory.
-	 */
-	public final static DefaultSelectorLoopStructureFactory DEFAULT = new DefaultSelectorLoopStructureFactory();
+    /**
+     * Default selector loop's structure factory.
+     */
+    public final static DefaultSelectorLoopStructureFactory DEFAULT = new DefaultSelectorLoopStructureFactory();
 
-	private DefaultSelectorLoopStructureFactory() {
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * This implementation creates a selector by executing
-	 * {@link java.nio.channels.Selector#open()}.
-	 */
-	@Override
-	public Selector openSelector() throws IOException {
-		return Selector.open();
-	}
+    private DefaultSelectorLoopStructureFactory() {
+    }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * This implementation creates a selector by executing
+     * {@link java.nio.channels.Selector#open()}.
+     */
+    @Override
+    public Selector openSelector() throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

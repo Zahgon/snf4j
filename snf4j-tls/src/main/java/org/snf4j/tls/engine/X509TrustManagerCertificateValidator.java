@@ -31,9 +31,7 @@ import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.CertificateRevokedException;
 import java.security.cert.X509Certificate;
-
 import javax.net.ssl.X509TrustManager;
-
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.BadCertificateAlert;
@@ -43,53 +41,29 @@ import org.snf4j.tls.alert.UnsupportedCertificateAlert;
 
 public class X509TrustManagerCertificateValidator implements ICertificateValidator {
 
-	private final static String UNKNOWN = "UNKNOWN";
-	
-	private final X509TrustManager manager;
-	
-	private final boolean ignoreAlgorithms;
-	
-	public X509TrustManagerCertificateValidator(X509TrustManager manager) {
-		this(manager, false);
-	}
+    private final static String UNKNOWN = "UNKNOWN";
 
-	public X509TrustManagerCertificateValidator(X509TrustManager manager, boolean ignoreAlgorithms) {
-		Args.checkNull(manager, "manager");
-		this.manager = manager;
-		this.ignoreAlgorithms = ignoreAlgorithms;
-	}
-	
-	@Override
-	public Alert validateCertificates(CertificateValidateCriteria criteria, X509Certificate[] certs) throws Alert {
-		try {
-			if (!ignoreAlgorithms && !criteria.allMatch(certs)) {
-				return new BadCertificateAlert("Certificate signed by unsupported signatures");
-			}
-			if (criteria.isServer()) {
-				manager.checkClientTrusted(certs, UNKNOWN);
-			}
-			else {
-				manager.checkServerTrusted(certs, UNKNOWN);
-			}
-		}
-		catch (CertificateExpiredException e) {
-			return new CertificateExpiredAlert("Certificate expired", e);
-		}
-		catch (CertificateNotYetValidException e) {
-			return new CertificateExpiredAlert("Certificate not yet valid", e);
-		}
-		catch (CertificateRevokedException e) {
-			return new CertificateRevokedAlert("Certificate revoked", e);
-		}
-		catch (CertificateException e) {
-			return new BadCertificateAlert("Bad certificate", e);
-		}
-		return null;
-	}
+    private final X509TrustManager manager;
 
-	@Override
-	public Alert validateRawKey(CertificateValidateCriteria criteria, PublicKey key) throws Alert {
-		return new UnsupportedCertificateAlert("Unsupported raw key");
-	}
+    private final boolean ignoreAlgorithms;
 
+    public X509TrustManagerCertificateValidator(X509TrustManager manager) {
+        this(manager, false);
+    }
+
+    public X509TrustManagerCertificateValidator(X509TrustManager manager, boolean ignoreAlgorithms) {
+        Args.checkNull(manager, "manager");
+        this.manager = manager;
+        this.ignoreAlgorithms = ignoreAlgorithms;
+    }
+
+    @Override
+    public Alert validateCertificates(CertificateValidateCriteria criteria, X509Certificate[] certs) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Alert validateRawKey(CertificateValidateCriteria criteria, PublicKey key) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

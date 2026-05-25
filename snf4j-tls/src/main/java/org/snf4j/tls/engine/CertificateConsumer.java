@@ -37,49 +37,35 @@ import org.snf4j.tls.handshake.IHandshake;
 
 public class CertificateConsumer implements IHandshakeConsumer {
 
-	@Override
-	public HandshakeType getType() {
-		return HandshakeType.CERTIFICATE;
-	}
+    @Override
+    public HandshakeType getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private void consumeClient(EngineState state, ICertificate certificate, ByteBuffer[] data) throws Alert {
-		if (certificate.getEntries().length == 0) {
-			throw new DecodeErrorAlert("Empty server certificate message");
-		}
-		
-		state.getTranscriptHash().update(certificate.getType(), data);
-		state.retainHandshake(certificate);
-		state.changeState(MachineState.CLI_WAIT_CV);
-	}
+    private void consumeClient(EngineState state, ICertificate certificate, ByteBuffer[] data) throws Alert {
+        if (certificate.getEntries().length == 0) {
+            throw new DecodeErrorAlert("Empty server certificate message");
+        }
+        state.getTranscriptHash().update(certificate.getType(), data);
+        state.retainHandshake(certificate);
+        state.changeState(MachineState.CLI_WAIT_CV);
+    }
 
-	private void consumeServer(EngineState state, ICertificate certificate, ByteBuffer[] data) throws Alert {
-		state.getTranscriptHash().update(certificate.getType(), data);
+    private void consumeServer(EngineState state, ICertificate certificate, ByteBuffer[] data) throws Alert {
+        state.getTranscriptHash().update(certificate.getType(), data);
+        if (certificate.getEntries().length == 0) {
+            if (state.getParameters().getClientAuth() == ClientAuth.REQUIRED) {
+                throw new CertificateRequiredAlert("Empty client certificate message");
+            }
+            state.changeState(MachineState.SRV_WAIT_FINISHED);
+            return;
+        }
+        state.retainHandshake(certificate);
+        state.changeState(MachineState.SRV_WAIT_CV);
+    }
 
-		if (certificate.getEntries().length == 0) {
-			if (state.getParameters().getClientAuth() == ClientAuth.REQUIRED) {
-				throw new CertificateRequiredAlert("Empty client certificate message");
-			}
-			state.changeState(MachineState.SRV_WAIT_FINISHED);
-			return;
-		}
-		state.retainHandshake(certificate);
-		state.changeState(MachineState.SRV_WAIT_CV);
-	}
-	
-	@Override
-	public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
-		switch (state.getState()) {
-		case CLI_WAIT_CERT_CR:
-		case CLI_WAIT_CERT:
-			consumeClient(state, (ICertificate) handshake, data);
-			break;
-			
-		case SRV_WAIT_CERT:
-			consumeServer(state, (ICertificate) handshake, data);
-			break;
-			
-		default:
-			throw new UnexpectedMessageAlert("Unexpected Certificate");
-		}
-	}
+    @Override
+    public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

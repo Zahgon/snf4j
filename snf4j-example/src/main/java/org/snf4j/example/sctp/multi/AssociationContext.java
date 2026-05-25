@@ -28,55 +28,47 @@ package org.snf4j.example.sctp.multi;
 import java.net.SocketAddress;
 
 class AssociationContext {
-	
-	final SocketAddress peer;
-	
-	private final int maxCount;
-	
-	private int counter;
-	
-	private boolean blocked;
-	
-	int progress;
-	
-	AssociationContext(SocketAddress peer, int maxCount) {
-		this.peer = peer;
-		this.maxCount = maxCount;
-	}
-	
-	void block() {
-		blocked = true;
-	}
-	
-	boolean isBlocked() {
-		return blocked;
-	}
-	
-	AssociationContext incCounter() {
-		counter++;
-		return this;
-	}
-	
-	boolean isDone() {
-		return counter >= maxCount;
-	}
-	
-	void resetCounter() {
-		counter = 0;
-		progress = 0;
-	}
-	
-	boolean updateProgress() {
-		int progress = counter / (maxCount / 10);
-		
-		if (progress > this.progress) {
-			this.progress = progress;
-			return true;
-		}
-		return false;
-	}
-	
-	int getProgress() {
-		return progress*10;
-	}
+
+    final SocketAddress peer;
+
+    private final int maxCount;
+
+    private int counter;
+
+    private boolean blocked;
+
+    int progress;
+
+    AssociationContext(SocketAddress peer, int maxCount) {
+        this.peer = peer;
+        this.maxCount = maxCount;
+    }
+
+    void block() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    boolean isBlocked() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    AssociationContext incCounter() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    boolean isDone() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void resetCounter() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    boolean updateProgress() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    int getProgress() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

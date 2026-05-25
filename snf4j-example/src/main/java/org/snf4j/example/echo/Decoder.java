@@ -27,25 +27,23 @@ package org.snf4j.example.echo;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.codec.IDecoder;
 import org.snf4j.core.session.ISession;
 
-public class Decoder implements IDecoder<ByteBuffer,ByteBuffer> {
+public class Decoder implements IDecoder<ByteBuffer, ByteBuffer> {
 
-	@Override
-	public Class<ByteBuffer> getInboundType() {
-		return ByteBuffer.class;
-	}
+    @Override
+    public Class<ByteBuffer> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Class<ByteBuffer> getOutboundType() {
-		return ByteBuffer.class;
-	}
+    @Override
+    public Class<ByteBuffer> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void decode(ISession session, ByteBuffer data, List<ByteBuffer> out) throws Exception {
-		out.add(data);
-	}
-
+    @Override
+    public void decode(ISession session, ByteBuffer data, List<ByteBuffer> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

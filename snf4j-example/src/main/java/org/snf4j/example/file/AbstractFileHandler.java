@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.SocketAddress;
 import java.nio.channels.FileChannel;
-
 import org.snf4j.core.allocator.CachingAllocator;
 import org.snf4j.core.allocator.IByteBufferAllocator;
 import org.snf4j.core.factory.DefaultSessionStructureFactory;
@@ -44,75 +43,45 @@ import org.snf4j.core.timer.ITimer;
 
 public abstract class AbstractFileHandler extends AbstractStreamHandler {
 
-	protected static final int BUFFER_SIZE = 4096;
+    protected static final int BUFFER_SIZE = 4096;
 
-	protected static final AllocatorMetric METRIC = new AllocatorMetric();
-	
-	private static final IByteBufferAllocator ALLOCATOR = new CachingAllocator(true, METRIC);
+    protected static final AllocatorMetric METRIC = new AllocatorMetric();
 
-	private static final ITimer TIMER = new DefaultTimer(true);
+    private static final IByteBufferAllocator ALLOCATOR = new CachingAllocator(true, METRIC);
 
-	protected final DefaultSessionConfig config;
+    private static final ITimer TIMER = new DefaultTimer(true);
 
-	protected RandomAccessFile file;
-	
-	protected FileChannel fileChannel;
-	
-	protected long fileLength;
+    protected final DefaultSessionConfig config;
 
-	protected SocketAddress remoteAddress;
+    protected RandomAccessFile file;
 
-	protected long startTime;
-		
-	AbstractFileHandler(SSLEngineBuilder builder) {
-		config = new DefaultSessionConfig()
-				.setOptimizeDataCopying(true);
-		if (builder != null) {
-			config.addSSLEngineBuilder(builder);
-		}
-	}
-	
-	@Override
-	public void event(SessionEvent event) {
-		switch (event) {
-		
-		case OPENED:
-			remoteAddress = getSession().getRemoteAddress();
-			break;
-			
-		case CLOSED:
-			if (fileChannel != null) {
-				try {
-					fileChannel.close();
-					file.close();
-				} catch (IOException e) {
-				}
-			}
-			break;
-			
-		default:
-		}
-	}
-	
-	@Override
-	public ISessionConfig getConfig() {
-		return config;
-	}
-	
-	@Override
-	public ISessionStructureFactory getFactory() {
-		return new DefaultSessionStructureFactory() {
+    protected FileChannel fileChannel;
 
-			@Override
-			public ITimer getTimer() {
-				return TIMER;
-			}
-	
-			@Override
-			public IByteBufferAllocator getAllocator() {
-				return ALLOCATOR;
-			}
-		};
-	}
+    protected long fileLength;
 
+    protected SocketAddress remoteAddress;
+
+    protected long startTime;
+
+    AbstractFileHandler(SSLEngineBuilder builder) {
+        config = new DefaultSessionConfig().setOptimizeDataCopying(true);
+        if (builder != null) {
+            config.addSSLEngineBuilder(builder);
+        }
+    }
+
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionStructureFactory getFactory() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

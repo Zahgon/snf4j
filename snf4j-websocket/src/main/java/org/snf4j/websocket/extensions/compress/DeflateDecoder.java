@@ -28,7 +28,6 @@ package org.snf4j.websocket.extensions.compress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.snf4j.core.codec.IDecoder;
 import org.snf4j.core.codec.IEventDrivenCodec;
 import org.snf4j.core.codec.zip.ZlibCodec;
@@ -40,104 +39,45 @@ import org.snf4j.websocket.frame.CloseFrame;
 import org.snf4j.websocket.frame.Frame;
 import org.snf4j.websocket.frame.InvalidFrameException;
 
-abstract class DeflateDecoder extends DeflateCodec implements IDecoder<Frame,Frame>, IEventDrivenCodec {
+abstract class DeflateDecoder extends DeflateCodec implements IDecoder<Frame, Frame>, IEventDrivenCodec {
 
     private ZlibDecoder decoder;
-    
+
     private final boolean noContext;
-    
+
     private final int minInflateBound;
-    
+
     public DeflateDecoder(boolean noContext, int minInflateBound) {
-    	this.noContext = noContext;
-    	this.minInflateBound = minInflateBound;
+        this.noContext = noContext;
+        this.minInflateBound = minInflateBound;
     }
 
     public DeflateDecoder(boolean noContext) {
-    	this.noContext = noContext;
-    	minInflateBound = 0;
+        this.noContext = noContext;
+        minInflateBound = 0;
     }
-    
+
     abstract boolean allowDecoding(Frame frame);
 
-	abstract boolean appendTail(Frame frame);
-	
-	private RuntimeException protocolError(ISession session, String message) throws InvalidFrameException {
-		((IStreamSession)session).writenf(new CloseFrame(CloseFrame.PROTOCOL_ERROR));
-		return new InvalidFrameException(message);
-	}
-	
-	private RuntimeException protocolError(ISession session, Throwable cause) throws InvalidFrameException {
-		((IStreamSession)session).writenf(new CloseFrame(CloseFrame.PROTOCOL_ERROR));
-		return new InvalidFrameException(cause);
-	}
-	
-	@Override
-	IEventDrivenCodec codec() {
-		return decoder;
-	}
-	
-	@Override
-	public void decode(ISession session, Frame frame, List<Frame> out) throws Exception {
-		if (allowDecoding(frame)) {
-			if (decoder == null) {
-				decoder = new ZlibDecoder(ZlibCodec.Mode.RAW) {
-					@Override
-					protected int inflateBound(int len) {
-						len = super.inflateBound(len);
-						
-						if (len < minInflateBound) {
-							len = minInflateBound;
-						}
-						return len;
-					}
-				};
-			}
-			
-			List<ByteBuffer> bufs = new ArrayList<ByteBuffer>();
-			
-			try {
-				decoder.decode(session, frame.getPayload(), bufs);
-				if (appendTail(frame)) {
-					decoder.decode(session, TAIL, bufs);
-				}
-			}
-			catch (Exception e) {
-				throw protocolError(session, e);
-			}
-			
-			if (frame.isFinalFragment() && noContext) {
-				decoder.event(session, SessionEvent.ENDING);
-				decoder = null;
-			}
-			
-			byte[] payload;
-			ByteBuffer buf;
-			
-			switch (bufs.size()) {
-			case 1:
-				buf = bufs.get(0);
-				payload = new byte[buf.remaining()];
-				buf.get(payload);
-				break;
-				
-			case 0:
-				payload = frame.getPayload();
-				if (payload.length == 1 && payload[0] == 0) {
-					payload = new byte[0];
-				}
-				else {
-					throw protocolError(session, "Inflating of input data produced no data");
-				}
-				break;
-				
-			default:
-				payload = bytes(bufs, false);
-			}
-			
-			frame = createFrame(frame, payload);
-		}
-		out.add(frame);
-	}
+    abstract boolean appendTail(Frame frame);
 
+    private RuntimeException protocolError(ISession session, String message) throws InvalidFrameException {
+        ((IStreamSession) session).writenf(new CloseFrame(CloseFrame.PROTOCOL_ERROR));
+        return new InvalidFrameException(message);
+    }
+
+    private RuntimeException protocolError(ISession session, Throwable cause) throws InvalidFrameException {
+        ((IStreamSession) session).writenf(new CloseFrame(CloseFrame.PROTOCOL_ERROR));
+        return new InvalidFrameException(cause);
+    }
+
+    @Override
+    IEventDrivenCodec codec() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void decode(ISession session, Frame frame, List<Frame> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -29,9 +29,8 @@ import org.snf4j.core.handler.AbstractStreamHandler;
 
 public class DiscardingServerHandler extends AbstractStreamHandler {
 
-	@Override
-	public void read(Object msg) {
-		//Discarding all read bytes
-	}
-
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

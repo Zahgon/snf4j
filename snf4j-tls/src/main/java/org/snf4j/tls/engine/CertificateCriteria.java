@@ -26,127 +26,86 @@
 package org.snf4j.tls.engine;
 
 import java.security.cert.X509Certificate;
-
 import org.snf4j.tls.Args;
 import org.snf4j.tls.IntConstant;
 import org.snf4j.tls.extension.SignatureScheme;
 import org.snf4j.tls.handshake.CertificateType;
 
 public class CertificateCriteria {
-	
-	private final boolean server;
-	
-	private final CertificateType type;
-	
-	private final String hostName;
-	
-	private final SignatureScheme[] schemes;
-	
-	private final SignatureScheme[] certSchemes;
 
-	private final SignatureScheme[] localSchemes;
-	
-	public CertificateCriteria(boolean server, CertificateType type, String hostName, SignatureScheme[] schemes,
-			SignatureScheme[] certSchemes, SignatureScheme[] localSchemes) {
-		Args.checkNull(type, "type");
-		Args.checkNull(schemes, "schemes");
-		Args.checkNull(localSchemes, "localSchemes");
-		this.server = server;
-		this.type = type;
-		this.hostName = hostName;
-		this.schemes = schemes;
-		this.certSchemes = certSchemes;
-		this.localSchemes = localSchemes;
-	}
+    private final boolean server;
 
-	public boolean isServer() {
-		return server;
-	}
-	
-	public CertificateType getType() {
-		return type;
-	}
+    private final CertificateType type;
 
-	public String getHostName() {
-		return hostName;
-	}
+    private final String hostName;
 
-	public SignatureScheme[] getSchemes() {
-		return schemes;
-	}
+    private final SignatureScheme[] schemes;
 
-	public SignatureScheme[] getCertSchemes() {
-		return certSchemes;
-	}
-	
-	public SignatureScheme[] getLocalSchemes() {
-		return localSchemes;
-	}
-		
-	public static SignatureScheme match(X509Certificate cert, SignatureScheme[] schemes, SignatureScheme[] secondarySchemes) {
-		Args.checkNull(cert, "cert");
-		Args.checkNull(schemes, "schemes");
-		boolean secondary = secondarySchemes != null;
-		
-		for (SignatureScheme scheme: schemes) {
-			if (scheme.spec().getSignature().matches(cert)) {
-				if (secondary) {
-					if (IntConstant.find(secondarySchemes, scheme) == null) {
-						continue;
-					}
-				}
-				return scheme;
-			}
-		}		
-		return null;
-	}
+    private final SignatureScheme[] certSchemes;
 
-	public static SignatureScheme matchByKey(X509Certificate cert, SignatureScheme[] schemes, SignatureScheme[] secondarySchemes) {
-		Args.checkNull(cert, "cert");
-		Args.checkNull(schemes, "schemes");
-		boolean secondary = secondarySchemes != null;
-		
-		for (SignatureScheme scheme: schemes) {
-			if (scheme.spec().getSignature().matchesByKey(cert)) {
-				if (secondary) {
-					if (IntConstant.find(secondarySchemes, scheme) == null) {
-						continue;
-					}
-				}
-				return scheme;
-			}
-		}		
-		return null;
-	}
+    private final SignatureScheme[] localSchemes;
 
-	public static boolean allMatch(X509Certificate[] certs, int offset, int length, SignatureScheme[] schemes) {
-		Args.checkNull(certs, "certs");
-		Args.checkNull(schemes, "schemes");
-		Args.checkBounds(offset, length, certs.length);
-		
-		length += offset;
-		for (int i=offset; i<length; ++i) {
-			if (match(certs[i], schemes, null) == null) {
-				return false;
-			}
-		}		
-		return true;
-	}
-	
-	public SignatureScheme match(X509Certificate cert) {
-		return match(cert, localSchemes, schemes);
-	}
+    public CertificateCriteria(boolean server, CertificateType type, String hostName, SignatureScheme[] schemes, SignatureScheme[] certSchemes, SignatureScheme[] localSchemes) {
+        Args.checkNull(type, "type");
+        Args.checkNull(schemes, "schemes");
+        Args.checkNull(localSchemes, "localSchemes");
+        this.server = server;
+        this.type = type;
+        this.hostName = hostName;
+        this.schemes = schemes;
+        this.certSchemes = certSchemes;
+        this.localSchemes = localSchemes;
+    }
 
-	public SignatureScheme matchByKey(X509Certificate cert) {
-		return matchByKey(cert, localSchemes, schemes);
-	}
+    public boolean isServer() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public boolean allMatch(X509Certificate[] certs, int offset, int length) {
-		return allMatch(certs, offset, length, certSchemes == null ? this.schemes : certSchemes);
-	}
-	
-	public boolean allMatch(X509Certificate[] certs) {
-		return allMatch(certs, 0, certs.length);
-	}
-	
+    public CertificateType getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public String getHostName() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SignatureScheme[] getSchemes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SignatureScheme[] getCertSchemes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SignatureScheme[] getLocalSchemes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static SignatureScheme match(X509Certificate cert, SignatureScheme[] schemes, SignatureScheme[] secondarySchemes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static SignatureScheme matchByKey(X509Certificate cert, SignatureScheme[] schemes, SignatureScheme[] secondarySchemes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static boolean allMatch(X509Certificate[] certs, int offset, int length, SignatureScheme[] schemes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SignatureScheme match(X509Certificate cert) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SignatureScheme matchByKey(X509Certificate cert) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean allMatch(X509Certificate[] certs, int offset, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean allMatch(X509Certificate[] certs) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

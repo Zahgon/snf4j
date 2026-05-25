@@ -28,52 +28,38 @@ package org.snf4j.tls.record;
 import org.snf4j.tls.IntConstant;
 
 public class ContentType extends IntConstant {
-	
-	public static final ContentType INVALID = new ContentType("invalid", 0);
-	
-	public static final ContentType CHANGE_CIPHER_SPEC = new ContentType("change_cipher_spec", 20);
 
-	public static final ContentType ALERT = new ContentType("alert", 21);
+    public static final ContentType INVALID = new ContentType("invalid", 0);
 
-	public static final ContentType HANDSHAKE = new ContentType("handshake", 22);
+    public static final ContentType CHANGE_CIPHER_SPEC = new ContentType("change_cipher_spec", 20);
 
-	public static final ContentType APPLICATION_DATA = new ContentType("application_data", 23);
-     
-	private final static ContentType[] KNOWN = new ContentType[APPLICATION_DATA.value()+1];
-	
-	private static void known(ContentType... knowns) {
-		for (ContentType known: knowns) {
-			KNOWN[known.value()] = known;
-		}
-	}
-	
-	static {
-		known(
-				INVALID,
-				CHANGE_CIPHER_SPEC,
-				ALERT,
-				HANDSHAKE,
-				APPLICATION_DATA
-				);
-	}
-	
-	protected ContentType(String name, int value) {
-		super(name, value);
-	}
+    public static final ContentType ALERT = new ContentType("alert", 21);
 
-	protected ContentType(int value) {
-		super(value);
-	}
+    public static final ContentType HANDSHAKE = new ContentType("handshake", 22);
 
-	public static ContentType of(int value) {
-		if (value >= 0 && value < KNOWN.length) {
-			ContentType known = KNOWN[value];
-			
-			if (known != null) {
-				return known;
-			}
-		}
-		return new ContentType(value);
-	}
-	
+    public static final ContentType APPLICATION_DATA = new ContentType("application_data", 23);
+
+    private final static ContentType[] KNOWN = new ContentType[APPLICATION_DATA.value() + 1];
+
+    private static void known(ContentType... knowns) {
+        for (ContentType known : knowns) {
+            KNOWN[known.value()] = known;
+        }
+    }
+
+    static {
+        known(INVALID, CHANGE_CIPHER_SPEC, ALERT, HANDSHAKE, APPLICATION_DATA);
+    }
+
+    protected ContentType(String name, int value) {
+        super(name, value);
+    }
+
+    protected ContentType(int value) {
+        super(value);
+    }
+
+    public static ContentType of(int value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

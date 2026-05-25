@@ -33,64 +33,36 @@ import org.snf4j.core.session.DefaultSessionConfig;
 import org.snf4j.core.session.ISessionConfig;
 
 public class DiscardingClientHandler extends AbstractStreamHandler {
-	private byte[] data = new byte[DiscardingClient.SIZE];
-	private long bytesSent;
-	private long totalBytesSent;
-	private double maxThroughput;
-	private long startTime;
-	
-	@Override
-	public void read(Object msg) {
-		//Discarding all read bytes
-	}
-	
-	@SuppressWarnings("incomplete-switch")
-	@Override
-	public void event(SessionEvent event) {
-		switch (event) {
-		case OPENED:
-			startTime = System.currentTimeMillis();
-			getSession().write(data);
-			break;
-			
-		case ENDING:
-			long endTime = System.currentTimeMillis(); 
-			long avgThroughput = 1000*totalBytesSent/(endTime - startTime);
-			System.out.println("Max throughput [bytes/secs]: " + (long)maxThroughput);
-			System.out.println("Avg throughput [bytes/secs]: " + avgThroughput);
-			break;
-		}
-	}
-	
-	@SuppressWarnings("incomplete-switch")
-	@Override
-	public void event(DataEvent event, long size) {
-		switch (event) {
-		case SENT:
-			double throughput = getSession().getWrittenBytesThroughput();
-			
-			if (throughput > maxThroughput) {
-				maxThroughput = throughput;
-			}
-			
-			totalBytesSent += size;
-			if (totalBytesSent >= DiscardingClient.TOTAL_SIZE) {
-				getSession().close();
-			}
-			else {
-				bytesSent += size;
-				if (bytesSent == data.length) {
-					bytesSent = 0;
-					getSession().write(data);
-				}
-			}
-			break;
-		}
-	}
 
-	@Override
-	public ISessionConfig getConfig() {
-		return new DefaultSessionConfig()
-				.setEndingAction(EndingAction.STOP);
-	}
+    private byte[] data = new byte[DiscardingClient.SIZE];
+
+    private long bytesSent;
+
+    private long totalBytesSent;
+
+    private double maxThroughput;
+
+    private long startTime;
+
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public void event(DataEvent event, long size) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

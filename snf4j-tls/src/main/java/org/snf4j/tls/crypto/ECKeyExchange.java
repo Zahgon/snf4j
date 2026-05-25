@@ -43,67 +43,54 @@ import java.security.spec.ECPoint;
 import java.security.spec.ECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-
 import javax.crypto.KeyAgreement;
 
 public class ECKeyExchange implements IECKeyExchange {
 
-	public final static ECKeyExchange SECP256R1 = new ECKeyExchange("secp256r1");
+    public final static ECKeyExchange SECP256R1 = new ECKeyExchange("secp256r1");
 
-	public final static ECKeyExchange SECP384R1 = new ECKeyExchange("secp384r1");
+    public final static ECKeyExchange SECP384R1 = new ECKeyExchange("secp384r1");
 
-	public final static ECKeyExchange SECP521R1 = new ECKeyExchange("secp521r1");
-	
-	private final String algorithm;
-	
-	public ECKeyExchange(String algorithm) {
-		this.algorithm = algorithm;
-	}
+    public final static ECKeyExchange SECP521R1 = new ECKeyExchange("secp521r1");
 
-	@Override
-	public String getAlgorithm() {
-		return algorithm;
-	}
-	
-	@Override
-	public boolean isImplemented() {
-		return true;
-	}
-	
-	@Override
-	public byte[] generateSecret(PrivateKey privateKey, PublicKey publicKey, SecureRandom random) throws NoSuchAlgorithmException, InvalidKeyException {
-        KeyAgreement keyAgreement = KeyAgreement.getInstance("ECDH");
-        
-        keyAgreement.init(privateKey, random);
-        keyAgreement.doPhase(publicKey, true);
-        return keyAgreement.generateSecret();
-	}
+    private final String algorithm;
 
-	@Override
-	public KeyPair generateKeyPair(SecureRandom random) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("EC");
-		
-        keyPairGenerator.initialize(new ECGenParameterSpec(algorithm), random);
-        return keyPairGenerator.genKeyPair();
-	}
+    public ECKeyExchange(String algorithm) {
+        this.algorithm = algorithm;
+    }
 
-	@Override
-	public PublicKey generatePublicKey(BigInteger x, BigInteger y) throws NoSuchAlgorithmException, InvalidParameterSpecException, InvalidKeySpecException {
-		KeyFactory kf = KeyFactory.getInstance("EC");
-        AlgorithmParameters params = AlgorithmParameters.getInstance("EC");
-        
-		params.init(new ECGenParameterSpec(algorithm));
-		return kf.generatePublic(new ECPublicKeySpec(new ECPoint(x, y), params.getParameterSpec(ECParameterSpec.class)));
-	}
+    @Override
+    public String getAlgorithm() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public BigInteger getX(PublicKey key) {
-		return ((ECPublicKey)key).getW().getAffineX();
-	}
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public BigInteger getY(PublicKey key) {
-		return ((ECPublicKey)key).getW().getAffineY();
-	}
+    @Override
+    public byte[] generateSecret(PrivateKey privateKey, PublicKey publicKey, SecureRandom random) throws NoSuchAlgorithmException, InvalidKeyException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public KeyPair generateKeyPair(SecureRandom random) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public PublicKey generatePublicKey(BigInteger x, BigInteger y) throws NoSuchAlgorithmException, InvalidParameterSpecException, InvalidKeySpecException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public BigInteger getX(PublicKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public BigInteger getY(PublicKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

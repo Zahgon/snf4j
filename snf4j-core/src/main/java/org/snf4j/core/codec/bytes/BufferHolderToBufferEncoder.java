@@ -27,35 +27,19 @@ package org.snf4j.core.codec.bytes;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.IByteBufferHolder;
 import org.snf4j.core.codec.IEncoder;
 import org.snf4j.core.session.ISession;
 
 /**
  * A encoder transforming an {@link IByteBufferHolder} into a {@link ByteBuffer}.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class BufferHolderToBufferEncoder extends BufferHolderToBufferCodec implements IEncoder<IByteBufferHolder, ByteBuffer> {
-	
-	@Override
-	public void encode(ISession session, IByteBufferHolder data, List<ByteBuffer> out) throws Exception {
-		ByteBuffer[] bufs = data.toArray();
-		
-		if (bufs.length == 1) {
-			out.add(bufs[0]);
-		}
-		else {
-			ByteBuffer newBuf = session.allocate(data.remaining());
-			
-			for (ByteBuffer buf: bufs) {
-				newBuf.put(buf);
-				session.release(buf);
-			}
-			newBuf.flip();
-			out.add(newBuf);
-		}
-	}
 
+    @Override
+    public void encode(ISession session, IByteBufferHolder data, List<ByteBuffer> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

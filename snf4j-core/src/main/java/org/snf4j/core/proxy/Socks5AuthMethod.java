@@ -26,19 +26,16 @@
 package org.snf4j.core.proxy;
 
 enum Socks5AuthMethod {
-	
-	NO_AUTH((byte)0),
-	GSSAPI((byte)1),
-	PASSWORD((byte)2),
-	UNACCEPTED((byte)0xff);
-	
-	private final byte code;
-	
-	Socks5AuthMethod(byte code) {
-		this.code = code;
-	}
-	
-	public byte code() {
-		return code;
-	}
+
+    NO_AUTH((byte) 0), GSSAPI((byte) 1), PASSWORD((byte) 2), UNACCEPTED((byte) 0xff);
+
+    private final byte code;
+
+    Socks5AuthMethod(byte code) {
+        this.code = code;
+    }
+
+    public byte code() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

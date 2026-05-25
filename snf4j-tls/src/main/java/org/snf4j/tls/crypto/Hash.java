@@ -27,39 +27,38 @@ package org.snf4j.tls.crypto;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.Mac;
 
 public class Hash implements IHash {
-	
-	public final static IHash SHA256 = new Hash("SHA-256","HmacSHA256", HashId.SHA_256);
 
-	public final static IHash SHA384 = new Hash("SHA-384","HmacSHA384", HashId.SHA_384);
-	
-	private final String hashAlgoritm;
-	
-	private final String macAlgorithm;
-	
-	private final HashId id;
-	
-	public Hash(String hashAlgorithm, String macAlgorithm, HashId id) {
-		this.hashAlgoritm = hashAlgorithm;
-		this.macAlgorithm = macAlgorithm;
-		this.id = id;
-	}
-	
-	@Override
-	public MessageDigest createMessageDigest() throws NoSuchAlgorithmException {
-		return MessageDigest.getInstance(hashAlgoritm);
-	}
-	
-	@Override
-	public Mac createMac() throws NoSuchAlgorithmException {
-		return Mac.getInstance(macAlgorithm);
-	}
+    public final static IHash SHA256 = new Hash("SHA-256", "HmacSHA256", HashId.SHA_256);
 
-	@Override
-	public HashId getId() {
-		return id;
-	}
+    public final static IHash SHA384 = new Hash("SHA-384", "HmacSHA384", HashId.SHA_384);
+
+    private final String hashAlgoritm;
+
+    private final String macAlgorithm;
+
+    private final HashId id;
+
+    public Hash(String hashAlgorithm, String macAlgorithm, HashId id) {
+        this.hashAlgoritm = hashAlgorithm;
+        this.macAlgorithm = macAlgorithm;
+        this.id = id;
+    }
+
+    @Override
+    public MessageDigest createMessageDigest() throws NoSuchAlgorithmException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Mac createMac() throws NoSuchAlgorithmException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public HashId getId() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

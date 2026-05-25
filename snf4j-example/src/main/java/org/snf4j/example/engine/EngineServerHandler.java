@@ -29,9 +29,8 @@ import org.snf4j.core.handler.AbstractStreamHandler;
 
 public class EngineServerHandler extends AbstractStreamHandler {
 
-	@Override
-	public void read(Object msg) {
-		System.out.print(new String((byte[])msg));
-	}
-
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

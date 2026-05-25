@@ -26,11 +26,14 @@
 package org.snf4j.example.sctp.multi;
 
 public class SctpMultiServer3 extends Server {
-	static final int PORT = Integer.getInteger(PREFIX+"Port", 8003);
-	static final int PEER1_PORT = Integer.getInteger(PREFIX+"Peer1Port", 8001);
-	static final int PEER2_PORT = Integer.getInteger(PREFIX+"Peer2Port", 8002);
-	
-	public static void main(String[] args) throws Exception {
-		new SctpMultiServer1().start(PORT, PEER1_PORT, PEER2_PORT);
-	}
+
+    static final int PORT = Integer.getInteger(PREFIX + "Port", 8003);
+
+    static final int PEER1_PORT = Integer.getInteger(PREFIX + "Peer1Port", 8001);
+
+    static final int PEER2_PORT = Integer.getInteger(PREFIX + "Peer2Port", 8002);
+
+    public static void main(String[] args) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

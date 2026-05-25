@@ -27,7 +27,6 @@ package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -36,53 +35,50 @@ import org.snf4j.tls.extension.IExtensionDecoder;
 
 public class Finished extends KnownHandshake implements IFinished {
 
-	private final static HandshakeType TYPE = HandshakeType.FINISHED;
-	
-	private final byte[] verifyData;
-	
-	private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
+    private final static HandshakeType TYPE = HandshakeType.FINISHED;
 
-		@Override
-		public HandshakeType getType() {
-			return TYPE;
-		}
+    private final byte[] verifyData;
 
-		@Override
-		public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
-			byte[] verifyData = new byte[remaining];
-			
-			srcs.get(verifyData);
-			return new Finished(verifyData);
-		}
-		
-	};
-	public Finished(byte[] verifyData) {
-		super(TYPE);
-		Args.checkNull(verifyData, "verifyData");
-		this.verifyData = verifyData;
-	}
+    private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
 
-	@Override
-	public int getDataLength() {
-		return verifyData.length;
-	}
+        @Override
+        public HandshakeType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	@Override
-	public List<IExtension> getExtensions() {
-		return null;
-	}
+        @Override
+        public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	public static IHandshakeParser getParser() {
-		return PARSER;
-	}
-	
-	@Override
-	public byte[] getVerifyData() {
-		return verifyData;
-	}
+    public Finished(byte[] verifyData) {
+        super(TYPE);
+        Args.checkNull(verifyData, "verifyData");
+        this.verifyData = verifyData;
+    }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.put(verifyData);
-	}
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IHandshakeParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] getVerifyData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

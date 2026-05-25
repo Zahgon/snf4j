@@ -28,19 +28,18 @@ package org.snf4j.core.logger;
 /**
  * Default implementation of the {@link ILoggerFactory} interface that is
  * used by the API. This implementation simply does not log any messages.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class NopLoggerFactory implements ILoggerFactory {
 
-	private final ILogger NOP_LOGGER = new NopLogger(); 
-	
-	/**
-	 * Returns a logger that simply does not log any messages.
-	 */
-	@Override
-	public ILogger getLogger(String name) {
-		return NOP_LOGGER;
-	}
+    private final ILogger NOP_LOGGER = new NopLogger();
 
+    /**
+     * Returns a logger that simply does not log any messages.
+     */
+    @Override
+    public ILogger getLogger(String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

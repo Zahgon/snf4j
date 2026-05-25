@@ -27,11 +27,12 @@ package org.snf4j.tls.handshake;
 
 public abstract class KnownHandshake extends AbstractHandshake {
 
-	protected KnownHandshake(HandshakeType type) {
-		super(type);
-	}
+    protected KnownHandshake(HandshakeType type) {
+        super(type);
+    }
 
-	@Override
-	public final boolean isKnown() { return true; }
-	
+    @Override
+    public final boolean isKnown() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

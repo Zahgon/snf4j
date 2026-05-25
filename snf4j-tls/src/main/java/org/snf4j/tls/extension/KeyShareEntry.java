@@ -27,102 +27,74 @@ package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
 import java.security.PublicKey;
-
 import org.snf4j.tls.Args;
 
 public class KeyShareEntry {
-	
-	private final NamedGroup namedGroup;
-	
-	private final PublicKey key;
-	
-	private final ParsedKey parsedKey;
-	
-	private final byte[] rawKey;
-	
-	public KeyShareEntry(NamedGroup namedGroup, PublicKey key) {
-		Args.checkNull(namedGroup, "namedGroup");
-		Args.checkNull(key, "key");
-		this.namedGroup = namedGroup;
-		this.key = key;
-		parsedKey = null;
-		rawKey = null;
-	}
 
-	public KeyShareEntry(NamedGroup namedGroup, ParsedKey parsedKey) {
-		Args.checkNull(namedGroup, "namedGroup");
-		Args.checkNull(parsedKey, "parsedKey");
-		this.namedGroup = namedGroup;
-		key = null;
-		this.parsedKey = parsedKey;
-		rawKey = null;
-	}
-	
-	public KeyShareEntry(NamedGroup namedGroup, byte[] rawKey) {
-		Args.checkNull(namedGroup, "namedGroup");
-		Args.checkNull(rawKey, "rawKey");
-		this.namedGroup = namedGroup;
-		key = null;
-		parsedKey = null;
-		this.rawKey = rawKey;
-	}
+    private final NamedGroup namedGroup;
 
-	public NamedGroup getNamedGroup() {
-		return namedGroup;
-	}
-	
-	public PublicKey getKey() {
-		return key;
-	}
+    private final PublicKey key;
 
-	public ParsedKey getParsedKey() {
-		return parsedKey;
-	}
-	
-	public byte[] getRawKey() {
-		return rawKey;
-	}
-	
-	public int getDataLength() {
-		return 2 + 2 + namedGroup.spec().getDataLength();
-	}
-	
-	public void getData(ByteBuffer buffer) {
-		buffer.putShort((short) namedGroup.value());
-		buffer.putShort((short) namedGroup.spec().getDataLength());
-		if (key != null) {
-			namedGroup.spec().getData(buffer, key);
-		}
-		else if (parsedKey != null) {
-			namedGroup.spec().getData(buffer, parsedKey);
-		}
-		else {
-			buffer.put(rawKey);
-		}
-	}
-	
-	public static KeyShareEntry find(KeyShareEntry[] entries, NamedGroup group) {
-		int value = group.value();
-		
-		for (KeyShareEntry e: entries) {
-			if (e.namedGroup.value() == value) {
-				return e;
-			}
-		}
-		return null;
-	}
-	
-	public static KeyShareEntry findMatch(KeyShareEntry[] entries, NamedGroup[] groups) {
-		for (NamedGroup g: groups) {
-			int value = g.value();
+    private final ParsedKey parsedKey;
 
-			for (KeyShareEntry e: entries) {
-				if (e.namedGroup.value() == value) {
-					return e;
-				}
-			}
-		}
-		return null;
-	}
-	
+    private final byte[] rawKey;
+
+    public KeyShareEntry(NamedGroup namedGroup, PublicKey key) {
+        Args.checkNull(namedGroup, "namedGroup");
+        Args.checkNull(key, "key");
+        this.namedGroup = namedGroup;
+        this.key = key;
+        parsedKey = null;
+        rawKey = null;
+    }
+
+    public KeyShareEntry(NamedGroup namedGroup, ParsedKey parsedKey) {
+        Args.checkNull(namedGroup, "namedGroup");
+        Args.checkNull(parsedKey, "parsedKey");
+        this.namedGroup = namedGroup;
+        key = null;
+        this.parsedKey = parsedKey;
+        rawKey = null;
+    }
+
+    public KeyShareEntry(NamedGroup namedGroup, byte[] rawKey) {
+        Args.checkNull(namedGroup, "namedGroup");
+        Args.checkNull(rawKey, "rawKey");
+        this.namedGroup = namedGroup;
+        key = null;
+        parsedKey = null;
+        this.rawKey = rawKey;
+    }
+
+    public NamedGroup getNamedGroup() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public PublicKey getKey() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public ParsedKey getParsedKey() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public byte[] getRawKey() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static KeyShareEntry find(KeyShareEntry[] entries, NamedGroup group) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static KeyShareEntry findMatch(KeyShareEntry[] entries, NamedGroup[] groups) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

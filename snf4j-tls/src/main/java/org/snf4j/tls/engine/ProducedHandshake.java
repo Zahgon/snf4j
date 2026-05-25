@@ -29,58 +29,60 @@ import org.snf4j.tls.handshake.IHandshake;
 import org.snf4j.tls.record.RecordType;
 
 public class ProducedHandshake {
-	
-	public enum Type {HANDSHAKE, APPLICATION_DATA, CHANGE_CIPHER_SPEC};
-	
-	private final IHandshake handshake;
-	
-	private final Type type;
-	
-	private final RecordType recordType;
 
-	private final RecordType nextRecordType;
-	
-	public ProducedHandshake(IHandshake handshake) {
-		this(handshake, null, (RecordType)null);
-	}
+    public enum Type {
 
-	public ProducedHandshake(IHandshake handshake, Type type) {
-		this(handshake, null, (RecordType)null, type);
-	}
+        HANDSHAKE, APPLICATION_DATA, CHANGE_CIPHER_SPEC
+    }
 
-	public ProducedHandshake(IHandshake handshake, RecordType recordType) {
-		this(handshake, recordType, (RecordType)null);
-	}
+    private final IHandshake handshake;
 
-	public ProducedHandshake(IHandshake handshake, RecordType recordType, Type type) {
-		this(handshake, recordType, null, type);
-	}
+    private final Type type;
 
-	public ProducedHandshake(IHandshake handshake, RecordType recordType, RecordType nextRecordType) {
-		this(handshake, recordType, nextRecordType, handshake.getType() != null ? Type.HANDSHAKE : Type.APPLICATION_DATA);
-	}
+    private final RecordType recordType;
 
-	public ProducedHandshake(IHandshake handshake, RecordType recordType, RecordType nextRecordType, Type type) {
-		this.handshake = handshake;
-		this.recordType = recordType;
-		this.nextRecordType = nextRecordType;
-		this.type = type;
-	}
-	
-	public Type getType() {
-		return type;
-	}
-	
-	public IHandshake getHandshake() {
-		return handshake;
-	}
+    private final RecordType nextRecordType;
 
-	public RecordType getRecordType() {
-		return recordType;
-	}
+    public ProducedHandshake(IHandshake handshake) {
+        this(handshake, null, (RecordType) null);
+    }
 
-	public RecordType getNextRecordType() {
-		return nextRecordType;
-	}
-	
+    public ProducedHandshake(IHandshake handshake, Type type) {
+        this(handshake, null, (RecordType) null, type);
+    }
+
+    public ProducedHandshake(IHandshake handshake, RecordType recordType) {
+        this(handshake, recordType, (RecordType) null);
+    }
+
+    public ProducedHandshake(IHandshake handshake, RecordType recordType, Type type) {
+        this(handshake, recordType, null, type);
+    }
+
+    public ProducedHandshake(IHandshake handshake, RecordType recordType, RecordType nextRecordType) {
+        this(handshake, recordType, nextRecordType, handshake.getType() != null ? Type.HANDSHAKE : Type.APPLICATION_DATA);
+    }
+
+    public ProducedHandshake(IHandshake handshake, RecordType recordType, RecordType nextRecordType, Type type) {
+        this.handshake = handshake;
+        this.recordType = recordType;
+        this.nextRecordType = nextRecordType;
+        this.type = type;
+    }
+
+    public Type getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public IHandshake getHandshake() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public RecordType getRecordType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public RecordType getNextRecordType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

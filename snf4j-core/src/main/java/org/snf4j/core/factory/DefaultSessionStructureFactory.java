@@ -27,7 +27,6 @@ package org.snf4j.core.factory;
 
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executor;
-
 import org.snf4j.core.allocator.DefaultAllocator;
 import org.snf4j.core.allocator.IByteBufferAllocator;
 import org.snf4j.core.timer.ITimeoutModel;
@@ -35,68 +34,67 @@ import org.snf4j.core.timer.ITimer;
 
 /**
  * Default factory used to configure the internal structure of the created session.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class DefaultSessionStructureFactory implements ISessionStructureFactory {
 
-	/**
-	 * Default session's structure factory.
-	 */
-	public final static DefaultSessionStructureFactory DEFAULT = new DefaultSessionStructureFactory();
-	
-	/**
-	 * Constructs default session's structure factory.
-	 */
-	protected DefaultSessionStructureFactory() {
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * By default it simply returns {@link DefaultAllocator#DEFAULT}
-	 * 
-	 * @return the default byte buffer allocator that will have a backing array.
-	 */
-	@Override
-	public IByteBufferAllocator getAllocator() {
-		return DefaultAllocator.DEFAULT;
-	}
+    /**
+     * Default session's structure factory.
+     */
+    public final static DefaultSessionStructureFactory DEFAULT = new DefaultSessionStructureFactory();
 
-	/**
-	 * {@inheritDoc}
-	 * @return <code>null</code>, so the session will be responsible for creation of its own copy of attributes
-	 */
-	@Override
-	public ConcurrentMap<Object, Object> getAttributes() {
-		return null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * @return <code>null</code>, so the default executor should be used by the session
-	 */
-	@Override
-	public Executor getExecutor() {
-		return null;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * @return <code>null</code>, so the session timer will not be supported by the session
-	 */
-	@Override
-	public ITimer getTimer() {
-		return null;
-	}
+    /**
+     * Constructs default session's structure factory.
+     */
+    protected DefaultSessionStructureFactory() {
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * @return <code>null</code>, so the default timeout model should be used by the session
-	 */
-	@Override
-	public ITimeoutModel getTimeoutModel() {
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     * <p>
+     * By default it simply returns {@link DefaultAllocator#DEFAULT}
+     *
+     * @return the default byte buffer allocator that will have a backing array.
+     */
+    @Override
+    public IByteBufferAllocator getAllocator() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    /**
+     * {@inheritDoc}
+     * @return <code>null</code>, so the session will be responsible for creation of its own copy of attributes
+     */
+    @Override
+    public ConcurrentMap<Object, Object> getAttributes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return <code>null</code>, so the default executor should be used by the session
+     */
+    @Override
+    public Executor getExecutor() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return <code>null</code>, so the session timer will not be supported by the session
+     */
+    @Override
+    public ITimer getTimer() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return <code>null</code>, so the default timeout model should be used by the session
+     */
+    @Override
+    public ITimeoutModel getTimeoutModel() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

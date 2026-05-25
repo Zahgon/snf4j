@@ -28,57 +28,21 @@ package org.snf4j.example.engine;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-
 import org.snf4j.core.SelectorLoop;
 import org.snf4j.core.StreamSession;
 import org.snf4j.core.factory.IStreamSessionFactory;
 
 public class EngineServer {
-	static final String PREFIX = "org.snf4j.";
-	static final int PORT = Integer.getInteger(PREFIX+"Port", 8003);
-	static final int ENGINE = Integer.getInteger(PREFIX+"Engine", 2);
-	static final int OFFSET = Integer.getInteger(PREFIX+"Offset", 66);
 
-	public static void main(String[] args) throws Exception {
-		SelectorLoop loop = new SelectorLoop();
+    static final String PREFIX = "org.snf4j.";
 
-		try {
-			loop.start();
-		
-			// Initialize the listener
-			ServerSocketChannel channel = ServerSocketChannel.open();
-			channel.configureBlocking(false);
-			channel.socket().bind(new InetSocketAddress(PORT));
-			
-			// Register the listener
-			loop.register(channel, new IStreamSessionFactory() {
+    static final int PORT = Integer.getInteger(PREFIX + "Port", 8003);
 
-				@Override
-				public StreamSession create(SocketChannel channel)
-						throws Exception {
-					return new EngineSession(EngineFactory.create(ENGINE, OFFSET, false), new EngineServerHandler());
-				}
+    static final int ENGINE = Integer.getInteger(PREFIX + "Engine", 2);
 
-				@Override
-				public void registered(ServerSocketChannel channel) {
-				}
+    static final int OFFSET = Integer.getInteger(PREFIX + "Offset", 66);
 
-				@Override
-				public void closed(ServerSocketChannel channel) {
-				}
-
-				@Override
-				public void exception(ServerSocketChannel channel, Throwable exception) {
-				}
-			});
-			
-			// Wait till the loop ends
-			loop.join();
-		}
-		finally {
-			
-			// Gently stop the loop
-			loop.stop();
-		}
-	}
+    public static void main(String[] args) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

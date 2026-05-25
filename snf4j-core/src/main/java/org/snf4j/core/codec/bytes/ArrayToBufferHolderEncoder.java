@@ -27,7 +27,6 @@ package org.snf4j.core.codec.bytes;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.IByteBufferHolder;
 import org.snf4j.core.SingleByteBufferHolder;
 import org.snf4j.core.codec.IEncoder;
@@ -35,42 +34,33 @@ import org.snf4j.core.session.ISession;
 
 /**
  * An encoder transforming an array of bytes into an {@link IByteBufferHolder}.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class ArrayToBufferHolderEncoder extends ArrayToBufferHolderCodec implements IEncoder<byte[], IByteBufferHolder> {
 
-	private final boolean allocate;
-	
-	/**
-	 * Constructs an encoder with a specified allocation mode.
-	 * 
-	 * @param allocate the allocation mode determining if the buffer in the output
-	 *                 buffer holder should be allocated by the session's allocator
-	 *                 or the buffer should wrap the input array.
-	 */
-	public ArrayToBufferHolderEncoder(boolean allocate) {
-		this.allocate = allocate;
-	}
-	
-	/**
-	 * Constructs a encoder with no buffer allocation (only by wrapping the input array)
-	 */
-	public ArrayToBufferHolderEncoder() {
-		allocate = false;
-	}
-	
-	@Override
-	public void encode(ISession session, byte[] data, List<IByteBufferHolder> out) throws Exception {
-		if (allocate) {
-			ByteBuffer b = session.allocate(data.length);
-			
-			b.put(data).flip();
-			out.add(new SingleByteBufferHolder(b));
-		}
-		else {
-			out.add(new SingleByteBufferHolder(ByteBuffer.wrap(data)));
-		}
-	}
+    private final boolean allocate;
 
+    /**
+     * Constructs an encoder with a specified allocation mode.
+     *
+     * @param allocate the allocation mode determining if the buffer in the output
+     *                 buffer holder should be allocated by the session's allocator
+     *                 or the buffer should wrap the input array.
+     */
+    public ArrayToBufferHolderEncoder(boolean allocate) {
+        this.allocate = allocate;
+    }
+
+    /**
+     * Constructs a encoder with no buffer allocation (only by wrapping the input array)
+     */
+    public ArrayToBufferHolderEncoder() {
+        allocate = false;
+    }
+
+    @Override
+    public void encode(ISession session, byte[] data, List<IByteBufferHolder> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -28,25 +28,23 @@ package org.snf4j.tls.extension;
 import org.snf4j.tls.Args;
 
 public class OfferedPsk {
-	
-	private final PskIdentity identity;
-	
-	private final byte[] binder;
 
-	public OfferedPsk(PskIdentity identity, byte[] binder) {
-		Args.checkNull(identity, "identity");
-		Args.checkNull(binder, "binder");
-		this.identity = identity;
-		this.binder = binder;
-	}
+    private final PskIdentity identity;
 
-	public PskIdentity getIdentity() {
-		return identity;
-	}
+    private final byte[] binder;
 
-	public byte[] getBinder() {
-		return binder;
-	}
-	
-	
+    public OfferedPsk(PskIdentity identity, byte[] binder) {
+        Args.checkNull(identity, "identity");
+        Args.checkNull(binder, "binder");
+        this.identity = identity;
+        this.binder = binder;
+    }
+
+    public PskIdentity getIdentity() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public byte[] getBinder() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

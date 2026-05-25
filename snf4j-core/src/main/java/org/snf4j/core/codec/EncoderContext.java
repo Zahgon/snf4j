@@ -26,50 +26,33 @@
 package org.snf4j.core.codec;
 
 class EncoderContext extends CodecContext {
-	
-	final private IEncoder<?,?> encoder;
-	
-	EncoderContext(Object key, IEncoder<?,?> encoder) {
-		super(key, encoder);
-		this.encoder = encoder;
-	}
 
-	@SuppressWarnings("rawtypes")
-	final IEncoder getEncoder() {
-		return encoder;
-	}	
-	
-	private final EncoderContext findPreviousNotClogged(CodecContext previous) {
-		while (previous != null && previous.isClogged()) {
-			previous = previous.prev;
-		}
-		return (EncoderContext) previous;
-	}
-	
-	@Override
-	final boolean isValid(CodecContext previous) {
-		if (previous == null) {
-			return clogged ? inboundByte : outboundByte;
-		}
-		if (previous instanceof EncoderContext) {
-			EncoderContext found = findPreviousNotClogged(previous);
-			
-			if (found != null) {
-				if (clogged) {
-					return encoder.getInboundType().isAssignableFrom(found.encoder.getInboundType());
-				}
-				return found.encoder.getInboundType().isAssignableFrom(encoder.getOutboundType());
-			}
-			else {
-				return isValid(null);
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	final boolean isDecoder() {
-		return false;
-	}
-	
+    final private IEncoder<?, ?> encoder;
+
+    EncoderContext(Object key, IEncoder<?, ?> encoder) {
+        super(key, encoder);
+        this.encoder = encoder;
+    }
+
+    @SuppressWarnings("rawtypes")
+    final IEncoder getEncoder() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private final EncoderContext findPreviousNotClogged(CodecContext previous) {
+        while (previous != null && previous.isClogged()) {
+            previous = previous.prev;
+        }
+        return (EncoderContext) previous;
+    }
+
+    @Override
+    final boolean isValid(CodecContext previous) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final boolean isDecoder() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

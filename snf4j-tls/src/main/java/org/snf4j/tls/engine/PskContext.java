@@ -29,31 +29,30 @@ import org.snf4j.tls.crypto.KeySchedule;
 import org.snf4j.tls.session.SessionTicket;
 
 public class PskContext {
-	
-	private final KeySchedule keySchedule;
-	
-	private final SessionTicket ticket;
 
-	public PskContext(KeySchedule keySchedule, SessionTicket ticket) {
-		this.keySchedule = keySchedule;
-		this.ticket = ticket;
-	}
+    private final KeySchedule keySchedule;
 
-	public PskContext(KeySchedule keySchedule) {
-		this.keySchedule = keySchedule;
-		this.ticket = null;
-	}
-	
-	public KeySchedule getKeySchedule() {
-		return keySchedule;
-	}
+    private final SessionTicket ticket;
 
-	public SessionTicket getTicket() {
-		return ticket;
-	}
-	
-	public void clear() {
-		keySchedule.eraseAll();
-	}
-	
+    public PskContext(KeySchedule keySchedule, SessionTicket ticket) {
+        this.keySchedule = keySchedule;
+        this.ticket = ticket;
+    }
+
+    public PskContext(KeySchedule keySchedule) {
+        this.keySchedule = keySchedule;
+        this.ticket = null;
+    }
+
+    public KeySchedule getKeySchedule() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SessionTicket getTicket() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void clear() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

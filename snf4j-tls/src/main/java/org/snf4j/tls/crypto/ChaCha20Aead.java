@@ -28,7 +28,6 @@ package org.snf4j.tls.crypto;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
@@ -37,97 +36,91 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class ChaCha20Aead implements IAead {
 
-	public final static ChaCha20Aead AEAD_CHACHA20_POLY1305 = new ChaCha20Aead(16,32,4611686018427387904L,12, AeadId.CHACHA20_POLY1305);
-	
-	private final static String TRANSFORMATION = "ChaCha20-Poly1305";
-	
-	private final static String ALGORITHM = "ChaCha20";
-	
-	private final static boolean IMPLEMENTED;
-	
-	private final int tagLength;
-	
-	private final int keyLength;
-	
-	private final long keyLimit;
-	
-	private final int ivLength;
+    public final static ChaCha20Aead AEAD_CHACHA20_POLY1305 = new ChaCha20Aead(16, 32, 4611686018427387904L, 12, AeadId.CHACHA20_POLY1305);
 
-	private final AeadId id;
-	
-	static boolean implemented(String transformation) {
-		try {
-			Cipher.getInstance(transformation);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}		
-	}
+    private final static String TRANSFORMATION = "ChaCha20-Poly1305";
 
-	static {
-		IMPLEMENTED = implemented(TRANSFORMATION);
-	}
-	
-	public ChaCha20Aead(int tagLength, int keyLength, long keyLimit, int ivLength, AeadId id) {
-		this.tagLength = tagLength;
-		this.keyLength = keyLength;
-		this.keyLimit = keyLimit;
-		this.ivLength = ivLength;
-		this.id = id;
-	}
-	
-	@Override
-	public int getTagLength() {
-		return tagLength;
-	}
+    private final static String ALGORITHM = "ChaCha20";
 
-	@Override
-	public int getKeyLength() {
-		return keyLength;
-	}
+    private final static boolean IMPLEMENTED;
 
-	@Override
-	public int getIvLength() {
-		return ivLength;
-	}
+    private final int tagLength;
 
-	@Override
-	public long getKeyLimit() {
-		return keyLimit;
-	}
+    private final int keyLength;
 
-	@Override
-	public boolean isImplemented() {
-		return IMPLEMENTED;
-	}
+    private final long keyLimit;
 
-	Cipher createCipher(String transformation) throws NoSuchAlgorithmException, NoSuchPaddingException {
-		return Cipher.getInstance(transformation);
-	}
-	
-	@Override
-	public Cipher createCipher() throws NoSuchAlgorithmException, NoSuchPaddingException {
-		return createCipher(TRANSFORMATION);
-	}
+    private final int ivLength;
 
-	@Override
-	public SecretKey createKey(byte[] key) {
-		return new SecretKeySpec(key, ALGORITHM);
-	}
+    private final AeadId id;
 
-	@Override
-	public void initDecrypt(Cipher cipher, SecretKey key, byte[] nonce)	throws InvalidKeyException, InvalidAlgorithmParameterException {
-		cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(nonce));
-	}
+    static boolean implemented(String transformation) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void initEncrypt(Cipher cipher, SecretKey key, byte[] nonce) throws InvalidKeyException, InvalidAlgorithmParameterException {
-		cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(nonce));
-	}
+    static {
+        IMPLEMENTED = implemented(TRANSFORMATION);
+    }
 
-	@Override
-	public AeadId getId() {
-		return id;
-	}
+    public ChaCha20Aead(int tagLength, int keyLength, long keyLimit, int ivLength, AeadId id) {
+        this.tagLength = tagLength;
+        this.keyLength = keyLength;
+        this.keyLimit = keyLimit;
+        this.ivLength = ivLength;
+        this.id = id;
+    }
 
+    @Override
+    public int getTagLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getKeyLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getIvLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public long getKeyLimit() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    Cipher createCipher(String transformation) throws NoSuchAlgorithmException, NoSuchPaddingException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Cipher createCipher() throws NoSuchAlgorithmException, NoSuchPaddingException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SecretKey createKey(byte[] key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void initDecrypt(Cipher cipher, SecretKey key, byte[] nonce) throws InvalidKeyException, InvalidAlgorithmParameterException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void initEncrypt(Cipher cipher, SecretKey key, byte[] nonce) throws InvalidKeyException, InvalidAlgorithmParameterException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public AeadId getId() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

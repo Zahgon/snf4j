@@ -26,43 +26,41 @@
 package org.snf4j.tls.engine;
 
 import java.security.cert.X509Certificate;
-
 import org.snf4j.tls.Args;
 import org.snf4j.tls.extension.SignatureScheme;
 
 public class CertificateValidateCriteria {
 
-	private final boolean server;
+    private final boolean server;
 
-	private final String hostName;
+    private final String hostName;
 
-	private final SignatureScheme[] localSchemes;
+    private final SignatureScheme[] localSchemes;
 
-	public CertificateValidateCriteria(boolean server, String hostName, SignatureScheme[] localSchemes) {
-		Args.checkNull(localSchemes, "localSchemes");
-		this.server = server;
-		this.hostName = hostName;
-		this.localSchemes = localSchemes;
-	}
+    public CertificateValidateCriteria(boolean server, String hostName, SignatureScheme[] localSchemes) {
+        Args.checkNull(localSchemes, "localSchemes");
+        this.server = server;
+        this.hostName = hostName;
+        this.localSchemes = localSchemes;
+    }
 
-	public boolean isServer() {
-		return server;
-	}
+    public boolean isServer() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public String getHostName() {
-		return hostName;
-	}
-	
-	public SignatureScheme[] getLocalSchemes() {
-		return localSchemes;
-	}
-	
-	public boolean allMatch(X509Certificate[] certs, int offset, int length) {
-		return CertificateCriteria.allMatch(certs, offset, length, localSchemes);
-	}
-	
-	public boolean allMatch(X509Certificate[] certs) {
-		return allMatch(certs, 0, certs.length);
-	}
+    public String getHostName() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    public SignatureScheme[] getLocalSchemes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean allMatch(X509Certificate[] certs, int offset, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean allMatch(X509Certificate[] certs) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

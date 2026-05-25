@@ -28,7 +28,6 @@ package org.snf4j.websocket.handshake;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.codec.ICodecPipeline;
 import org.snf4j.core.codec.IEncoder;
 import org.snf4j.core.codec.IEventDrivenCodec;
@@ -39,95 +38,54 @@ import org.snf4j.websocket.IWebSocketSessionConfig;
 
 /**
  * Encodes a Web Socket handshake frame into bytes in the protocol version 13 format.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public class HandshakeEncoder implements IEncoder<HandshakeFrame,ByteBuffer>, IEventDrivenCodec {
+public class HandshakeEncoder implements IEncoder<HandshakeFrame, ByteBuffer>, IEventDrivenCodec {
 
-	private final boolean clientMode;
-	
-	private final HandshakeFactory factory = HandshakeFactory.getDefault();
-	
-	private ICodecPipeline pipeline;
-	
-	/**
-	 * Constructs a Web Socket handshake encoder.
-	 * 
-	 * @param clientMode determines the mode (client/server) in which the encoder
-	 *                   should work
-	 */
-	public HandshakeEncoder(boolean clientMode) {
-		this.clientMode = clientMode;
-	}
-	
-	@Override
-	public Class<HandshakeFrame> getInboundType() {
-		return HandshakeFrame.class;
-	}
+    private final boolean clientMode;
 
-	@Override
-	public Class<ByteBuffer> getOutboundType() {
-		return ByteBuffer.class;
-	}
+    private final HandshakeFactory factory = HandshakeFactory.getDefault();
 
-	@Override
-	public void encode(ISession session, HandshakeFrame data, List<ByteBuffer> out) throws Exception {
-		if (!clientMode) {
-			if (data instanceof HandshakeResponse) {
-				if (((HandshakeResponse)data).getStatus() == HttpStatus.SWITCHING_PROTOCOLS.getStatus()) {
-					IHandshaker handshaker = ((IWebSocketSession)session).getHandshaker();
-					boolean hasExtensions = handshaker.hasExtensions();
-					
-					
-					((IWebSocketSessionConfig) session.getConfig()).switchEncoders(pipeline, hasExtensions);
-					if (hasExtensions) {
-						handshaker.updateExtensionEncoders(pipeline);
-					}
-				}
-			}
-		}
-		
-		ByteBuffer buffer = session.allocate(data.getLength());
-		int tries = 0;
-		
-		for (;;) {
-			try {
-				factory.format(data, buffer, clientMode);
-				break;
-			}
-			catch (InvalidHandshakeException e) {
-				session.release(buffer);
-				throw e;
-			}
-			catch (BufferOverflowException e) {
-				session.release(buffer);
-				if (tries++ > 0) {
-					throw new InvalidHandshakeException(e);
-				}
-				buffer = session.allocate(data.getLength()*2);
-			}
-			catch (Throwable e) {
-				session.release(buffer);
-				throw new InvalidHandshakeException(e);
-			}
-		}
-		
-		buffer.flip();
-		out.add(buffer);
-	}
+    private ICodecPipeline pipeline;
 
-	@Override
-	public void added(ISession session, ICodecPipeline pipeline) {
-		this.pipeline = pipeline;
-	}
+    /**
+     * Constructs a Web Socket handshake encoder.
+     *
+     * @param clientMode determines the mode (client/server) in which the encoder
+     *                   should work
+     */
+    public HandshakeEncoder(boolean clientMode) {
+        this.clientMode = clientMode;
+    }
 
-	@Override
-	public void event(ISession session, SessionEvent event) {
-	}
+    @Override
+    public Class<HandshakeFrame> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void removed(ISession session, ICodecPipeline pipeline) {
-		this.pipeline = null;
-	}
+    @Override
+    public Class<ByteBuffer> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public void encode(ISession session, HandshakeFrame data, List<ByteBuffer> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void added(ISession session, ICodecPipeline pipeline) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void event(ISession session, SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void removed(ISession session, ICodecPipeline pipeline) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

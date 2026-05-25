@@ -29,175 +29,84 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 
 class ProtocolDefaults {
-	
-	final static String TLS = "TLS";
 
-	final static String DTLS = "DTLS";
-	
-	static volatile ProtocolDefaults tlsDefaults;
-	
-	static volatile ProtocolDefaults dtlsDefaults;
-	
-	final static String[] PROTOCOLS = new String[] {
-			"TLSv1.3", 
-			"TLSv1.2", 
-			"TLSv1.1", 
-			"TLSv1",
-			"DTLSv1.2", 
-			"DTLSv1.0"
-			};
-	
-	final static String[] CIPHERS = new String[] {
-			"TLS_AES_128_GCM_SHA256",
-			"TLS_AES_256_GCM_SHA384",
-			"TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
-			"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-			"TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
-			"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
-			"TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384",
-			"TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384",
-			"TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256",
-			"TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256"
-			};
+    final static String TLS = "TLS";
 
-	private final Set<String> supportedCiphers;
-	
-	private final String[] defaultCiphers;
+    final static String DTLS = "DTLS";
 
-	private final Set<String> supportedProtocols;
-	
-	private final String[] defaultProtocols;
-	
-	ProtocolDefaults(String protocol) {
-		SSLEngine engine = ProtocolDefaults.defaultEngine(protocol);
-		
-		supportedCiphers = ProtocolDefaults.supportedCiphers(engine);
-		defaultCiphers = ProtocolDefaults.defaultCiphers(engine, supportedCiphers);
-		supportedProtocols = ProtocolDefaults.supportedProtocols(engine);
-		defaultProtocols = ProtocolDefaults.defaultProtocols(engine, supportedProtocols);
-	}
-	
-	Set<String> supportedCiphers() {
-		return supportedCiphers;
-	}
+    static volatile ProtocolDefaults tlsDefaults;
 
-	String[] defaultCiphers() {
-		return defaultCiphers;
-	}
+    static volatile ProtocolDefaults dtlsDefaults;
 
-	Set<String> supportedProtocols() {
-		return supportedProtocols;
-	}
+    final static String[] PROTOCOLS = new String[] { "TLSv1.3", "TLSv1.2", "TLSv1.1", "TLSv1", "DTLSv1.2", "DTLSv1.0" };
 
-	String[] defaultProtocols() {
-		return defaultProtocols;
-	}
-	
-	static ProtocolDefaults instance(SSLEngine engine) {
-		return instance(isDtls(engine));
-	}
+    final static String[] CIPHERS = new String[] { "TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384", "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384", "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256", "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256" };
 
-	static ProtocolDefaults instance(boolean dtls) {
-		if (dtls) {
-			if (dtlsDefaults == null) {
-				synchronized (ProtocolDefaults.class) {
-					if (dtlsDefaults == null) {
-						dtlsDefaults = new ProtocolDefaults(DTLS);
-					}
-				}
-			}
-			return dtlsDefaults;
-		}
-		if (tlsDefaults == null) {
-			synchronized (ProtocolDefaults.class) {
-				if (tlsDefaults == null) {
-					tlsDefaults = new ProtocolDefaults(TLS);
-				}
-			}
-		}
-		return tlsDefaults;
-	}
-	
-	static boolean isDtls(SSLEngine engine) {
-		String[] protocols = engine.getSupportedProtocols();
-		
-		for (String protocol: protocols) {
-			if (protocol.startsWith(DTLS)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	static SSLEngine defaultEngine(String protocol) throws Error {
-		SSLContext context;
-		
-		try {
-			context = SSLContext.getInstance(protocol);
-			context.init(null, null, null);
-		}
-		catch (Exception e) {
-			throw new Error("Initialization of SSL context for protocol " + protocol + " failed", e);
-		}
-		return context.createSSLEngine();
-	}
-	
-	static Set<String> supportedCiphers(SSLEngine engine) {
-		String[] supported = engine.getSupportedCipherSuites();
-		Set<String> ciphers = new HashSet<String>(supported.length);
-		
-		for (String cipher: supported) {
-			ciphers.add(cipher);
-		}
-		return ciphers;
-	}
-	
-	static String[] defaultCiphers(SSLEngine engine, Set<String> supportedCiphers) {
-		List<String> defaultList = new ArrayList<String>(CIPHERS.length);
-		
-		for (String cipher: CIPHERS) {
-			if (supportedCiphers.contains(cipher)) {
-				defaultList.add(cipher);
-			}
-		}
-		if (defaultList.isEmpty()) {
-			String[] ciphers = engine.getEnabledCipherSuites();
-			for (String cipher: ciphers) {
-				defaultList.add(cipher);
-			}
-		}
-		return defaultList.toArray(new String[defaultList.size()]);
-	}
+    private final Set<String> supportedCiphers;
 
-	static Set<String> supportedProtocols(SSLEngine engine) {
-		String[] supported = engine.getSupportedProtocols();
-		Set<String> protocols = new HashSet<String>(supported.length);
-		
-		for (String protocol: supported) {
-			protocols.add(protocol);
-		}
-		return protocols;
-	}
-	
-	static String[] defaultProtocols(SSLEngine engine, Set<String> supportedPtotocols) {
-		List<String> defaultList = new ArrayList<String>(PROTOCOLS.length);
-		
-		for (String protocol: PROTOCOLS) {
-			if (supportedPtotocols.contains(protocol)) {
-				defaultList.add(protocol);
-			}
-		}
-		if (defaultList.isEmpty()) {
-			String[] protocols = engine.getEnabledProtocols();
-			for (String protocol: protocols) {
-				defaultList.add(protocol);
-			}
-		}
-		return defaultList.toArray(new String[defaultList.size()]);
-	}
+    private final String[] defaultCiphers;
+
+    private final Set<String> supportedProtocols;
+
+    private final String[] defaultProtocols;
+
+    ProtocolDefaults(String protocol) {
+        SSLEngine engine = ProtocolDefaults.defaultEngine(protocol);
+        supportedCiphers = ProtocolDefaults.supportedCiphers(engine);
+        defaultCiphers = ProtocolDefaults.defaultCiphers(engine, supportedCiphers);
+        supportedProtocols = ProtocolDefaults.supportedProtocols(engine);
+        defaultProtocols = ProtocolDefaults.defaultProtocols(engine, supportedProtocols);
+    }
+
+    Set<String> supportedCiphers() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    String[] defaultCiphers() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    Set<String> supportedProtocols() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    String[] defaultProtocols() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static ProtocolDefaults instance(SSLEngine engine) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static ProtocolDefaults instance(boolean dtls) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static boolean isDtls(SSLEngine engine) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static SSLEngine defaultEngine(String protocol) throws Error {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static Set<String> supportedCiphers(SSLEngine engine) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static String[] defaultCiphers(SSLEngine engine, Set<String> supportedCiphers) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static Set<String> supportedProtocols(SSLEngine engine) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static String[] defaultProtocols(SSLEngine engine, Set<String> supportedPtotocols) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

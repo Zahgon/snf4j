@@ -26,81 +26,49 @@
 package org.snf4j.websocket.frame;
 
 import java.util.List;
-
 import org.snf4j.core.codec.IDecoder;
 import org.snf4j.core.session.ISession;
 import org.snf4j.core.session.IStreamSession;
 
 /**
  * Aggregates fragmented Web Socket frames into complete (final) frames.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public class FrameAggregator implements IDecoder<Frame,Frame> {
+public class FrameAggregator implements IDecoder<Frame, Frame> {
 
-	private final int maxAggregatedLength;
-	
-	private IAggregatedFrame frame;
-	
-	/**
-	 * Construct a Web Socket frame aggregator.
-	 * 
-	 * @param maxAggregatedLength maximum length of a aggregated frame's payload
-	 *                            data. Setting it to an appropriate value can
-	 *                            prevent from denial of service attacks
-	 */
-	public FrameAggregator(int maxAggregatedLength) {
-		this.maxAggregatedLength = maxAggregatedLength;
-	}
-	
-	@Override
-	public Class<Frame> getInboundType() {
-		return Frame.class;
-	}
+    private final int maxAggregatedLength;
 
-	@Override
-	public Class<Frame> getOutboundType() {
-		return Frame.class;
-	}
-	
-	private RuntimeException tooBig(ISession session, String message) throws InvalidFrameException {
-		((IStreamSession)session).writenf(new CloseFrame(CloseFrame.TOO_BIG));
-		return new InvalidFrameException(message);
-	}
+    private IAggregatedFrame frame;
 
-	@Override
-	public void decode(ISession session, Frame data, List<Frame> out) throws Exception {
-		switch (data.getOpcode()) {
-		case BINARY:
-			if (data.isFinalFragment()) {
-				break;
-			}
-			frame = new AggregatedBinaryFrame(true, data.getRsvBits(), data.getPayload());
-			return;
-			
-		case TEXT:
-			if (data.isFinalFragment()) {
-				break;
-			}
-			frame = new AggregatedTextFrame(true, data.getRsvBits(), data.getPayload());
-			return;
-			
-		case CONTINUATION:
-			if (frame != null) {
-				if (frame.getPayloadLength() + data.getPayloadLength() > maxAggregatedLength) {
-					throw tooBig(session, "Too big payload for aggregated frame");
-				}
-				frame.addFragment(data.getPayload());
-				if (!data.isFinalFragment()) {
-					return;
-				}
-				data = (Frame)frame;
-				frame = null;
-			}
-			
-		default:
-		}
-		out.add(data);
-	} 
+    /**
+     * Construct a Web Socket frame aggregator.
+     *
+     * @param maxAggregatedLength maximum length of a aggregated frame's payload
+     *                            data. Setting it to an appropriate value can
+     *                            prevent from denial of service attacks
+     */
+    public FrameAggregator(int maxAggregatedLength) {
+        this.maxAggregatedLength = maxAggregatedLength;
+    }
 
+    @Override
+    public Class<Frame> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Class<Frame> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private RuntimeException tooBig(ISession session, String message) throws InvalidFrameException {
+        ((IStreamSession) session).writenf(new CloseFrame(CloseFrame.TOO_BIG));
+        return new InvalidFrameException(message);
+    }
+
+    @Override
+    public void decode(ISession session, Frame data, List<Frame> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

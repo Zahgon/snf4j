@@ -26,7 +26,6 @@
 package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -34,62 +33,45 @@ import org.snf4j.tls.handshake.HandshakeType;
 
 public class PskKeyExchangeModesExtension extends KnownExtension implements IPskKeyExchangeModesExtension {
 
-	private final static ExtensionType TYPE = ExtensionType.PSK_KEY_EXCHANGE_MODES;
-	
-	private final PskKeyExchangeMode[] modes;
-	
-	private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
+    private final static ExtensionType TYPE = ExtensionType.PSK_KEY_EXCHANGE_MODES;
 
-		@Override
-		public ExtensionType getType() {
-			return TYPE;
-		}
+    private final PskKeyExchangeMode[] modes;
 
-		@Override
-		public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
-			if (remaining > 1) {
-				int len = srcs.getUnsigned();
-				
-				--remaining;
-				if (len == remaining) {
-					PskKeyExchangeMode[] modes = new PskKeyExchangeMode[len];
-					
-					for (int i=0; i<len; ++i) {
-						modes[i] = PskKeyExchangeMode.of(srcs.getUnsigned());
-					}
-					return new PskKeyExchangeModesExtension(modes);
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}	
-	};
-	
-	public PskKeyExchangeModesExtension(PskKeyExchangeMode... modes) {
-		super(TYPE);
-		Args.checkMin(modes, 1, "modes");
-		this.modes = modes;
-	}
+    private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
 
-	@Override
-	public PskKeyExchangeMode[] getModes() {
-		return modes;
-	}
+        @Override
+        public ExtensionType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	@Override
-	public int getDataLength() {
-		return 1 + modes.length;
-	}
+        @Override
+        public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.put((byte) modes.length);
-		for (PskKeyExchangeMode mode: modes) {
-			buffer.put((byte) mode.value());
-		}
-	}
+    public PskKeyExchangeModesExtension(PskKeyExchangeMode... modes) {
+        super(TYPE);
+        Args.checkMin(modes, 1, "modes");
+        this.modes = modes;
+    }
 
-	public static IExtensionParser getParser() {
-		return PARSER;
-	}
+    @Override
+    public PskKeyExchangeMode[] getModes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IExtensionParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

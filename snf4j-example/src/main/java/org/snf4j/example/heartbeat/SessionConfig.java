@@ -30,14 +30,9 @@ import org.snf4j.core.codec.ICodecExecutor;
 import org.snf4j.core.session.DefaultSessionConfig;
 
 public class SessionConfig extends DefaultSessionConfig {
-	
-	@Override
-	public ICodecExecutor createCodecExecutor() {
-		DefaultCodecExecutor executor = new DefaultCodecExecutor();
-		
-		executor.getPipeline().add("DECODER", new PacketDecoder());
-		executor.getPipeline().add("ENCODER", new PacketEncoder());
-		return executor;
-	}
 
+    @Override
+    public ICodecExecutor createCodecExecutor() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

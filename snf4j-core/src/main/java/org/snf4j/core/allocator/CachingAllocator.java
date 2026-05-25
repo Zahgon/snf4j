@@ -27,7 +27,6 @@ package org.snf4j.core.allocator;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.snf4j.core.Constants;
 
 /**
@@ -37,15 +36,15 @@ import org.snf4j.core.Constants;
  * organized to store buffers of different capacities. The first N-1 caches are
  * assigned to store buffers of fixed capacities according to the following
  * rules:
- * 
+ *
  * <pre>
- * cache 1: stores buffers of capacity determined by the minCapacity 
+ * cache 1: stores buffers of capacity determined by the minCapacity
  * cache 2: stores buffers of capacity determined by the minCapacity * 2
  * cache 3: stores buffers of capacity determined by the minCapacity * 4
  * ...
  * cache N-1: stores buffers of capacity determined by the minCapacity * 2 to the power (N-2)
  * </pre>
- * 
+ *
  * The last N-th cache is assign to store buffers of capacities greater or equal
  * to {@code minCapacity} * 2 to the power (N-1). Its current capacity adjusts
  * to the capacities of released buffers. If the capacity of released buffer is
@@ -54,13 +53,13 @@ import org.snf4j.core.Constants;
  * buffer being just released.
  * <p>
  * It implements cache aging mechanism to reduce size of caches that are not
- * used for longer time. 
+ * used for longer time.
  * <p>
- * <b>Performance and Scalability</b>: 
- * <br>It uses one set of caches so it can significantly reduce memory 
+ * <b>Performance and Scalability</b>:
+ * <br>It uses one set of caches so it can significantly reduce memory
  * consumption but on the other hand, due to a need for cache synchronization,
  * it can introduce latency issues in multi-thread applications.
- * 
+ *
  * <p>The behavior of the allocator can be customized by
  * setting following system properties:
  * <ul>
@@ -69,217 +68,168 @@ import org.snf4j.core.Constants;
  * <li>{@link Constants#ALLOCATOR_MIN_CACHE_SIZE_PROPERTY ALLOCATOR_MIN_CACHE_SIZE_PROPERTY}
  * <li>{@link Constants#ALLOCATOR_CACHE_AGE_THRESHOLD_PROPERTY ALLOCATOR_CACHE_AGE_THRESHOLD_PROPERTY}
  * </ul>
- * 
- * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  *
+ * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class CachingAllocator extends DefaultAllocator {
 
-	private final static int NUM_OF_CACHES = Integer.getInteger(Constants.ALLOCATOR_NUM_OF_CACHES_PROPERTY, 8);
-	
-	private final static byte[] MAP = new byte[1 << NUM_OF_CACHES];
-	
-	private final static int MASK;
-	
-	private final int touchAllThreshold;
-	
-	private final int minCapacity;
+    private final static int NUM_OF_CACHES = Integer.getInteger(Constants.ALLOCATOR_NUM_OF_CACHES_PROPERTY, 8);
 
-	private final int maxCapacity;
-	
-	private final int shift;
-	
-	final Cache[] caches = new Cache[NUM_OF_CACHES];
-	
-	private final AtomicLong touch = new AtomicLong(0);
-	
-	private final AtomicLong touchAll;
-	
-	static {
-		byte cacheIdx = 0;
-		int mask = 1;
-		for (int i=0; i<MAP.length; ++i) {
-			if ((i & mask) != i) {
-				mask = (mask << 1) | 1;
-				++cacheIdx;
-			}
-			MAP[i] = cacheIdx;
-		}
-		MASK = mask;
-	}
-	
-	/**
-	 * Constructs a caching allocator with default minimal capacity (128) and specified
-	 * metric data collector.
-	 * 
-	 * @param direct
-	 *            <code>true</code> if the allocator should allocate direct
-	 *            buffers, or <code>false</code> to allocate non-direct buffers
-	 *            that have a backing array
-	 * @param metric 
-	 *            a metric data collector
-	 */
-	public CachingAllocator(boolean direct, IDefaultAllocatorMetricCollector metric) {
-		this(direct, 128, metric);
-	}
-	
-	/**
-	 * Constructs a caching allocator with default minimal capacity (128).
-	 * 
-	 * @param direct
-	 *            <code>true</code> if the allocator should allocate direct
-	 *            buffers, or <code>false</code> to allocate non-direct buffers
-	 *            that have a backing array
-	 */
-	public CachingAllocator(boolean direct) {
-		this(direct, 128);
-	}
-	
-	/**
-	 * Constructs a caching allocator with specified metric data collector.
-	 * 
-	 * @param direct
-	 *            <code>true</code> if the allocator should allocate direct
-	 *            buffers, or <code>false</code> to allocate non-direct buffers
-	 *            that have a backing array
-	 * @param minCapacity the minimal capacity for buffers allocated by this 
-	 *                    allocator
-	 * @param metric a metric data collector
-	 */
-	public CachingAllocator(boolean direct, int minCapacity, IDefaultAllocatorMetricCollector metric) {
-		super(direct, metric);
-		
-		int maxCacheSize = Integer.getInteger(Constants.ALLOCATOR_MAX_CACHE_SIZE_PROPERTY, 512);
-		int minCacheSize = Integer.getInteger(Constants.ALLOCATOR_MIN_CACHE_SIZE_PROPERTY, 256);
-		int cacheAgeThreshold = Integer.getInteger(Constants.ALLOCATOR_CACHE_AGE_THRESHOLD_PROPERTY, 1000000);	
-		int min = 1;
-		int shift = 0;
-		int i = 0;
-		
-		while (min < minCapacity) {
-			min <<= 1;
-			shift++;
-		}
-		if (shift > 0) {
-			--shift;
-		}
-		this.shift = shift;
-		this.minCapacity = min;
-		maxCapacity = min << (NUM_OF_CACHES-1);
-		touchAllThreshold = cacheAgeThreshold * 2;
-		touchAll = new AtomicLong(touchAllThreshold);
-		for (; i<NUM_OF_CACHES-1; ++i) {
-			caches[i] = new SyncCache(minCapacity << i, minCacheSize, maxCacheSize, cacheAgeThreshold, caches);
-		}
-		caches[i] = new SyncLastCache(minCapacity << i, minCacheSize, maxCacheSize, cacheAgeThreshold, caches);
-	}
+    private final static byte[] MAP = new byte[1 << NUM_OF_CACHES];
 
-	/**
-	 * Constructs a caching allocator.
-	 * 
-	 * @param direct
-	 *            <code>true</code> if the allocator should allocate direct
-	 *            buffers, or <code>false</code> to allocate non-direct buffers
-	 *            that have a backing array
-	 * @param minCapacity the minimal capacity for buffers allocated by this 
-	 *                    allocator
-	 */
-	public CachingAllocator(boolean direct, int minCapacity) {
-		this(direct, minCapacity, null);
-	}
-	
-	final int cacheIdx(int capacity) {
-		if (capacity == 0) {
-			return 0;
-		}
-		else if (capacity >= maxCapacity) {
-			return NUM_OF_CACHES-1;
-		}
-		return MAP[(capacity-1 >>> shift) & MASK];
-	}
-	
-	Cache cache(int capacity) {
-		return caches[cacheIdx(capacity)];
-	}
-	
-	/**
-	 * Gets the minimal capacity for buffers allocated by this allocator.
-	 * 
-	 * @return the minimal capacity
-	 */
-	public final int getMinCapacity() {
-		return minCapacity;
-	}
-	
-	/**
-	 * Purges all caches used by this allocator.
-	 */
-	public void purge() {
-		for (int i=0; i<NUM_OF_CACHES; ++i) {
-			caches[i].purge();
-		}
-	}
-	
-	@Override
-	public boolean isReleasable() {
-		return true;
-	}
-	
-	@Override
-	public void release(ByteBuffer buffer) {
-		int capacity = buffer.capacity();
-		
-		metric.releasing(capacity);
-		if (buffer.isDirect() == direct) {
-			long t = touch.incrementAndGet();
-			long tAll = touchAll.get();
+    private final static int MASK;
 
-			if (touchAll.compareAndSet(t, tAll + touchAllThreshold)) {
-				tAll += touchAllThreshold;
-			}
-			
-			if (cache(capacity).put(buffer, t, tAll)) {
-				metric.released(capacity);
-			}
-		}
-	}	
-	
-	@Override
-	protected ByteBuffer allocate(int capacity, boolean direct) {
-		if (this.direct == direct) {
-			Cache cache = cache(capacity);
-			long t = touch.incrementAndGet();
-			long tAll = touchAll.get();
+    private final int touchAllThreshold;
 
-			if (touchAll.compareAndSet(t, tAll + touchAllThreshold)) {
-				tAll += touchAllThreshold;
-			}
-			
-			ByteBuffer buffer = cache.get(capacity, t, tAll);
-			
-			if (buffer != null) {
-				metric.allocating(capacity);
-				return buffer;
-			}
-			return super.allocate(Math.max(cache.capacity(), capacity), direct);
-		}
-		return super.allocate(capacity, direct);
-	}	
-	
-	@Override
-	protected ByteBuffer allocateEmpty(int capacity, ByteBuffer buffer) {
-		release(buffer);
-		return allocate(capacity, buffer.isDirect());
-	}
-	
-	@Override
-	protected ByteBuffer allocate(int capacity, ByteBuffer buffer) {
-		ByteBuffer b = allocate(capacity, buffer.isDirect());
-		
-		buffer.flip();
-		b.put(buffer);
-		release(buffer);
-		return b;
-	}
-	
+    private final int minCapacity;
+
+    private final int maxCapacity;
+
+    private final int shift;
+
+    final Cache[] caches = new Cache[NUM_OF_CACHES];
+
+    private final AtomicLong touch = new AtomicLong(0);
+
+    private final AtomicLong touchAll;
+
+    static {
+        byte cacheIdx = 0;
+        int mask = 1;
+        for (int i = 0; i < MAP.length; ++i) {
+            if ((i & mask) != i) {
+                mask = (mask << 1) | 1;
+                ++cacheIdx;
+            }
+            MAP[i] = cacheIdx;
+        }
+        MASK = mask;
+    }
+
+    /**
+     * Constructs a caching allocator with default minimal capacity (128) and specified
+     * metric data collector.
+     *
+     * @param direct
+     *            <code>true</code> if the allocator should allocate direct
+     *            buffers, or <code>false</code> to allocate non-direct buffers
+     *            that have a backing array
+     * @param metric
+     *            a metric data collector
+     */
+    public CachingAllocator(boolean direct, IDefaultAllocatorMetricCollector metric) {
+        this(direct, 128, metric);
+    }
+
+    /**
+     * Constructs a caching allocator with default minimal capacity (128).
+     *
+     * @param direct
+     *            <code>true</code> if the allocator should allocate direct
+     *            buffers, or <code>false</code> to allocate non-direct buffers
+     *            that have a backing array
+     */
+    public CachingAllocator(boolean direct) {
+        this(direct, 128);
+    }
+
+    /**
+     * Constructs a caching allocator with specified metric data collector.
+     *
+     * @param direct
+     *            <code>true</code> if the allocator should allocate direct
+     *            buffers, or <code>false</code> to allocate non-direct buffers
+     *            that have a backing array
+     * @param minCapacity the minimal capacity for buffers allocated by this
+     *                    allocator
+     * @param metric a metric data collector
+     */
+    public CachingAllocator(boolean direct, int minCapacity, IDefaultAllocatorMetricCollector metric) {
+        super(direct, metric);
+        int maxCacheSize = Integer.getInteger(Constants.ALLOCATOR_MAX_CACHE_SIZE_PROPERTY, 512);
+        int minCacheSize = Integer.getInteger(Constants.ALLOCATOR_MIN_CACHE_SIZE_PROPERTY, 256);
+        int cacheAgeThreshold = Integer.getInteger(Constants.ALLOCATOR_CACHE_AGE_THRESHOLD_PROPERTY, 1000000);
+        int min = 1;
+        int shift = 0;
+        int i = 0;
+        while (min < minCapacity) {
+            min <<= 1;
+            shift++;
+        }
+        if (shift > 0) {
+            --shift;
+        }
+        this.shift = shift;
+        this.minCapacity = min;
+        maxCapacity = min << (NUM_OF_CACHES - 1);
+        touchAllThreshold = cacheAgeThreshold * 2;
+        touchAll = new AtomicLong(touchAllThreshold);
+        for (; i < NUM_OF_CACHES - 1; ++i) {
+            caches[i] = new SyncCache(minCapacity << i, minCacheSize, maxCacheSize, cacheAgeThreshold, caches);
+        }
+        caches[i] = new SyncLastCache(minCapacity << i, minCacheSize, maxCacheSize, cacheAgeThreshold, caches);
+    }
+
+    /**
+     * Constructs a caching allocator.
+     *
+     * @param direct
+     *            <code>true</code> if the allocator should allocate direct
+     *            buffers, or <code>false</code> to allocate non-direct buffers
+     *            that have a backing array
+     * @param minCapacity the minimal capacity for buffers allocated by this
+     *                    allocator
+     */
+    public CachingAllocator(boolean direct, int minCapacity) {
+        this(direct, minCapacity, null);
+    }
+
+    final int cacheIdx(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    Cache cache(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the minimal capacity for buffers allocated by this allocator.
+     *
+     * @return the minimal capacity
+     */
+    public final int getMinCapacity() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Purges all caches used by this allocator.
+     */
+    public void purge() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isReleasable() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void release(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected ByteBuffer allocate(int capacity, boolean direct) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected ByteBuffer allocateEmpty(int capacity, ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected ByteBuffer allocate(int capacity, ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -26,9 +26,7 @@
 package org.snf4j.tls.engine;
 
 import static org.snf4j.tls.extension.ExtensionsUtil.find;
-
 import java.nio.ByteBuffer;
-
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.MissingExtensionAlert;
 import org.snf4j.tls.alert.UnexpectedMessageAlert;
@@ -40,40 +38,13 @@ import org.snf4j.tls.handshake.IHandshake;
 
 public class CertificateRequestConsumer implements IHandshakeConsumer {
 
-	@Override
-	public HandshakeType getType() {
-		return HandshakeType.CERTIFICATE_REQUEST;
-	}
+    @Override
+    public HandshakeType getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
-		switch (state.getState()) {
-		case CLI_WAIT_CERT_CR:
-			break;
-			
-		default:
-			throw new UnexpectedMessageAlert("Unexpected CertificateRequest");
-		}
-		
-		ISignatureAlgorithmsExtension signAlgorithms = find(handshake, ExtensionType.SIGNATURE_ALGORITHMS);
-		if (signAlgorithms == null) {
-			throw new MissingExtensionAlert("Missing signature_algorithms extension in CertificateRequest");
-		}
-		ISignatureAlgorithmsExtension signAlgorithmsCert = find(handshake, ExtensionType.SIGNATURE_ALGORITHMS_CERT);
-
-		
-		state.getTranscriptHash().update(handshake.getType(), data);
-		
-		state.setCertCryteria(new CertificateCriteria(
-				false,
-				CertificateType.X509,
-				state.getSessionInfo().peerHost(),
-				signAlgorithms.getSchemes(),
-				signAlgorithmsCert == null ? null : signAlgorithmsCert.getSchemes(),
-				state.getParameters().getSignatureSchemes().clone()
-				));
-		
-		state.changeState(MachineState.CLI_WAIT_CERT);
-	}
-
+    @Override
+    public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

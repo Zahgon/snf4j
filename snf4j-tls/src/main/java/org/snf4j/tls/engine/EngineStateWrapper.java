@@ -33,89 +33,88 @@ import org.snf4j.tls.session.ISession;
 
 class EngineStateWrapper implements IEngineState {
 
-	private final IEngineState state;
-	
-	private final KeySchedule keySchedule;
-	
-	EngineStateWrapper(IEngineState state, KeySchedule keySchedule) {
-		Args.checkNull(state, "state");
-		this.state = state;
-		this.keySchedule = keySchedule;
-	}
-	
-	@Override
-	public IEngineParameters getParameters() {
-		return state.getParameters();
-	}
+    private final IEngineState state;
 
-	@Override
-	public IEngineHandler getHandler() {
-		return state.getHandler();
-	}
+    private final KeySchedule keySchedule;
 
-	@Override
-	public MachineState getState() {
-		return state.getState();
-	}
+    EngineStateWrapper(IEngineState state, KeySchedule keySchedule) {
+        Args.checkNull(state, "state");
+        this.state = state;
+        this.keySchedule = keySchedule;
+    }
 
-	@Override
-	public boolean isClientMode() {
-		return state.isClientMode();
-	}
+    @Override
+    public IEngineParameters getParameters() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isStarted() {
-		return state.isStarted();
-	}
+    @Override
+    public IEngineHandler getHandler() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isConnected() {
-		return state.isConnected();
-	}
+    @Override
+    public MachineState getState() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public ITranscriptHash getTranscriptHash() {
-		return keySchedule != null ? keySchedule.getTranscriptHash() : state.getTranscriptHash();
-	}
+    @Override
+    public boolean isClientMode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public ISession getSession() {
-		return state.getSession();
-	}
+    @Override
+    public boolean isStarted() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public KeySchedule getKeySchedule() {
-		return keySchedule != null ? keySchedule : state.getKeySchedule();
-	}
+    @Override
+    public boolean isConnected() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public CipherSuite getCipherSuite() {
-		return state.getCipherSuite();
-	}
+    @Override
+    public ITranscriptHash getTranscriptHash() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public String getApplicationProtocol() {
-		return state.getApplicationProtocol();
-	}
+    @Override
+    public ISession getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public String getHostName() {
-		return state.getHostName();
-	}
+    @Override
+    public KeySchedule getKeySchedule() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int getVersion() {
-		return state.getVersion();
-	}
+    @Override
+    public CipherSuite getCipherSuite() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int getMaxFragmentLength() {
-		return state.getMaxFragmentLength();
-	}
+    @Override
+    public String getApplicationProtocol() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public IEarlyDataContext getEarlyDataContext() {
-		return state.getEarlyDataContext();
-	}
+    @Override
+    public String getHostName() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public int getVersion() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getMaxFragmentLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IEarlyDataContext getEarlyDataContext() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

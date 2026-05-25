@@ -29,34 +29,33 @@ import org.snf4j.core.session.ISession;
 
 /**
  * A failed future
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class FailedFuture<V> extends CompletedFuture<V> {
-	
-	private final Throwable cause;
-	
-	/**
-	 * Constructs a failed future.
-	 * 
-	 * @param session
-	 *            the session this future is associated with
-	 * @param cause
-	 *            the cause of the failure
-	 */
-	public FailedFuture(ISession session, Throwable cause) {
-		super(session, FutureState.FAILED);
-		this.cause = cause;
-	}
-	
-	/**
-	 * Returns the cause of the failure
-	 * 
-	 * @return the cause of the failure
-	 */
-	@Override
-	public Throwable cause() {
-		return cause;
-	}
 
+    private final Throwable cause;
+
+    /**
+     * Constructs a failed future.
+     *
+     * @param session
+     *            the session this future is associated with
+     * @param cause
+     *            the cause of the failure
+     */
+    public FailedFuture(ISession session, Throwable cause) {
+        super(session, FutureState.FAILED);
+        this.cause = cause;
+    }
+
+    /**
+     * Returns the cause of the failure
+     *
+     * @return the cause of the failure
+     */
+    @Override
+    public Throwable cause() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

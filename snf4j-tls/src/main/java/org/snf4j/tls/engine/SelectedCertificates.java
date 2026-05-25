@@ -29,56 +29,52 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.util.ArrayList;
-
 import org.snf4j.tls.extension.IExtension;
 import org.snf4j.tls.extension.SignatureScheme;
 import org.snf4j.tls.handshake.CertificateEntry;
 
 public class SelectedCertificates {
-	
-	private final SignatureScheme algorithm;
-	
-	private final CertificateEntry[] entries;
-	
-	private final PrivateKey privateKey;
 
-	private final Certificate[] certs;
-	
-	public SelectedCertificates(SignatureScheme algorithm, CertificateEntry[] entries, PrivateKey privateKey, Certificate[] certs) {
-		this.algorithm = algorithm;
-		this.entries = entries;
-		this.privateKey = privateKey;
-		this.certs = certs;
-	}
+    private final SignatureScheme algorithm;
 
-	public SelectedCertificates(SignatureScheme algorithm, PrivateKey privateKey, Certificate[] certs) throws CertificateEncodingException {
-		this(algorithm, entries(certs), privateKey, certs);
-	}
-	
-	private static CertificateEntry[] entries(Certificate[] certs) throws CertificateEncodingException {
-		CertificateEntry[] entries = new CertificateEntry[certs.length];
+    private final CertificateEntry[] entries;
 
-		for (int i=0; i<certs.length; ++i) {
-			entries[i] = new CertificateEntry(certs[i].getEncoded(), new ArrayList<IExtension>(0));
-		}
-		return entries;
-	}
-	
-	public SignatureScheme getAlgorithm() {
-		return algorithm;
-	}
+    private final PrivateKey privateKey;
 
-	public CertificateEntry[] getEntries() {
-		return entries;
-	}
+    private final Certificate[] certs;
 
-	public PrivateKey getPrivateKey() {
-		return privateKey;
-	}
+    public SelectedCertificates(SignatureScheme algorithm, CertificateEntry[] entries, PrivateKey privateKey, Certificate[] certs) {
+        this.algorithm = algorithm;
+        this.entries = entries;
+        this.privateKey = privateKey;
+        this.certs = certs;
+    }
 
-	public Certificate[] getCertificates() {
-		return certs;
-	}
-	
-	
+    public SelectedCertificates(SignatureScheme algorithm, PrivateKey privateKey, Certificate[] certs) throws CertificateEncodingException {
+        this(algorithm, entries(certs), privateKey, certs);
+    }
+
+    private static CertificateEntry[] entries(Certificate[] certs) throws CertificateEncodingException {
+        CertificateEntry[] entries = new CertificateEntry[certs.length];
+        for (int i = 0; i < certs.length; ++i) {
+            entries[i] = new CertificateEntry(certs[i].getEncoded(), new ArrayList<IExtension>(0));
+        }
+        return entries;
+    }
+
+    public SignatureScheme getAlgorithm() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public CertificateEntry[] getEntries() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public PrivateKey getPrivateKey() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public Certificate[] getCertificates() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -26,26 +26,24 @@
 package org.snf4j.core.codec.bytes;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.IByteBufferHolder;
 import org.snf4j.core.codec.ICodec;
 
 /**
  * A base {@code class} for encoders and decoders transforming an {@link IByteBufferHolder}
  * into a {@link ByteBuffer}.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class BufferHolderToBufferCodec implements ICodec<IByteBufferHolder, ByteBuffer> {
 
-	@Override
-	public Class<IByteBufferHolder> getInboundType() {
-		return IByteBufferHolder.class;
-	}
+    @Override
+    public Class<IByteBufferHolder> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Class<ByteBuffer> getOutboundType() {
-		return ByteBuffer.class;
-	}
-
+    @Override
+    public Class<ByteBuffer> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

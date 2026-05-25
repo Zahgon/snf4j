@@ -28,26 +28,25 @@ package org.snf4j.tls.record;
 import org.snf4j.tls.crypto.IAeadDecrypt;
 
 public class Decryptor extends Cryptor {
-	
-	private final IAeadDecrypt aead;
-	
-	public Decryptor(IAeadDecrypt aead, byte[] iv, long keyLimit) {
-		super(iv, aead.getAead().getTagLength(), keyLimit);
-		this.aead = aead;
-	}
 
-	public Decryptor(IAeadDecrypt aead, byte[] iv) {
-		super(iv, aead.getAead().getTagLength(), aead.getAead().getKeyLimit());
-		this.aead = aead;
-	}
+    private final IAeadDecrypt aead;
 
-	public IAeadDecrypt getAead() {
-		return aead;
-	}
-	
-	@Override
-	public void erase() {
-		super.erase();
-		aead.erase();
-	}	
+    public Decryptor(IAeadDecrypt aead, byte[] iv, long keyLimit) {
+        super(iv, aead.getAead().getTagLength(), keyLimit);
+        this.aead = aead;
+    }
+
+    public Decryptor(IAeadDecrypt aead, byte[] iv) {
+        super(iv, aead.getAead().getTagLength(), aead.getAead().getKeyLimit());
+        this.aead = aead;
+    }
+
+    public IAeadDecrypt getAead() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void erase() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -31,7 +31,6 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.snf4j.core.IByteBufferHolder;
 import org.snf4j.core.SingleByteBufferHolder;
 import org.snf4j.core.handler.SessionEvent;
@@ -39,599 +38,281 @@ import org.snf4j.core.session.ISession;
 
 /**
  * The default implementation of the {@link ICodecExecutor}.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class DefaultCodecExecutor implements ICodecExecutor {
 
-	private final static int EVENT_COUNT = SessionEvent.values().length;
-	
-	private int decodersVersion;
-	
-	private final Deque<DecoderContext> decoders = new LinkedList<DecoderContext>();
+    private final static int EVENT_COUNT = SessionEvent.values().length;
 
-	private IBaseDecoder<?,?> baseDecoder;
-	
-	private boolean hasDecoders;
-	
-	private int encodersVersion;
-	
-	/** first encoder that produce an output */
-	private EncoderContext firstEncoder;
-	
-	private final Deque<EncoderContext> encoders = new LinkedList<EncoderContext>();
-	
-	private final InternalCodecPipeline pipeline = new InternalCodecPipeline();
-	
-	private int eventCodecsVersion;
-	
-	private IEventDrivenCodec[] eventCodecs;
-	
-	private SessionEvent[] events;
-	
-	private List<ICodecExecutor> children;
-	
-	@Override
-	public final void syncDecoders(ISession session) {
-		if (pipeline.getCodecsVersion() != decodersVersion) {
-			decoders.clear();
-			baseDecoder = null;
-			hasDecoders = false;
-			synchronized (pipeline.getLock()) {
-				CodecContext ctx = pipeline.getFirstDecoder();
-				
-				while (ctx != null) {
-					decoders.add((DecoderContext) ctx);
-					if (!ctx.isClogged()) {
-						if (!hasDecoders) {
-							if (((DecoderContext) ctx).getDecoder() instanceof IBaseDecoder<?,?>) {
-								baseDecoder = (IBaseDecoder<?,?>) ((DecoderContext) ctx).getDecoder();
-							}
-							hasDecoders = true;
-						}
-					}
-					ctx = ctx.next;
-				}
-				decodersVersion = pipeline.getCodecsVersion();
-				syncEventDrivenCodecs(session);
-			}
-		}
-	}
-	
-	@Override
-	public final void syncEncoders(ISession session) {
-		if (pipeline.getCodecsVersion() != encodersVersion) {
-			encoders.clear();
-			firstEncoder = null;
-			synchronized (pipeline.getLock()) {
-				CodecContext ctx = pipeline.getFirstEncoder();
-				
-				while (ctx != null) {
-					encoders.add((EncoderContext) ctx);
-					if (firstEncoder == null &&!ctx.isClogged()) {
-						firstEncoder = (EncoderContext) ctx;
-					}
-					ctx = ctx.next;
-				}
-				encodersVersion = pipeline.getCodecsVersion();
-				syncEventDrivenCodecs(session);
-			}
-		}		
-	}
-	
-	private static boolean remove(Object o, Object[] objects) {
-		boolean removed = false;
-		
-		if (objects != null) {
-			for (int i=0; i<objects.length; ++i) {
-				if (objects[i] == o) {
-					objects[i] = null;
-					removed = true;
-				}
-			}
-		}
-		return removed;
-	}
-	
-	private static IEventDrivenCodec[] toArrayWithNoDuplicates(List<IEventDrivenCodec> codecs) {
-		if (codecs.isEmpty()) {
-			return null;
-		}
-		Object[] objects = codecs.toArray();
-		Iterator<IEventDrivenCodec> i = codecs.iterator();
-		
-		while (i.hasNext()) {
-			if (!remove(i.next(), objects)) {
-				i.remove();
-			}
-		}
-		return codecs.toArray(new IEventDrivenCodec[codecs.size()]);
-	}
-	
-	@Override
-	public void syncEventDrivenCodecs(ISession session) {
-		if (pipeline.getCodecsVersion() != eventCodecsVersion) {
-			List<IEventDrivenCodec> newCodecs = new ArrayList<IEventDrivenCodec>();
-			
-			synchronized (pipeline.getLock()) {
-				CodecContext ctx = pipeline.getFirstDecoder();
-				ICodec<?,?> codec;
-				
-				while (ctx != null) {
-					codec = ((DecoderContext)ctx).getDecoder();
-					if (codec instanceof IEventDrivenCodec) {
-						newCodecs.add((IEventDrivenCodec) codec);
-					}
-					ctx = ctx.next;
-				}
-				ctx = pipeline.getFirstEncoder();
-				while (ctx != null) {
-					codec = ((EncoderContext)ctx).getEncoder();
-					if (codec instanceof IEventDrivenCodec) {
-						newCodecs.add((IEventDrivenCodec) codec);
-					}
-					ctx = ctx.next;
-				}
-				eventCodecsVersion = pipeline.getCodecsVersion();
-			}
-			
-			IEventDrivenCodec[] removed = eventCodecs;
-			
-			eventCodecs = toArrayWithNoDuplicates(newCodecs);
-			if (eventCodecs != null) {
-				for (IEventDrivenCodec c: eventCodecs) {
-					if (!remove(c, removed)) {
-						c.added(session, pipeline);
-					}
-				}
-			}
-			if (removed != null) {
-				for (IEventDrivenCodec c: removed) {
-					if (c != null) {
-						c.removed(session, pipeline);
-					}
-				}
-			}
-		}
-	}
+    private int decodersVersion;
 
-	@Override
-	public final ICodecPipeline getPipeline() {
-		return pipeline;
-	}
-	
-	@Override
-	public boolean hasDecoders() {
-		return hasDecoders;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object> encode(ISession session, ByteBuffer data) throws Exception {
-		Iterator<EncoderContext> i = encoders.descendingIterator();
-		
-		if (i.hasNext()) {
-			EncoderContext ctx;
-			
-			do {
-				ctx = i.next();
-				if (ctx.isInboundByte()) {
-					if (ctx.isInboundByteArray()) {
-						byte[] dataArray = new byte[data.remaining()];
-						
-						if (ctx.isClogged()) {
-							data.duplicate().get(dataArray);
-							ctx.getEncoder().encode(session, dataArray, null);
-						}
-						else {
-							data.get(dataArray);
-							session.release(data);
-							return encode(session, dataArray, ctx, i);
-						}
-					}
-					else if (ctx.isInboundHolder()) {
-						if (ctx.isClogged()) {
-							ctx.getEncoder().encode(session, new SingleByteBufferHolder(data), null);
-						}
-						else {
-							return encode(session, new SingleByteBufferHolder(data), ctx, i);
-						}
-					}
-					else {
-						if (ctx.isClogged()) {
-							ctx.getEncoder().encode(session, data, null);
-						}
-						else {
-							return encode(session, data, ctx, i);
-						}
-					}
-				}
-			} while (i.hasNext());
-		}
-		return null;
-	}
+    private final Deque<DecoderContext> decoders = new LinkedList<DecoderContext>();
 
-	private static byte[] byteArray(ISession session, IByteBufferHolder data, boolean duplicate) {
-		byte[] byteArray = new byte[data.remaining()];
-		int off = 0, remaining;
-		
-		for (ByteBuffer buffer: data.toArray()) {
-			if (duplicate) {
-				buffer = buffer.duplicate();
-			}
-			remaining = buffer.remaining();
-			buffer.get(byteArray, off, remaining);
-			off += remaining;
-			if (!duplicate) {
-				session.release(buffer);
-			}
-		}
-		return byteArray;
-	}
+    private IBaseDecoder<?, ?> baseDecoder;
 
-	private static ByteBuffer byteBuffer(ISession session, IByteBufferHolder data, boolean duplicate) {
-		ByteBuffer[] buffers = data.toArray();
-		
-		if (buffers.length == 1) {
-			return buffers[0];
-		}
-		else {
-			ByteBuffer byteBuffer = session.allocate(data.remaining());
+    private boolean hasDecoders;
 
-			for (ByteBuffer buffer: buffers) {
-				if (duplicate) {
-					buffer = buffer.duplicate();
-				}
-				byteBuffer.put(buffer);
-				if (!duplicate) {
-					session.release(buffer);
-				}
-			}
-			byteBuffer.flip();
-			return byteBuffer;
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object> encode(ISession session, IByteBufferHolder data) throws Exception {
-		Iterator<EncoderContext> i = encoders.descendingIterator();
-		
-		if (i.hasNext()) {
-			EncoderContext ctx;
-			
-			do {
-				ctx = i.next();
-				if (ctx.isInboundByte()) {
-					if (ctx.isInboundByteArray()) {
-						if (ctx.isClogged()) {
-							ctx.getEncoder().encode(session, byteArray(session, data, true), null);
-						}
-						else {
-							return encode(session, byteArray(session, data, false), ctx, i);
-						}
-					}
-					else if (ctx.isInboundHolder()) {
-						if (ctx.isClogged()) {
-							ctx.getEncoder().encode(session, data, null);
-						}
-						else {
-							return encode(session, data, ctx, i);
-						}
-					}
-					else {
-						if (ctx.isClogged()) {
-							ByteBuffer[] bufs = data.toArray();
+    private int encodersVersion;
 
-							if (bufs.length == 1) {
-								ctx.getEncoder().encode(session, bufs[0], null);
-							}
-							else {
-								ByteBuffer buf = byteBuffer(session, data, true);
-								
-								ctx.getEncoder().encode(session, buf, null);
-								session.release(buf);
-							}
-						}
-						else {
-							return encode(session, byteBuffer(session, data, false), ctx, i);
-						}
-					}
-				}
-			} while (i.hasNext());
-		}
-		return null;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object> encode(ISession session, byte[] data) throws Exception {
-		Iterator<EncoderContext> i = encoders.descendingIterator();
-		
-		if (i.hasNext()) {
-			EncoderContext ctx;
-			
-			do {
-				ctx = i.next();
-				if (ctx.isInboundByte()) {
-					if (ctx.isInboundByteArray()) {
-						if (ctx.isClogged()) {
-							ctx.getEncoder().encode(session, data, null);
-						}
-						else {
-							return encode(session, data, ctx, i);
-						}
-					}
-					else if (ctx.isInboundHolder()) {
-						IByteBufferHolder holder = new SingleByteBufferHolder(ByteBuffer.wrap(data));
+    /**
+     * first encoder that produce an output
+     */
+    private EncoderContext firstEncoder;
 
-						if (ctx.isClogged()) {
-							ctx.getEncoder().encode(session, holder, null);
-						}
-						else {
-							return encode(session, holder, ctx, i);
-						}
-					}
-					else {
-						ByteBuffer buffer = ByteBuffer.wrap(data);
-						
-						if (ctx.isClogged()) {
-							ctx.getEncoder().encode(session, buffer, null);
-						}
-						else {
-							return encode(session, buffer, ctx, i);
-						}
-					}
-				}
-			} while (i.hasNext());
-		}
-		return null;
-	}
+    private final Deque<EncoderContext> encoders = new LinkedList<EncoderContext>();
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object> encode(ISession session, Object msg) throws Exception {
-		Iterator<EncoderContext> i = encoders.descendingIterator();
-		
-		if (i.hasNext()) {
-			EncoderContext ctx;
-			
-			do {
-				ctx = i.next();
-				if (ctx.getEncoder().getInboundType().isAssignableFrom(msg.getClass())) {
-					if (ctx.isClogged()) {
-						ctx.getEncoder().encode(session, msg, null);
-					}
-					else {
-						return encode(session, msg, ctx, i);
-					}
-				}
-			} while (i.hasNext());
-		}
-		return null;
-	}
+    private final InternalCodecPipeline pipeline = new InternalCodecPipeline();
 
-	@SuppressWarnings("unchecked")
-	private final List<Object> encode(ISession session, Object data, EncoderContext ctx, Iterator<EncoderContext> i) throws Exception {
-		List<Object> out = new ArrayList<Object>();
+    private int eventCodecsVersion;
 
-		ctx.getEncoder().encode(session, data, out);
-		if (out.isEmpty()) {
-			return out;
-		}
+    private IEventDrivenCodec[] eventCodecs;
 
-		List<Object> in = new ArrayList<Object>();
-		List<Object> tmp;
-		boolean onlyClogged = firstEncoder == ctx; 
-		
-		while (i.hasNext()) {
-			ctx = i.next();
-			if (ctx.isClogged()) {
-				for (Object o: out) {
-					if (onlyClogged) {
-						
-						//There are only clogged encoders left and they can support
-						//both byte or byte buffer as the inbound object
-						boolean bytes = o.getClass() == byte[].class;
-						
-						if (bytes) {
-							if (!ctx.isInboundByteArray()) {
-								o = ByteBuffer.wrap((byte[])o);
-							}
-						}
-						else {
-							if (ctx.isInboundByteArray()) {
-								ByteBuffer dup = ((ByteBuffer)o).duplicate();
-								byte[] dataArray = new byte[dup.remaining()];
-								
-								((ByteBuffer)o).duplicate().get(dataArray);
-								o = dataArray;
-							}
-						}
-					}
-					ctx.getEncoder().encode(session, o, null);
-				}
-				continue;
-			}
-			onlyClogged |= firstEncoder == ctx; 
-			tmp = in;
-			in = out;
-			out = tmp;
-			for (Object o: in) {
-				ctx.getEncoder().encode(session, o, out);
-			}
-			in.clear();
-		}
-		return out;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private final void decode(ISession session, DecoderContext ctx, byte[] data, List<Object> out) throws Exception {
-		if (ctx.isInboundByteArray()) {
-			ctx.getDecoder().decode(session, data, out);
-		}
-		else {
-			ctx.getDecoder().decode(session, ByteBuffer.wrap(data), out);
-		}
-	}
-	
-	@Override
-	public List<Object> decode(ISession session, byte[] data) throws Exception {
-		Iterator<DecoderContext> i = decoders.iterator();
-		
-		if (!i.hasNext()) {
-			return null;
-		}
+    private SessionEvent[] events;
 
-		DecoderContext ctx = i.next();
-			
-		while (ctx.isClogged()) {
-			decode(session, ctx, data, null);
-			if (i.hasNext()) {
-				ctx = i.next();
-			}
-			else {
-				return null;
-			}
-		}
+    private List<ICodecExecutor> children;
 
-		List<Object> out = new ArrayList<Object>();
+    @Override
+    public final void syncDecoders(ISession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		decode(session, ctx, data, out);
-		return decode(session, i, out);
-	}
-	
-	@Override
-	public List<Object> decode(ISession session, ByteBuffer data) throws Exception {
-		Iterator<DecoderContext> i = decoders.iterator();
-		
-		if (!i.hasNext()) {
-			return null;
-		}
-		
-		DecoderContext ctx = i.next();
+    @Override
+    public final void syncEncoders(ISession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		while (ctx.isClogged()) {
-			decode(session, ctx, data);
-			if (i.hasNext()) {
-				ctx = i.next();
-			}
-			else {
-				return null;
-			}
-		}
+    private static boolean remove(Object o, Object[] objects) {
+        boolean removed = false;
+        if (objects != null) {
+            for (int i = 0; i < objects.length; ++i) {
+                if (objects[i] == o) {
+                    objects[i] = null;
+                    removed = true;
+                }
+            }
+        }
+        return removed;
+    }
 
-		List<Object> out = new ArrayList<Object>();
+    private static IEventDrivenCodec[] toArrayWithNoDuplicates(List<IEventDrivenCodec> codecs) {
+        if (codecs.isEmpty()) {
+            return null;
+        }
+        Object[] objects = codecs.toArray();
+        Iterator<IEventDrivenCodec> i = codecs.iterator();
+        while (i.hasNext()) {
+            if (!remove(i.next(), objects)) {
+                i.remove();
+            }
+        }
+        return codecs.toArray(new IEventDrivenCodec[codecs.size()]);
+    }
 
-		decode(session, ctx, data, out);
-		return decode(session, i, out);
-	}
-	
-	@SuppressWarnings("unchecked")
-	private final void decode(ISession session, DecoderContext ctx, ByteBuffer data, List<Object> out) throws Exception {
-		if (ctx.isInboundByteArray()) {
-			byte[] array = new byte[data.remaining()];
-			
-			data.get(array);
-			session.release(data);
-			ctx.getDecoder().decode(session, array, out);
-		}
-		else {
-			ctx.getDecoder().decode(session, data, out);
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	private final void decode(ISession session, DecoderContext ctx, ByteBuffer data) throws Exception {
-		if (ctx.isInboundByteArray()) {
-			byte[] array = new byte[data.remaining()];
-			
-			data.duplicate().get(array);
-			ctx.getDecoder().decode(session, array, null);
-		}
-		else {
-			ctx.getDecoder().decode(session, data, null);
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	private final List<Object> decode(ISession session, Iterator<DecoderContext> i, List<Object> out) throws Exception {
-		if (out.isEmpty()) {
-			return out;
-		}
-		
-		List<Object> in = new ArrayList<Object>();
-		List<Object> tmp;
-		DecoderContext ctx;
-		
-		while (i.hasNext()) {
-			ctx = i.next();
-			if (ctx.isClogged()) {
-				for (Object o: out) {
-					ctx.getDecoder().decode(session, o, null);
-				}
-				continue;
-			}
-			tmp = in;
-			in = out;
-			out = tmp;
-			for (Object o: in) {
-				ctx.getDecoder().decode(session, o, out);
-			}
-			in.clear();
-		}
-		return out;
-	}
-	
-	@Override
-	public final IBaseDecoder<?,?> getBaseDecoder() {
-		return baseDecoder;
-	}
+    @Override
+    public void syncEventDrivenCodecs(ISession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void event(ISession session, SessionEvent event) {
-		if (events != null) {
-			if (event == SessionEvent.CREATED) {
-				for (int i=0; i<EVENT_COUNT; ++i) {
-					events[i] = null;
-				}
-			}
-		}
-		else {
-			events = new SessionEvent[EVENT_COUNT];
-		}
-		events[event.ordinal()] = event;
-		
-		if (eventCodecs != null) {
-			for (IEventDrivenCodec codec: eventCodecs) {
-				codec.event(session, event);
-			}
-		}
-		
-		if (children != null) {
-			for (ICodecExecutor executor: children) {
-				executor.syncEventDrivenCodecs(session);
-				executor.event(session, event);
-			}
-		}
-	}
-	
-	@Override
-	public void addChild(ISession session, ICodecExecutor executor) {
-		if (events != null) {
-			for (int i=0; i<EVENT_COUNT; ++i) {
-				SessionEvent event = events[i];
+    @Override
+    public final ICodecPipeline getPipeline() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-				if (event != null) {
-					executor.syncEventDrivenCodecs(session);
-					executor.event(session, event);
-				}
-			}
-		}
-		if (children == null) {
-			children = new ArrayList<ICodecExecutor>();
-		}
-		children.add(executor);
-	}
-	
+    @Override
+    public boolean hasDecoders() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object> encode(ISession session, ByteBuffer data) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private static byte[] byteArray(ISession session, IByteBufferHolder data, boolean duplicate) {
+        byte[] byteArray = new byte[data.remaining()];
+        int off = 0, remaining;
+        for (ByteBuffer buffer : data.toArray()) {
+            if (duplicate) {
+                buffer = buffer.duplicate();
+            }
+            remaining = buffer.remaining();
+            buffer.get(byteArray, off, remaining);
+            off += remaining;
+            if (!duplicate) {
+                session.release(buffer);
+            }
+        }
+        return byteArray;
+    }
+
+    private static ByteBuffer byteBuffer(ISession session, IByteBufferHolder data, boolean duplicate) {
+        ByteBuffer[] buffers = data.toArray();
+        if (buffers.length == 1) {
+            return buffers[0];
+        } else {
+            ByteBuffer byteBuffer = session.allocate(data.remaining());
+            for (ByteBuffer buffer : buffers) {
+                if (duplicate) {
+                    buffer = buffer.duplicate();
+                }
+                byteBuffer.put(buffer);
+                if (!duplicate) {
+                    session.release(buffer);
+                }
+            }
+            byteBuffer.flip();
+            return byteBuffer;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object> encode(ISession session, IByteBufferHolder data) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object> encode(ISession session, byte[] data) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object> encode(ISession session, Object msg) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("unchecked")
+    private final List<Object> encode(ISession session, Object data, EncoderContext ctx, Iterator<EncoderContext> i) throws Exception {
+        List<Object> out = new ArrayList<Object>();
+        ctx.getEncoder().encode(session, data, out);
+        if (out.isEmpty()) {
+            return out;
+        }
+        List<Object> in = new ArrayList<Object>();
+        List<Object> tmp;
+        boolean onlyClogged = firstEncoder == ctx;
+        while (i.hasNext()) {
+            ctx = i.next();
+            if (ctx.isClogged()) {
+                for (Object o : out) {
+                    if (onlyClogged) {
+                        //There are only clogged encoders left and they can support
+                        //both byte or byte buffer as the inbound object
+                        boolean bytes = o.getClass() == byte[].class;
+                        if (bytes) {
+                            if (!ctx.isInboundByteArray()) {
+                                o = ByteBuffer.wrap((byte[]) o);
+                            }
+                        } else {
+                            if (ctx.isInboundByteArray()) {
+                                ByteBuffer dup = ((ByteBuffer) o).duplicate();
+                                byte[] dataArray = new byte[dup.remaining()];
+                                ((ByteBuffer) o).duplicate().get(dataArray);
+                                o = dataArray;
+                            }
+                        }
+                    }
+                    ctx.getEncoder().encode(session, o, null);
+                }
+                continue;
+            }
+            onlyClogged |= firstEncoder == ctx;
+            tmp = in;
+            in = out;
+            out = tmp;
+            for (Object o : in) {
+                ctx.getEncoder().encode(session, o, out);
+            }
+            in.clear();
+        }
+        return out;
+    }
+
+    @SuppressWarnings("unchecked")
+    private final void decode(ISession session, DecoderContext ctx, byte[] data, List<Object> out) throws Exception {
+        if (ctx.isInboundByteArray()) {
+            ctx.getDecoder().decode(session, data, out);
+        } else {
+            ctx.getDecoder().decode(session, ByteBuffer.wrap(data), out);
+        }
+    }
+
+    @Override
+    public List<Object> decode(ISession session, byte[] data) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public List<Object> decode(ISession session, ByteBuffer data) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("unchecked")
+    private final void decode(ISession session, DecoderContext ctx, ByteBuffer data, List<Object> out) throws Exception {
+        if (ctx.isInboundByteArray()) {
+            byte[] array = new byte[data.remaining()];
+            data.get(array);
+            session.release(data);
+            ctx.getDecoder().decode(session, array, out);
+        } else {
+            ctx.getDecoder().decode(session, data, out);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private final void decode(ISession session, DecoderContext ctx, ByteBuffer data) throws Exception {
+        if (ctx.isInboundByteArray()) {
+            byte[] array = new byte[data.remaining()];
+            data.duplicate().get(array);
+            ctx.getDecoder().decode(session, array, null);
+        } else {
+            ctx.getDecoder().decode(session, data, null);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private final List<Object> decode(ISession session, Iterator<DecoderContext> i, List<Object> out) throws Exception {
+        if (out.isEmpty()) {
+            return out;
+        }
+        List<Object> in = new ArrayList<Object>();
+        List<Object> tmp;
+        DecoderContext ctx;
+        while (i.hasNext()) {
+            ctx = i.next();
+            if (ctx.isClogged()) {
+                for (Object o : out) {
+                    ctx.getDecoder().decode(session, o, null);
+                }
+                continue;
+            }
+            tmp = in;
+            in = out;
+            out = tmp;
+            for (Object o : in) {
+                ctx.getDecoder().decode(session, o, out);
+            }
+            in.clear();
+        }
+        return out;
+    }
+
+    @Override
+    public final IBaseDecoder<?, ?> getBaseDecoder() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void event(ISession session, SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void addChild(ISession session, ICodecExecutor executor) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

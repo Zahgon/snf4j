@@ -32,126 +32,124 @@ import org.snf4j.tls.extension.PskKeyExchangeMode;
 import org.snf4j.tls.extension.SignatureScheme;
 
 public class EngineParameters implements IEngineParameters {
-	
-	private final static String[] EMPTY = new String[0];
-	
-	private final CipherSuite[] cipherSuites;
-	
-	private final NamedGroup[] namedGroups;
-	
-	private final SignatureScheme[] signatureSchemes;
 
-	private final SignatureScheme[] certSignatureSchemes;
-	
-	private final PskKeyExchangeMode[] pskKeyExchangeModes;
-	
-	private final boolean compatibilityMode;
-	
-	private final int numberOfOfferedSharedKeys;// = 1;
-	
-	private final String peerHost;
-	
-	private final int peerPort;
-	
-	private final boolean serverNameRequired;
-	
-	private final DelegatedTaskMode delegatedTaskMode;// = DelegatedTaskMode.NONE;
-	
-	private final ClientAuth clientAuth;
-	
-	private final String[] applicationProtocols;
-	
-	private final boolean skipEndOfEarlyData;
-	
-	public EngineParameters(CipherSuite[] cipherSuites, NamedGroup[] namedGroups, SignatureScheme[] signatureSchemes,
-			SignatureScheme[] certSignatureSchemes, PskKeyExchangeMode[] pskKeyExchangeModes,
-			boolean compatibilityMode, int numberOfOfferedSharedKeys, String peerHost,
-			int peerPort, boolean serverNameRequired, DelegatedTaskMode delegatedTaskMode,ClientAuth clientAuth,
-			String[] applicationProtocols, boolean skipEndOfEarlyData) {
-		super();
-		this.cipherSuites = cipherSuites;
-		this.namedGroups = namedGroups;
-		this.signatureSchemes = signatureSchemes;
-		this.certSignatureSchemes = certSignatureSchemes;
-		this.pskKeyExchangeModes = pskKeyExchangeModes;
-		this.compatibilityMode = compatibilityMode;
-		this.numberOfOfferedSharedKeys = numberOfOfferedSharedKeys;
-		this.peerHost = peerHost;
-		this.peerPort = peerPort;
-		this.serverNameRequired = serverNameRequired;
-		this.delegatedTaskMode = delegatedTaskMode;
-		this.clientAuth = clientAuth;
-		this.applicationProtocols = applicationProtocols == null ? EMPTY : applicationProtocols;
-		this.skipEndOfEarlyData = skipEndOfEarlyData;
-	}
+    private final static String[] EMPTY = new String[0];
 
-	@Override
-	public CipherSuite[] getCipherSuites() {
-		return cipherSuites;
-	}
+    private final CipherSuite[] cipherSuites;
 
-	@Override
-	public NamedGroup[] getNamedGroups() {
-		return namedGroups;
-	}
+    private final NamedGroup[] namedGroups;
 
-	@Override
-	public SignatureScheme[] getSignatureSchemes() {
-		return signatureSchemes;
-	}
+    private final SignatureScheme[] signatureSchemes;
 
-	@Override
-	public SignatureScheme[] getCertSignatureSchemes() {
-		return certSignatureSchemes;
-	}
-	
-	@Override
-	public PskKeyExchangeMode[] getPskKeyExchangeModes() {
-		return pskKeyExchangeModes;
-	}
-	
-	@Override
-	public boolean isCompatibilityMode() {
-		return compatibilityMode;
-	}
+    private final SignatureScheme[] certSignatureSchemes;
 
-	@Override
-	public String getPeerHost() {
-		return peerHost;
-	}
+    private final PskKeyExchangeMode[] pskKeyExchangeModes;
 
-	@Override
-	public int getPeerPort() {
-		return peerPort;
-	}
-	
-	@Override
-	public boolean isServerNameRequired() {
-		return serverNameRequired;
-	}
+    private final boolean compatibilityMode;
 
-	@Override
-	public int getNumberOfOfferedSharedKeys() {
-		return numberOfOfferedSharedKeys;
-	}
+    // = 1;
+    private final int numberOfOfferedSharedKeys;
 
-	@Override
-	public DelegatedTaskMode getDelegatedTaskMode() {
-		return delegatedTaskMode;
-	}
+    private final String peerHost;
 
-	@Override
-	public ClientAuth getClientAuth() {
-		return clientAuth;
-	}
-	
-	@Override
-	public String[] getApplicationProtocols() {
-		return applicationProtocols;
-	}
-	
-	@Override
-	public boolean skipEndOfEarlyData() {
-		return skipEndOfEarlyData;
-	}
+    private final int peerPort;
+
+    private final boolean serverNameRequired;
+
+    // = DelegatedTaskMode.NONE;
+    private final DelegatedTaskMode delegatedTaskMode;
+
+    private final ClientAuth clientAuth;
+
+    private final String[] applicationProtocols;
+
+    private final boolean skipEndOfEarlyData;
+
+    public EngineParameters(CipherSuite[] cipherSuites, NamedGroup[] namedGroups, SignatureScheme[] signatureSchemes, SignatureScheme[] certSignatureSchemes, PskKeyExchangeMode[] pskKeyExchangeModes, boolean compatibilityMode, int numberOfOfferedSharedKeys, String peerHost, int peerPort, boolean serverNameRequired, DelegatedTaskMode delegatedTaskMode, ClientAuth clientAuth, String[] applicationProtocols, boolean skipEndOfEarlyData) {
+        super();
+        this.cipherSuites = cipherSuites;
+        this.namedGroups = namedGroups;
+        this.signatureSchemes = signatureSchemes;
+        this.certSignatureSchemes = certSignatureSchemes;
+        this.pskKeyExchangeModes = pskKeyExchangeModes;
+        this.compatibilityMode = compatibilityMode;
+        this.numberOfOfferedSharedKeys = numberOfOfferedSharedKeys;
+        this.peerHost = peerHost;
+        this.peerPort = peerPort;
+        this.serverNameRequired = serverNameRequired;
+        this.delegatedTaskMode = delegatedTaskMode;
+        this.clientAuth = clientAuth;
+        this.applicationProtocols = applicationProtocols == null ? EMPTY : applicationProtocols;
+        this.skipEndOfEarlyData = skipEndOfEarlyData;
+    }
+
+    @Override
+    public CipherSuite[] getCipherSuites() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public NamedGroup[] getNamedGroups() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SignatureScheme[] getSignatureSchemes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SignatureScheme[] getCertSignatureSchemes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public PskKeyExchangeMode[] getPskKeyExchangeModes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isCompatibilityMode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String getPeerHost() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getPeerPort() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isServerNameRequired() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getNumberOfOfferedSharedKeys() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public DelegatedTaskMode getDelegatedTaskMode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ClientAuth getClientAuth() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String[] getApplicationProtocols() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean skipEndOfEarlyData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

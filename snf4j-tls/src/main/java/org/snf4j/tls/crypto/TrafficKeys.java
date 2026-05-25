@@ -26,60 +26,56 @@
 package org.snf4j.tls.crypto;
 
 import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 public class TrafficKeys {
-	
-	private final IAead aead;
-	
-	private SecretKey clientKey;
-	
-	private SecretKey serverKey;
-	
-	private byte[] clientIv;
 
-	private byte[] serverIv;
+    private final IAead aead;
 
-	public TrafficKeys(IAead aead, SecretKey clientKey, byte[] clientIv, SecretKey serverKey, byte[] serverIv) {
-		this.aead = aead;
-		this.clientKey = clientKey;
-		this.clientIv = clientIv;
-		this.serverKey = serverKey;
-		this.serverIv = serverIv;
-	}
+    private SecretKey clientKey;
 
-	public TrafficKeys(IAead aead, SecretKey clientKey, byte[] clientIv) {
-		this.aead = aead;
-		this.clientKey = clientKey;
-		this.clientIv = clientIv;
-	}
-	
-	public IAeadDecrypt getAeadDecrypt(boolean client) throws NoSuchAlgorithmException, NoSuchPaddingException {
-		return new AeadDecrypt(getKey(client), aead);
-	}
+    private SecretKey serverKey;
 
-	public IAeadEncrypt getAeadEncrypt(boolean client) throws NoSuchAlgorithmException, NoSuchPaddingException {
-		return new AeadEncrypt(getKey(client), aead);
-	}
-	
-	public SecretKey getKey(boolean client) {
-		return client ? clientKey : serverKey;
-	}
-	
-	public byte[] getIv(boolean client) {
-		return client ? clientIv : serverIv;
-	}
-	
-	public IAead getAead() {
-		return aead;
-	}
-	
-	public void clear() {
-		clientKey = null;
-		serverKey = null;
-		clientIv = null;
-		serverIv = null;
-	}
+    private byte[] clientIv;
+
+    private byte[] serverIv;
+
+    public TrafficKeys(IAead aead, SecretKey clientKey, byte[] clientIv, SecretKey serverKey, byte[] serverIv) {
+        this.aead = aead;
+        this.clientKey = clientKey;
+        this.clientIv = clientIv;
+        this.serverKey = serverKey;
+        this.serverIv = serverIv;
+    }
+
+    public TrafficKeys(IAead aead, SecretKey clientKey, byte[] clientIv) {
+        this.aead = aead;
+        this.clientKey = clientKey;
+        this.clientIv = clientIv;
+    }
+
+    public IAeadDecrypt getAeadDecrypt(boolean client) throws NoSuchAlgorithmException, NoSuchPaddingException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public IAeadEncrypt getAeadEncrypt(boolean client) throws NoSuchAlgorithmException, NoSuchPaddingException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SecretKey getKey(boolean client) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public byte[] getIv(boolean client) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public IAead getAead() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void clear() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

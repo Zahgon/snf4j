@@ -27,117 +27,124 @@ package org.snf4j.websocket.frame;
 
 /**
  * Base class for all Web Socket frames.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class Frame {
-	
-	final static byte[] EMPTY_PAYLOAD = new byte[0];
-	
-	/** The reserved bit 1 */
+
+    final static byte[] EMPTY_PAYLOAD = new byte[0];
+
+    /**
+     * The reserved bit 1
+     */
     public final static int RSV1 = 0x04;
-    
-	/** The reserved bit 2 */
+
+    /**
+     * The reserved bit 2
+     */
     public final static int RSV2 = 0x02;
-    
-	/** The reserved bit 3 */
-    public final static int RSV3 = 0x01; 	
 
-	private final Opcode opcode;
-	
-	private final boolean finalFragment;
-	
-	private final int rsvBits;
-	
-	/** Payload data */
-	protected final byte[] payload;
-	
-	/**
-	 * Constructs a generic Web Socket frame.
-	 * 
-	 * @param opcode        the type of created frame
-	 * @param finalFragment determines if the created frame is the final fragment in
-	 *                      a message
-	 * @param rsvBits		reserved bits for extensions or future versions
-	 * @param payload       payload data
-	 */
-	protected Frame(Opcode opcode, boolean finalFragment, int rsvBits, byte[] payload) {
-		this.opcode = opcode;
-		this.finalFragment = finalFragment;
-		this.rsvBits = rsvBits;
-		this.payload = payload == null ? EMPTY_PAYLOAD : payload;
-	}
-	
-	/**
-	 * Tells if this frame is the final fragment in a message.
-	 * 
-	 * @return {@code true} if this frame is the final fragment
-	 */
-	public boolean isFinalFragment() {
-		return finalFragment;
-	}
-	
-	/**
-	 * Returns the reserved bits for extensions or future versions.
-	 * 
-	 * @return the reserved bits
-	 */
-	public int getRsvBits() {
-		return rsvBits;
-	}
+    /**
+     * The reserved bit 3
+     */
+    public final static int RSV3 = 0x01;
 
-	/**
-	 * Tells if the reserved bit 1 is set
-	 * 
-	 * @return {@code true} if the reserved bit 1 is set
-	 */
-	public boolean isRsvBit1() {
-		return (rsvBits & RSV1) != 0;
-	}
+    private final Opcode opcode;
 
-	/**
-	 * Tells if the reserved bit 2 is set
-	 * 
-	 * @return {@code true} if the reserved bit 2 is set
-	 */
-	public boolean isRsvBit2() {
-		return (rsvBits & RSV2) != 0;
-	}
+    private final boolean finalFragment;
 
-	/**
-	 * Tells if the reserved bit 3 is set
-	 * 
-	 * @return {@code true} if the reserved bit 3 is set
-	 */
-	public boolean isRsvBit3() {
-		return (rsvBits & RSV3) != 0;
-	}
+    private final int rsvBits;
 
-	/**
-	 * Returns the type (opcode) of this frame.
-	 * 
-	 * @return the type of this frame
-	 */
-	public Opcode getOpcode() {
-		return opcode;
-	}
+    /**
+     * Payload data
+     */
+    protected final byte[] payload;
 
-	/**
-	 * Returns the payload data in this frame.
-	 * 
-	 * @return the payload data
-	 */
-	public byte[] getPayload() {
-		return payload;
-	}
-	
-	/**
-	 * Return the length of the payload data in this frame.
-	 * 
-	 * @return the lenght of the payload data
-	 */
-	public int getPayloadLength() {
-		return payload.length;
-	}
-	
+    /**
+     * Constructs a generic Web Socket frame.
+     *
+     * @param opcode        the type of created frame
+     * @param finalFragment determines if the created frame is the final fragment in
+     *                      a message
+     * @param rsvBits		reserved bits for extensions or future versions
+     * @param payload       payload data
+     */
+    protected Frame(Opcode opcode, boolean finalFragment, int rsvBits, byte[] payload) {
+        this.opcode = opcode;
+        this.finalFragment = finalFragment;
+        this.rsvBits = rsvBits;
+        this.payload = payload == null ? EMPTY_PAYLOAD : payload;
+    }
+
+    /**
+     * Tells if this frame is the final fragment in a message.
+     *
+     * @return {@code true} if this frame is the final fragment
+     */
+    public boolean isFinalFragment() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Returns the reserved bits for extensions or future versions.
+     *
+     * @return the reserved bits
+     */
+    public int getRsvBits() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Tells if the reserved bit 1 is set
+     *
+     * @return {@code true} if the reserved bit 1 is set
+     */
+    public boolean isRsvBit1() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Tells if the reserved bit 2 is set
+     *
+     * @return {@code true} if the reserved bit 2 is set
+     */
+    public boolean isRsvBit2() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Tells if the reserved bit 3 is set
+     *
+     * @return {@code true} if the reserved bit 3 is set
+     */
+    public boolean isRsvBit3() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Returns the type (opcode) of this frame.
+     *
+     * @return the type of this frame
+     */
+    public Opcode getOpcode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Returns the payload data in this frame.
+     *
+     * @return the payload data
+     */
+    public byte[] getPayload() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Return the length of the payload data in this frame.
+     *
+     * @return the lenght of the payload data
+     */
+    public int getPayloadLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

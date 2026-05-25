@@ -29,68 +29,43 @@ import org.snf4j.core.session.ISession;
 
 class DelegatingBlockingFuture<V> extends AbstractBlockingFuture<V> implements IDelegatingFuture<V> {
 
-	private volatile IFuture<V> delegate;
-	
-	protected DelegatingBlockingFuture(ISession session) {
-		super(session);
-	}
+    private volatile IFuture<V> delegate;
 
-	@Override
-	public boolean isDone() {
-		return (delegate != null) ? delegate.isDone() : super.isDone();
-	}
-	
-	@Override
-	public Throwable cause() {
-		return (delegate != null) ? delegate.cause() : super.cause();
-	}
+    protected DelegatingBlockingFuture(ISession session) {
+        super(session);
+    }
 
-	@Override
-	public boolean isCancelled() {
-		return (delegate != null) ? delegate.isCancelled() : super.isCancelled();
-	}	
-	
-	@Override
-	public boolean isSuccessful() {
-		return (delegate != null) ? delegate.isSuccessful() : super.isSuccessful();
-	}
+    @Override
+    public boolean isDone() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isFailed() {
-		return (delegate != null) ? delegate.isFailed() : super.isFailed();
-	}
-	
-	@Override
-	public void setDelegate(IFuture<V> delegate) {
-		synchronized (this) {
-			if (this.delegate == null) {
-				this.delegate = delegate;
-			}
-			else if (delegate == this.delegate) {
-				return;
-			}
-			else {
-				throw new IllegalStateException("delegate is already set");
-			}
-		}
-		
-		FutureLock superLock = super.getLock();
-		
-		synchronized (superLock) {
-			if (superLock.hasWaiters()) {
-				superLock.notifyAll();
-			}
-		}
-	}
-	
-	protected FutureLock getLock() {
-		synchronized (this) {
-			if (delegate instanceof AbstractBlockingFuture) {
-				return ((AbstractBlockingFuture<V>) delegate).getLock();
-			}
-		}
-		return super.getLock();
-	}
-	
-	
+    @Override
+    public Throwable cause() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isCancelled() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isSuccessful() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isFailed() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void setDelegate(IFuture<V> delegate) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    protected FutureLock getLock() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

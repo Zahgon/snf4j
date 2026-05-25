@@ -29,45 +29,49 @@ import org.snf4j.tls.ProtocolException;
 
 public class Alert extends ProtocolException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final AlertLevel level;
-	
-	private final AlertDescription description;
-	
-	private final boolean closure;
-	
-	protected Alert(String message, AlertLevel level, AlertDescription description) {
-		super(message);
-		this.level = level;
-		this.description = description;
-		closure = false;
-	}
+    private final AlertLevel level;
 
-	protected Alert(String message, AlertDescription description) {
-		this(message, AlertLevel.FATAL, description);
-	}
+    private final AlertDescription description;
 
-	protected Alert(String message, AlertLevel level, AlertDescription description, Throwable cause, boolean closure) {
-		super(message, cause);
-		this.level = level;
-		this.description = description;
-		this.closure = closure;
-	}
+    private final boolean closure;
 
-	protected Alert(String message, AlertDescription description, Throwable cause) {
-		this(message, AlertLevel.FATAL, description, cause, false);
-	}
-	
-	public AlertLevel getLevel() { return level; }
-	
-	public AlertDescription getDescription() { return description; }
+    protected Alert(String message, AlertLevel level, AlertDescription description) {
+        super(message);
+        this.level = level;
+        this.description = description;
+        closure = false;
+    }
 
-	public boolean isClosure() {
-		return closure;
-	}
+    protected Alert(String message, AlertDescription description) {
+        this(message, AlertLevel.FATAL, description);
+    }
 
-	public static Alert of(AlertLevel level, AlertDescription description) {
-		return AlertUtil.of(level, description);
-	}
+    protected Alert(String message, AlertLevel level, AlertDescription description, Throwable cause, boolean closure) {
+        super(message, cause);
+        this.level = level;
+        this.description = description;
+        this.closure = closure;
+    }
+
+    protected Alert(String message, AlertDescription description, Throwable cause) {
+        this(message, AlertLevel.FATAL, description, cause, false);
+    }
+
+    public AlertLevel getLevel() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public AlertDescription getDescription() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean isClosure() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static Alert of(AlertLevel level, AlertDescription description) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

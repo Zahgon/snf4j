@@ -34,38 +34,39 @@ import java.util.Set;
  * A set of cipher and protocol filters that filter out all requested ciphers and
  * protocols that are not supported by the current {@link SSLEngine}. If no
  * cipher or protocol is requested they return the recommended values.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public final class SupportedCipherProtocolFilters implements CipherFilter, ProtocolFilter {
 
-	/** The instance of this class */
-	public static final SupportedCipherProtocolFilters INSATNCE = new SupportedCipherProtocolFilters();
-	
-	private SupportedCipherProtocolFilters() {}
-	
-	private final String[] filter(String[] items, String[] recommendedItems, Set<String> supportedItems) {
-		if (items == null) {
-			return recommendedItems;
-		}
-		
-		List<String> itemList = new ArrayList<String>();
-		
-		for (String item: items) {
-			if (supportedItems.contains(item)) {
-				itemList.add(item);
-			}
-		}
-		return itemList.toArray(new String[itemList.size()]);
-	}
-	
-	@Override
-	public String[] filterCiphers(String[] ciphers, String[] recommendedCiphers, Set<String> supportedCiphers) {
-		return filter(ciphers, recommendedCiphers, supportedCiphers);
-	}
+    /**
+     * The instance of this class
+     */
+    public static final SupportedCipherProtocolFilters INSATNCE = new SupportedCipherProtocolFilters();
 
-	@Override
-	public String[] filterProtocols(String[] protocols, String[] recommendedProtocols, Set<String> supportedProtocols) {
-		return filter(protocols, recommendedProtocols, supportedProtocols);
-	}
+    private SupportedCipherProtocolFilters() {
+    }
+
+    private final String[] filter(String[] items, String[] recommendedItems, Set<String> supportedItems) {
+        if (items == null) {
+            return recommendedItems;
+        }
+        List<String> itemList = new ArrayList<String>();
+        for (String item : items) {
+            if (supportedItems.contains(item)) {
+                itemList.add(item);
+            }
+        }
+        return itemList.toArray(new String[itemList.size()]);
+    }
+
+    @Override
+    public String[] filterCiphers(String[] ciphers, String[] recommendedCiphers, Set<String> supportedCiphers) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String[] filterProtocols(String[] protocols, String[] recommendedProtocols, Set<String> supportedProtocols) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

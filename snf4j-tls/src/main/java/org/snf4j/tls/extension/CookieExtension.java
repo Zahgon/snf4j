@@ -26,70 +26,52 @@
 package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.handshake.HandshakeType;
 
 public class CookieExtension extends KnownExtension implements ICookieExtension {
-	
-	private final static ExtensionType TYPE = ExtensionType.COOKIE;
-	
-	private final byte[] cookie;
-	
-	private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
 
-		@Override
-		public ExtensionType getType() {
-			return TYPE;
-		}
+    private final static ExtensionType TYPE = ExtensionType.COOKIE;
 
-		@Override
-		public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
-			if (remaining >= 2) {
-				int len = srcs.getUnsignedShort();
-				
-				remaining -= 2;
-				if (len == remaining) {
-					if (len > 0) {
-						byte[] cookie = new byte[len];
-						
-						srcs.get(cookie);
-						return new CookieExtension(cookie);
-					}
-					else {
-						throw decodeError("Cookie is empty");
-					}
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}
-	};
-	
-	public CookieExtension(byte[] cookie) {
-		super(TYPE);
-		Args.checkMin(cookie, 1, "cookie");
-		this.cookie = cookie;
-	}
+    private final byte[] cookie;
 
-	@Override
-	public int getDataLength() {
-		return 2 + cookie.length;
-	}
+    private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
 
-	@Override
-	public byte[] getCookie() {
-		return cookie;
-	}
-	
-	public static IExtensionParser getParser() {
-		return PARSER;
-	}
+        @Override
+        public ExtensionType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.putShort((short) cookie.length);
-		buffer.put(cookie);
-	}
+        @Override
+        public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
+
+    public CookieExtension(byte[] cookie) {
+        super(TYPE);
+        Args.checkMin(cookie, 1, "cookie");
+        this.cookie = cookie;
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] getCookie() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IExtensionParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

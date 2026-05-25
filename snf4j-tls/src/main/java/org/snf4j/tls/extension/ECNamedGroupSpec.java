@@ -31,7 +31,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.crypto.ECKeyExchange;
@@ -40,105 +39,77 @@ import org.snf4j.tls.crypto.IKeyExchange;
 
 public class ECNamedGroupSpec extends AbstractNamedGroupSpec {
 
-	public final static ECNamedGroupSpec SECP256R1 = new ECNamedGroupSpec(ECKeyExchange.SECP256R1,32);
-	
-	public final static ECNamedGroupSpec SECP384R1 = new ECNamedGroupSpec(ECKeyExchange.SECP384R1,48);
+    public final static ECNamedGroupSpec SECP256R1 = new ECNamedGroupSpec(ECKeyExchange.SECP256R1, 32);
 
-	public final static ECNamedGroupSpec SECP521R1 = new ECNamedGroupSpec(ECKeyExchange.SECP521R1,66);
-	
-	private final int coordinateLength;
-	
-	private final IECKeyExchange keyExchange;
-	
-	public ECNamedGroupSpec(IECKeyExchange keyExchange, int coordinateLength) {
-		this.coordinateLength = coordinateLength;
-		this.keyExchange = keyExchange;
-	}
+    public final static ECNamedGroupSpec SECP384R1 = new ECNamedGroupSpec(ECKeyExchange.SECP384R1, 48);
 
-	@Override
-	public boolean isImplemented() {
-		return keyExchange.isImplemented();
-	}
+    public final static ECNamedGroupSpec SECP521R1 = new ECNamedGroupSpec(ECKeyExchange.SECP521R1, 66);
 
-	@Override
-	public IKeyExchange getKeyExchange() {
-		return keyExchange;
-	}
-	
-	@Override
-	public ParsedKey parse(ByteBufferArray srcs, int remaining) throws Alert {
-		if (remaining != getDataLength()) {
-			throw decodeError("EC key exchange unexpected size");
-		}
-		if (srcs.get() != 4) {
-			throw decodeError("EC key exchange unexpected legacy form");
-		}
+    private final int coordinateLength;
 
-		byte[] x = new byte[coordinateLength];
-		byte[] y = new byte[coordinateLength];
-		
-		srcs.get(x);
-		srcs.get(y);
-		return new ECParsedKey(x,y);
-	}
+    private final IECKeyExchange keyExchange;
 
-	@Override
-	public PublicKey generateKey(ParsedKey key) throws Alert {
-		ECParsedKey ecKey = (ECParsedKey) key;
-		
-        try {
-        	return keyExchange.generatePublicKey(new BigInteger(1,ecKey.getX()), new BigInteger(1,ecKey.getY()));
-		} catch (NoSuchAlgorithmException e) {
-			throw internalError("No EC algorithm", e);
-		} catch (InvalidKeySpecException e) {
-			throw internalError("Invalid EC key specification", e);
-		} catch (InvalidParameterSpecException e) {
-			throw internalError("Invalid EC parameter specification", e);
-		} catch (Exception e) {
-			throw internalError("EC key generation failure", e);
-		}
-	}
-	
-	@Override
-	public int getDataLength() {
-		return 1 + coordinateLength*2;
-	}
-	
-	@Override
-	public void getData(ByteBuffer buffer, PublicKey key) {
-		getData(buffer, keyExchange.getX(key).toByteArray(), keyExchange.getY(key).toByteArray());
-	}
+    public ECNamedGroupSpec(IECKeyExchange keyExchange, int coordinateLength) {
+        this.coordinateLength = coordinateLength;
+        this.keyExchange = keyExchange;
+    }
 
-	@Override
-	public void getData(ByteBuffer buffer, ParsedKey key) {
-		ECParsedKey ecKey = (ECParsedKey) key;
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		getData(buffer, ecKey.getX(), ecKey.getY());
-	}
+    @Override
+    public IKeyExchange getKeyExchange() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	void getData(ByteBuffer buffer, byte[] x, byte[] y) {
-		buffer.put((byte) 4);
-		getDataWithLeftPadding(buffer, x, coordinateLength);
-		getDataWithLeftPadding(buffer, y, coordinateLength);
-	}
+    @Override
+    public ParsedKey parse(ByteBufferArray srcs, int remaining) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private class ECParsedKey implements ParsedKey {
-		
-		private final byte[] x;
-		
-		private final byte[] y;
-		
-		ECParsedKey(byte[] x, byte[] y) {
-			this.x = x;
-			this.y = y;
-		}
+    @Override
+    public PublicKey generateKey(ParsedKey key) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		public byte[] getX() {
-			return x;
-		}
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		public byte[] getY() {
-			return y;
-		}
-	}
+    @Override
+    public void getData(ByteBuffer buffer, PublicKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void getData(ByteBuffer buffer, ParsedKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void getData(ByteBuffer buffer, byte[] x, byte[] y) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private class ECParsedKey implements ParsedKey {
+
+        private final byte[] x;
+
+        private final byte[] y;
+
+        ECParsedKey(byte[] x, byte[] y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public byte[] getX() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        public byte[] getY() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    }
 }

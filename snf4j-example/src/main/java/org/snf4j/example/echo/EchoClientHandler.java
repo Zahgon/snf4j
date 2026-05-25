@@ -26,7 +26,6 @@
 package org.snf4j.example.echo;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.EndingAction;
 import org.snf4j.core.allocator.IByteBufferAllocator;
 import org.snf4j.core.allocator.ThreadLocalCachingAllocator;
@@ -41,101 +40,67 @@ import org.snf4j.core.session.ssl.SSLEngineBuilder;
 
 public class EchoClientHandler extends AbstractStreamHandler {
 
-	private static final IByteBufferAllocator ALLOCATOR = new ThreadLocalCachingAllocator(true);
-	
-	private final DefaultSessionConfig config;
-	
-	private long startTime;
-	
-	private long totalBytes;
-	
-	EchoClientHandler() {	
-		this(null);
-	}
-	
-	EchoClientHandler(SSLEngineBuilder builder) {
-		config =  new SessionConfig(EchoClient.PIPELINE_SIZE)
-				.setEndingAction(EndingAction.STOP)
-				.setOptimizeDataCopying(true)
-				.setMinOutBufferCapacity(EchoClient.SIZE << 1);
-		if (builder != null) {
-			config.addSSLEngineBuilder(builder);
-		}
-	}
-	
-	boolean read(int size) {
-		totalBytes += size;
-		if (totalBytes >= EchoClient.TOTAL_SIZE) {
-			getSession().close();
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public void read(ByteBuffer data) {
-		if (read(data.remaining())) {
-			super.read(data);
-		}
-	}
-	
-	@Override
-	public void read(Object msg) {
-		getSession().writenf(msg);
-	}
-	
-	@SuppressWarnings("incomplete-switch")
-	@Override
-	public void event(SessionEvent event) {
-		switch (event) {
-		case READY:
-			ByteBuffer msg = getSession().allocate(EchoClient.SIZE);
+    private static final IByteBufferAllocator ALLOCATOR = new ThreadLocalCachingAllocator(true);
 
-			Logger.inf("starting...");
-			startTime = System.currentTimeMillis();			
-			for (int i=0; i<msg.capacity(); ++i) {
-				msg.put((byte)i);
-			}
-			msg.flip();
-			getSession().writenf(msg);
-			break;
-			
-		case CLOSED:
-			stats();
-			break;
-		}
-	}
-	
-	@Override
-	public void exception(Throwable e) {
-		Logger.err(e.toString());
-	}
-	
-	@Override
-	public boolean incident(SessionIncident incident, Throwable t) {
-		Logger.err(incident + ": " + t.toString());
-		return true;
-	}
+    private final DefaultSessionConfig config;
 
-	private void stats() {
-		long bytesPerSecond = 1000*totalBytes/(System.currentTimeMillis() - startTime);
-		
-		Logger.inf("avg bytes/sec: " + bytesPerSecond);
-	}
-	
-	@Override
-	public ISessionConfig getConfig() {
-		return config;
-	}
-	
-	@Override
-	public ISessionStructureFactory getFactory() {
-		return new DefaultSessionStructureFactory() {
-			
-			@Override
-			public IByteBufferAllocator getAllocator() {
-				return ALLOCATOR;
-			}
-		};
-	}
+    private long startTime;
+
+    private long totalBytes;
+
+    EchoClientHandler() {
+        this(null);
+    }
+
+    EchoClientHandler(SSLEngineBuilder builder) {
+        config = new SessionConfig(EchoClient.PIPELINE_SIZE).setEndingAction(EndingAction.STOP).setOptimizeDataCopying(true).setMinOutBufferCapacity(EchoClient.SIZE << 1);
+        if (builder != null) {
+            config.addSSLEngineBuilder(builder);
+        }
+    }
+
+    boolean read(int size) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(ByteBuffer data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void exception(Throwable e) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean incident(SessionIncident incident, Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private void stats() {
+        long bytesPerSecond = 1000 * totalBytes / (System.currentTimeMillis() - startTime);
+        Logger.inf("avg bytes/sec: " + bytesPerSecond);
+    }
+
+    @Override
+    public ISessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionStructureFactory getFactory() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

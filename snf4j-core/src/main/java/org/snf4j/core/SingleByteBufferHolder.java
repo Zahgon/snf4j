@@ -29,47 +29,47 @@ import java.nio.ByteBuffer;
 
 /**
  * A byte buffer holder that stores only one byte buffer.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class SingleByteBufferHolder implements IByteBufferHolder {
-	
-	private final ByteBuffer buffer;
 
-	/**
-	 * Construct a byte buffer holder storing one specified byte buffer.
-	 * 
-	 * @param buffer the byte buffer to be stored by this holder
-	 * @throws IllegalArgumentException if the {@code buffer} is null
-	 */
-	public SingleByteBufferHolder(ByteBuffer buffer) {
-		if (buffer == null) throw new IllegalArgumentException("buffer is null");
-		this.buffer = buffer;
-	}
-	
-	@Override
-	public boolean hasRemaining() {
-		return buffer.hasRemaining();
-	}
+    private final ByteBuffer buffer;
 
-	@Override
-	public int remaining() {
-		return buffer.remaining();
-	}
+    /**
+     * Construct a byte buffer holder storing one specified byte buffer.
+     *
+     * @param buffer the byte buffer to be stored by this holder
+     * @throws IllegalArgumentException if the {@code buffer} is null
+     */
+    public SingleByteBufferHolder(ByteBuffer buffer) {
+        if (buffer == null)
+            throw new IllegalArgumentException("buffer is null");
+        this.buffer = buffer;
+    }
 
-	@Override
-	public ByteBuffer[] toArray() {
-		return new ByteBuffer[] {buffer};
-	}
+    @Override
+    public boolean hasRemaining() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return {@code false}
-	 */
-	@Override
-	public boolean isMessage() {
-		return false;
-	}
+    @Override
+    public int remaining() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public ByteBuffer[] toArray() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@code false}
+     */
+    @Override
+    public boolean isMessage() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -28,7 +28,6 @@ package org.snf4j.core;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Executor;
-
 import org.snf4j.core.engine.IEngine;
 import org.snf4j.core.future.IFuture;
 import org.snf4j.core.handler.IDatagramHandler;
@@ -38,253 +37,205 @@ import org.snf4j.core.logger.LoggerFactory;
 import org.snf4j.core.session.IEngineDatagramSession;
 
 class EngineDatagramServerSession extends DatagramServerSession implements IEngineDatagramSession {
-	
-	private final static ILogger LOGGER = LoggerFactory.getLogger(EngineDatagramServerSession.class);
-	
-	private final EngineDatagramWrapper wrapper;
 
-	EngineDatagramServerSession(IEngine engine, DatagramSession delegate, SocketAddress remoteAddress, IDatagramHandler handler) {
-		super(delegate, remoteAddress, new EngineDatagramHandler(engine, remoteAddress, handler, LOGGER));
-		wrapper = new EngineDatagramWrapper(remoteAddress, (EngineDatagramHandler) this.handler);
-		wrapper.setExecutor(handler.getFactory().getExecutor());
-		engine.link(this);
-	}
-	
-	@Override
-	IEncodeTaskWriter getEncodeTaskWriter() {
-		if (encodeTaskWriter == null) {
-			encodeTaskWriter = wrapper.getEncodeTaskWriter();
-		}
-		return encodeTaskWriter;
-	}
-	
-	@Override
-	IDatagramReader superCodec() {
-		return (IDatagramReader) handler;
-	}
-	
-	@Override
-	public void setExecutor(Executor executor) {
-		wrapper.setExecutor(executor);
-	}
-	
-	@Override
-	public Executor getExecutor() {
-		return wrapper.getExecutor();
-	}
-	
-	@Override
-	public void beginHandshake() {
-		wrapper.beginHandshake();
-	}
-	
-	@Override
-	public void beginLazyHandshake() {
-		wrapper.beginLazyHandshake();
-	}
-	
-	@Override
-	public Object getEngineSession() {
-		return wrapper.getEngineSession();
-	}
-	
-	@Override
-	public IDatagramHandler getHandler() {
-		return wrapper.getHandler();
-	}	
-	
-	@Override
-	void event(SessionEvent event) {
-		super.superEvent(event);
-	}
-	
-	@Override
-	public IFuture<Void> write(byte[] datagram) {
-		return wrapper.write(datagram);
-	}	
-	
-	@Override
-	public void writenf(byte[] datagram) {
-		wrapper.writenf(datagram);
-	}
-	
-	@Override
-	public IFuture<Void> write(byte[] datagram, int offset, int length) {
-		return wrapper.write(datagram, offset, length);
-	}
-	
-	@Override
-	public void writenf(byte[] datagram, int offset, int length) {
-		wrapper.writenf(datagram, offset, length);
-	}
-	
-	@Override
-	public IFuture<Void> write(ByteBuffer datagram) {
-		return wrapper.write(datagram);
-	}
-	
-	@Override
-	public void writenf(ByteBuffer datagram) {
-		wrapper.writenf(datagram);
-	}
-	
-	@Override
-	public IFuture<Void> write(ByteBuffer datagram, int length) {
-		return wrapper.write(datagram, length);
-	}
-	
-	@Override
-	public void writenf(ByteBuffer datagram, int length) {
-		wrapper.writenf(datagram, length);
-	}
+    private final static ILogger LOGGER = LoggerFactory.getLogger(EngineDatagramServerSession.class);
 
-	@Override
-	public IFuture<Void> write(IByteBufferHolder datagram) {
-		return wrapper.write(datagram);
-	}
-	
-	@Override
-	public void writenf(IByteBufferHolder datagram) {
-		wrapper.writenf(datagram);
-	}
-	
-	@Override
-	public IFuture<Void> write(Object msg) {
-		return wrapper.write(msg);
-	}
-	
-	@Override
-	public void writenf(Object msg) {
-		wrapper.writenf(msg);
-	}
-	
-	@Override
-	public IFuture<Void> send(SocketAddress remoteAddress, byte[] datagram) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			return wrapper.write(datagram);
-		}
-		return super.send(remoteAddress, datagram);
-	}
-	
-	@Override
-	public void sendnf(SocketAddress remoteAddress, byte[] datagram) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			wrapper.writenf(datagram);
-			return;
-		}
-		super.send(remoteAddress, datagram);
-	}
-	
-	@Override
-	public IFuture<Void> send(SocketAddress remoteAddress, byte[] datagram, int offset, int length) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			return wrapper.write(datagram, offset, length);
-		}
-		return super.send(remoteAddress, datagram, offset, length);
-	}
-	
-	@Override
-	public void sendnf(SocketAddress remoteAddress, byte[] datagram, int offset, int length) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			wrapper.writenf(datagram, offset, length);
-			return;
-		}
-		super.send(remoteAddress, datagram, offset, length);
-	}
-	
-	@Override
-	public IFuture<Void> send(SocketAddress remoteAddress, ByteBuffer datagram) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			return wrapper.write(datagram);
-		}
-		return super.send(remoteAddress, datagram);
-	}
-	
-	@Override
-	public void sendnf(SocketAddress remoteAddress, ByteBuffer datagram) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			wrapper.writenf(datagram);
-			return;
-		}
-		super.send(remoteAddress, datagram);
-	}
-	
-	@Override
-	public IFuture<Void> send(SocketAddress remoteAddress, ByteBuffer datagram, int length) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			return wrapper.write(datagram, length);
-		}
-		return super.send(remoteAddress, datagram, length);
-	}
-	
-	@Override
-	public void sendnf(SocketAddress remoteAddress, ByteBuffer datagram, int length) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			wrapper.writenf(datagram, length);
-			return;
-		}
-		super.send(remoteAddress, datagram, length);
-	}
+    private final EngineDatagramWrapper wrapper;
 
-	@Override
-	public IFuture<Void> send(SocketAddress remoteAddress, IByteBufferHolder datagram) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			return wrapper.write(datagram);
-		}
-		return super.send(remoteAddress, datagram);
-	}
-	
-	@Override
-	public void sendnf(SocketAddress remoteAddress, IByteBufferHolder datagram) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			wrapper.writenf(datagram);
-			return;
-		}
-		super.send(remoteAddress, datagram);
-	}
-	
-	@Override
-	public IFuture<Void> send(SocketAddress remoteAddress, Object msg) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			return wrapper.write(msg);
-		}
-		return super.send(remoteAddress, msg);
-	}
-	
-	@Override
-	public void sendnf(SocketAddress remoteAddress, Object msg) {
-		if (wrapper.connectedTo(remoteAddress)) {
-			wrapper.writenf(msg);
-			return;
-		}
-		super.send(remoteAddress, msg);
-	}
-	
-	@Override
-	public void close() {
-		wrapper.close();
-	}
-	
-	@Override
-	public void quickClose() {
-		wrapper.quickClose();
-	}	
-	
-	@Override
-	public void dirtyClose() {
-		wrapper.dirtyClose();
-	}	
-	
-	@Override
-	void preCreated() {
-		super.preCreated();
-		wrapper.preCreated();
-	}
-	
-	@Override
-	void postEnding() {
-		wrapper.postEnding();		
-		super.postEnding();
-	}
-	
+    EngineDatagramServerSession(IEngine engine, DatagramSession delegate, SocketAddress remoteAddress, IDatagramHandler handler) {
+        super(delegate, remoteAddress, new EngineDatagramHandler(engine, remoteAddress, handler, LOGGER));
+        wrapper = new EngineDatagramWrapper(remoteAddress, (EngineDatagramHandler) this.handler);
+        wrapper.setExecutor(handler.getFactory().getExecutor());
+        engine.link(this);
+    }
+
+    @Override
+    IEncodeTaskWriter getEncodeTaskWriter() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    IDatagramReader superCodec() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void setExecutor(Executor executor) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Executor getExecutor() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void beginHandshake() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void beginLazyHandshake() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Object getEngineSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IDatagramHandler getHandler() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> write(byte[] datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void writenf(byte[] datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> write(byte[] datagram, int offset, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void writenf(byte[] datagram, int offset, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> write(ByteBuffer datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void writenf(ByteBuffer datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> write(ByteBuffer datagram, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void writenf(ByteBuffer datagram, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> write(IByteBufferHolder datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void writenf(IByteBufferHolder datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> write(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void writenf(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> send(SocketAddress remoteAddress, byte[] datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void sendnf(SocketAddress remoteAddress, byte[] datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> send(SocketAddress remoteAddress, byte[] datagram, int offset, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void sendnf(SocketAddress remoteAddress, byte[] datagram, int offset, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> send(SocketAddress remoteAddress, ByteBuffer datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void sendnf(SocketAddress remoteAddress, ByteBuffer datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> send(SocketAddress remoteAddress, ByteBuffer datagram, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void sendnf(SocketAddress remoteAddress, ByteBuffer datagram, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> send(SocketAddress remoteAddress, IByteBufferHolder datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void sendnf(SocketAddress remoteAddress, IByteBufferHolder datagram) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> send(SocketAddress remoteAddress, Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void sendnf(SocketAddress remoteAddress, Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void close() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void quickClose() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void dirtyClose() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    void preCreated() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    void postEnding() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

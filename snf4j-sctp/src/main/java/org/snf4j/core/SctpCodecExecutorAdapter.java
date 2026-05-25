@@ -30,159 +30,78 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
 import org.snf4j.core.codec.ICodecExecutor;
 import org.snf4j.core.handler.ISctpHandler;
 import org.snf4j.core.session.ISctpSession;
 import org.snf4j.core.session.ISctpSessionConfig;
-
 import com.sun.nio.sctp.MessageInfo;
 
 class SctpCodecExecutorAdapter extends CodecExecutorAdapter implements ISctpReader {
 
-	private volatile ConcurrentMap<Object, ICodecExecutor> executors;
-	
-	private final ISctpSessionConfig config;
-	
-	SctpCodecExecutorAdapter(ICodecExecutor executor, ISctpHandler handler) {
-		super(executor);
-		config = handler.getConfig();
-	}
-	
-	void setSession(ISctpSession session) {
-		this.session = session;
-	}
+    private volatile ConcurrentMap<Object, ICodecExecutor> executors;
 
-	ICodecExecutor getExecutor(Object identifier) {
-		ConcurrentMap<Object, ICodecExecutor> executors = this.executors;
-		
-		return executors != null ? executors.get(identifier) : null;
-	}
-	
-	ICodecExecutor getExecutor(MessageInfo msgInfo) {
-		Object identifier = config.getCodecExecutorIdentifier(msgInfo);
+    private final ISctpSessionConfig config;
 
-		if (ISctpSessionConfig.DEFAULT_CODEC_EXECUTOR_IDENTIFIER == identifier) {
-			return executor;
-		}
-		else if (identifier == null) {
-			return SctpNopCodecExecutor.INSTANCE;
-		}
+    SctpCodecExecutorAdapter(ICodecExecutor executor, ISctpHandler handler) {
+        super(executor);
+        config = handler.getConfig();
+    }
 
-		ICodecExecutor executor;
-		
-		if (executors == null) {
-			executors = new ConcurrentHashMap<Object, ICodecExecutor>();
-			executor = null;
-		}
-		else {
-			executor = executors.get(identifier);
-		}
-		
-		if (executor == null) {
-			executor = config.createCodecExecutor(identifier);
-			if (executor == null) {
-				executor = SctpNopCodecExecutor.INSTANCE;
-			}
-			else {
-				this.executor.addChild(session, executor);
-			}
-			executors.put(identifier, executor);
-		}
-		return executor;
-	}
-	
-	final List<Object> encode(ByteBuffer data, MessageInfo msgInfo) throws Exception {
-		ICodecExecutor executor = getExecutor(msgInfo);
-		
-		executor.syncEncoders(session);
-		return executor.encode(session, data);
-	}
-	
-	final List<Object> encode(byte[] data, MessageInfo msgInfo) throws Exception {	
-		ICodecExecutor executor = getExecutor(msgInfo);
-		
-		executor.syncEncoders(session);
-		return executor.encode(session, data);
-	}
-	
-	final List<Object> encode(Object msg, MessageInfo msgInfo) throws Exception {	
-		ICodecExecutor executor = getExecutor(msgInfo);
-		
-		executor.syncEncoders(session);
-		return executor.encode(session, msg);
-	}
-	
-	@Override
-	public void read(byte[] msg, MessageInfo msgInfo) {
-		ICodecExecutor executor = getExecutor(msgInfo);
-		List<Object> out;	
-		
-		executor.syncDecoders(session);
-		try {
-			out = executor.decode(session, msg);
-		}
-		catch (Exception e) {
-			throw new PipelineDecodeException((InternalSession) session, e);
-		}
-		
-		ISctpHandler handler = (ISctpHandler) session.getHandler();
-		
-		if (out == null) {
-			handler.read(msg, msgInfo);
-			return;
-		}
-		read(msgInfo, out, handler);
-	}
+    void setSession(ISctpSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void read(ByteBuffer msg, MessageInfo msgInfo) {
-		ICodecExecutor executor = getExecutor(msgInfo);
-		List<Object> out;	
-		
-		executor.syncDecoders(session);
-		try {
-			out = executor.decode(session, msg);
-		}
-		catch (Exception e) {
-			throw new PipelineDecodeException((InternalSession) session, e);
-		}
-		
-		ISctpHandler handler = (ISctpHandler) session.getHandler();
-		
-		if (out == null) {
-			handler.read(msg, msgInfo);
-			return;
-		}
-		read(msgInfo, out, handler);
-	}
+    ICodecExecutor getExecutor(Object identifier) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private void read(MessageInfo msgInfo, List<Object> out, ISctpHandler handler) {
-		if (out.isEmpty()) {
-			return;
-		}
-		
-		Iterator<Object> i = out.iterator();
-		Object o = i.next();
-		
-		if (o.getClass() == byte[].class) {
-			handler.read((byte[])o, msgInfo);
-			while (i.hasNext()) {
-				handler.read((byte[])i.next(), msgInfo);
-			}
-		}
-		else if (o instanceof ByteBuffer) {
-			handler.read((ByteBuffer)o, msgInfo);
-			while (i.hasNext()) {
-				handler.read((ByteBuffer)i.next(), msgInfo);
-			}
-		}
-		else {
-			handler.read(o, msgInfo);
-			while (i.hasNext()) {
-				handler.read(i.next(), msgInfo);
-			}
-		}		
-	}
-	
+    ICodecExecutor getExecutor(MessageInfo msgInfo) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final List<Object> encode(ByteBuffer data, MessageInfo msgInfo) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final List<Object> encode(byte[] data, MessageInfo msgInfo) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final List<Object> encode(Object msg, MessageInfo msgInfo) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(byte[] msg, MessageInfo msgInfo) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(ByteBuffer msg, MessageInfo msgInfo) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private void read(MessageInfo msgInfo, List<Object> out, ISctpHandler handler) {
+        if (out.isEmpty()) {
+            return;
+        }
+        Iterator<Object> i = out.iterator();
+        Object o = i.next();
+        if (o.getClass() == byte[].class) {
+            handler.read((byte[]) o, msgInfo);
+            while (i.hasNext()) {
+                handler.read((byte[]) i.next(), msgInfo);
+            }
+        } else if (o instanceof ByteBuffer) {
+            handler.read((ByteBuffer) o, msgInfo);
+            while (i.hasNext()) {
+                handler.read((ByteBuffer) i.next(), msgInfo);
+            }
+        } else {
+            handler.read(o, msgInfo);
+            while (i.hasNext()) {
+                handler.read(i.next(), msgInfo);
+            }
+        }
+    }
 }

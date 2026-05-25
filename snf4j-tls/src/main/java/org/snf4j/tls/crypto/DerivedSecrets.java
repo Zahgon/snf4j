@@ -29,36 +29,32 @@ import java.util.Arrays;
 
 public class DerivedSecrets {
 
-	private byte[] clientSecret;
-	
-	private byte[] serverSecret;
+    private byte[] clientSecret;
 
-	public DerivedSecrets(byte[] clientSecret, byte[] serverSecret) {
-		this.clientSecret = clientSecret;
-		this.serverSecret = serverSecret;
-	}
+    private byte[] serverSecret;
 
-	public DerivedSecrets(byte[] clientSecret) {
-		this.clientSecret = clientSecret;
-	}
-	
-	public byte[] getSecret(boolean client) {
-		return client ? clientSecret : serverSecret;
-	}
+    public DerivedSecrets(byte[] clientSecret, byte[] serverSecret) {
+        this.clientSecret = clientSecret;
+        this.serverSecret = serverSecret;
+    }
 
-	public byte[] getClientSecret() {
-		return clientSecret;
-	}
+    public DerivedSecrets(byte[] clientSecret) {
+        this.clientSecret = clientSecret;
+    }
 
-	public byte[] getServerSecret() {
-		return serverSecret;
-	}
-	
-	public void clear() {
-		Arrays.fill(clientSecret, (byte)0);
-		if (serverSecret != null) {
-			Arrays.fill(serverSecret, (byte)0);
-		}
-	}
-	
+    public byte[] getSecret(boolean client) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public byte[] getClientSecret() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public byte[] getServerSecret() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void clear() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

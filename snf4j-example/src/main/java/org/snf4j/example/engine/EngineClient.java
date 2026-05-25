@@ -28,48 +28,22 @@ package org.snf4j.example.engine;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
-
 import org.snf4j.core.SelectorLoop;
 import org.snf4j.core.StreamSession;
 
 public class EngineClient {
-	static final String PREFIX = "org.snf4j.";
-	static final String HOST = System.getProperty(PREFIX+"Host", "127.0.0.1");
-	static final int PORT = Integer.getInteger(PREFIX+"Port", 8003);
-	static final int ENGINE = Integer.getInteger(PREFIX+"Engine", 2);
-	static final int OFFSET = Integer.getInteger(PREFIX+"Offset", 66);
-	
-	public static void main(String[] args) throws Exception {
-		SelectorLoop loop = new SelectorLoop();
-		
-		try {
-			loop.start();
-			
-			// Initialize the connection
-			SocketChannel channel = SocketChannel.open();
-			channel.configureBlocking(false);
-			channel.connect(new InetSocketAddress(InetAddress.getByName(HOST), PORT));
-			
-			//Create the engine session
-			StreamSession session = new EngineSession(EngineFactory.create(ENGINE, OFFSET, true), new EngineClientHandler());
-			
-			// Register the channel
-			loop.register(channel, session).sync().getSession();
-			
-			// Confirm that the connection was successful
-			session.getReadyFuture().sync();
 
-			session.write("Hello, World!".getBytes()).sync();
-			
-			session.quickClose();
+    static final String PREFIX = "org.snf4j.";
 
-			session.getCloseFuture().sync();
-		}
-		
-		finally {
+    static final String HOST = System.getProperty(PREFIX + "Host", "127.0.0.1");
 
-			// Gently stop the loop
-			loop.stop();
-		}
-	}
+    static final int PORT = Integer.getInteger(PREFIX + "Port", 8003);
+
+    static final int ENGINE = Integer.getInteger(PREFIX + "Engine", 2);
+
+    static final int OFFSET = Integer.getInteger(PREFIX + "Offset", 66);
+
+    public static void main(String[] args) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -26,36 +26,33 @@
 package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.tls.Args;
 
 public class PskIdentity {
-	
+
     private final byte[] identity;
-    
+
     private final long obfuscatedTicketAge;
 
-	public PskIdentity(byte[] identity, long obfuscatedTicketAge) {
-		Args.checkNull(identity, "identity");
-		this.identity = identity;
-		this.obfuscatedTicketAge = obfuscatedTicketAge;
-	}
+    public PskIdentity(byte[] identity, long obfuscatedTicketAge) {
+        Args.checkNull(identity, "identity");
+        this.identity = identity;
+        this.obfuscatedTicketAge = obfuscatedTicketAge;
+    }
 
-	public byte[] getIdentity() {
-		return identity;
-	}
+    public byte[] getIdentity() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public long getObfuscatedTicketAge() {
-		return obfuscatedTicketAge;
-	}
-	
-	public int getDataLength() {
-		return 2 + 4 + identity.length;
-	}
-	
-	public void getData(ByteBuffer buffer) {
-		buffer.putShort((short) identity.length);
-		buffer.put(identity);
-		buffer.putInt((int) obfuscatedTicketAge);
-	}
+    public long getObfuscatedTicketAge() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

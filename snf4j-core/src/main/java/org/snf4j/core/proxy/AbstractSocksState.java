@@ -28,32 +28,30 @@ package org.snf4j.core.proxy;
 import java.nio.ByteBuffer;
 
 abstract class AbstractSocksState {
-	
-	final static byte VER_INDEX = 0;
-	
-	protected final AbstractSocksProxyHandler handler;
-	
-	AbstractSocksState(AbstractSocksProxyHandler handler) {
-		this.handler = handler;
-	}
-	
-	protected int length(ByteBuffer data, boolean flipped) {
-		return flipped ? data.remaining() : data.position();
-	}
-	
-	int available(ByteBuffer data, boolean flipped) {
-		return available(null, 0, length(data, flipped));
-	}
 
-	int available(byte[] data, int off, int len) {
-		int size = responseSize();
-		
-		return len < size ? 0 : size;
-	}
-	
-	abstract int responseSize();
-	
-	abstract AbstractSocksState read(byte[] data);
-	
-	abstract void handleReady();
+    final static byte VER_INDEX = 0;
+
+    protected final AbstractSocksProxyHandler handler;
+
+    AbstractSocksState(AbstractSocksProxyHandler handler) {
+        this.handler = handler;
+    }
+
+    protected int length(ByteBuffer data, boolean flipped) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    int available(ByteBuffer data, boolean flipped) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    int available(byte[] data, int off, int len) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    abstract int responseSize();
+
+    abstract AbstractSocksState read(byte[] data);
+
+    abstract void handleReady();
 }

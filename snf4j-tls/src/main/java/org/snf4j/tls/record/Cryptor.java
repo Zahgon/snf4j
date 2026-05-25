@@ -28,65 +28,56 @@ package org.snf4j.tls.record;
 import java.util.Arrays;
 
 public class Cryptor {
-	
-	private final byte[] iv;
 
-	private final int expansion;
+    private final byte[] iv;
 
-	private long sequence;
-	
-	private long keyLimitCountdown;
-	
-	private boolean updated;
-	
-	protected Cryptor(byte[] iv, int expansion, long keyLimit) {
-		this.iv = iv;
-		this.expansion = expansion;
-		this.keyLimitCountdown = keyLimit;
-	}
-	
-	public byte[] nextNonce() {
-		int len = iv.length;
-		byte[] nonce = iv.clone();
-		long nextSequence = sequence++;
-		int i=len-1;
-		
-		for (; i>=len-8; --i) {
-			nonce[i] ^= (byte) nextSequence;
-			nextSequence >>= 8;
-		}
-		return nonce;
-	}
-	
-	public long getSequence() {
-		return sequence;
-	}
-	
-	public void rollbackSequence() {
-		--sequence;
-	}
-	
-	public int getExpansion() {
-		return expansion;
-	}
+    private final int expansion;
 
-	public void erase() {
-		Arrays.fill(iv, (byte) 0);
-	}
-	
-	public void incProcessedBytes(int amount) {
-		keyLimitCountdown -= amount;
-	}
-	
-	public boolean isKeyLimitReached() {
-		return keyLimitCountdown < 0;
-	}
-	
-	public boolean isMarkedForUpdate() {
-		return updated;
-	}
-	
-	public void markForUpdate() {
-		updated = true;
-	}
+    private long sequence;
+
+    private long keyLimitCountdown;
+
+    private boolean updated;
+
+    protected Cryptor(byte[] iv, int expansion, long keyLimit) {
+        this.iv = iv;
+        this.expansion = expansion;
+        this.keyLimitCountdown = keyLimit;
+    }
+
+    public byte[] nextNonce() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public long getSequence() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void rollbackSequence() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public int getExpansion() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void erase() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void incProcessedBytes(int amount) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean isKeyLimitReached() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean isMarkedForUpdate() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void markForUpdate() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

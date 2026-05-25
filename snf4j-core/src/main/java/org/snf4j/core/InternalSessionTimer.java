@@ -29,36 +29,36 @@ import org.snf4j.core.timer.ITimer;
 import org.snf4j.core.timer.ITimerTask;
 
 class InternalSessionTimer extends AbstractSessionTimer {
-	
-	private final ITimer timer;
-	
-	InternalSessionTimer(InternalSession session, ITimer timer) {
-		super(session);
-		this.timer = timer;
-	}
-	
-	@Override
-	public boolean isSupported() {
-		return timer != null;
-	}
-	
-	@Override
-	public ITimerTask scheduleTask(Runnable task, long delay, boolean inHandler) {
-		return timer.schedule(inHandler ? wrapTask(task) : task, delay);
-	}
-	
-	@Override
-	public ITimerTask scheduleEvent(Object event, long delay) {
-		return timer.schedule(wrapEvent(event), delay);
-	}
-	
-	@Override
-	public ITimerTask scheduleTask(Runnable task, long delay, long period, boolean inHandler) {
-		return timer.schedule(inHandler ? wrapTask(task) : task, delay, period);
-	}
-	
-	@Override
-	public ITimerTask scheduleEvent(Object event, long delay, long period) {
-		return timer.schedule(wrapEvent(event), delay, period);
-	}
+
+    private final ITimer timer;
+
+    InternalSessionTimer(InternalSession session, ITimer timer) {
+        super(session);
+        this.timer = timer;
+    }
+
+    @Override
+    public boolean isSupported() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ITimerTask scheduleTask(Runnable task, long delay, boolean inHandler) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ITimerTask scheduleEvent(Object event, long delay) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ITimerTask scheduleTask(Runnable task, long delay, long period, boolean inHandler) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ITimerTask scheduleEvent(Object event, long delay, long period) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -28,7 +28,6 @@ package org.snf4j.tls.handshake;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -38,151 +37,66 @@ import org.snf4j.tls.extension.IExtension;
 import org.snf4j.tls.extension.IExtensionDecoder;
 
 public class Certificate extends KnownHandshake implements ICertificate {
-	
-	private final static HandshakeType TYPE = HandshakeType.CERTIFICATE;
-	
-	private final static ICertificateEntry[] EMPTY = new ICertificateEntry[0];
-	
-	private final byte[] requestContext;
-	
-	private final ICertificateEntry[] entries;
-	
-	private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
 
-		@Override
-		public HandshakeType getType() {
-			return TYPE;
-		}
+    private final static HandshakeType TYPE = HandshakeType.CERTIFICATE;
 
-		@Override
-		public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
-			if (remaining >= 1) {
-				int len = srcs.getUnsigned();
-				
-				--remaining;
-				if (len <= remaining+3) {
-					byte[] requestContext = new byte[len];
-					
-					srcs.get(requestContext);
-					remaining -= len + 3;
-					len = srcs.getUnsigned() << 16;
-					len |= srcs.getUnsignedShort();
-					if (len == remaining) {
-						if (len == 0) {
-							return new Certificate(requestContext, EMPTY);
-						}
-						else {
-							List<ICertificateEntry> entries = new ArrayList<ICertificateEntry>();
-							
-							while (remaining >= 3) {
-								len = srcs.getUnsigned() << 16;
-								len |= srcs.getUnsignedShort();
-								
-								remaining -= 3;
-								if (len + 2 <= remaining) {
-									byte[] data = new byte[len];
-									ExtensionsParser parser = new ExtensionsParser(0, 0xffff, decoder);
-									
-									srcs.get(data);
-									remaining -= len;
-									parser.parse(TYPE, srcs, remaining);
-									if (parser.isComplete()) {
-										entries.add(new CertificateEntry(data,parser.getExtensions()));
-									}
-									else {
-										break;
-									}
-									remaining -= parser.getConsumedBytes();
-								}
-								else {
-									break;
-								}
-							}
-							if (remaining == 0) {
-								return new Certificate(requestContext, entries.toArray(new ICertificateEntry[entries.size()]));
-							}
-						}
-					}
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}
-	};
-	
-	public Certificate(byte[] requestContext, ICertificateEntry[] entries) {
-		super(TYPE);
-		Args.checkMax(requestContext, 255, "requestContext");
-		Args.checkNull(entries, "entries");
-		this.requestContext = requestContext;
-		this.entries = entries;
-	}
-	
-	@Override
-	public List<IExtension> getExtensions() {
-		List<IExtension> extensions = new ArrayList<IExtension>();
-		
-		for (ICertificateEntry entry: entries) {
-			extensions.addAll(entry.getExtensions());
-		}
-		return extensions;
-	}
+    private final static ICertificateEntry[] EMPTY = new ICertificateEntry[0];
 
-	@Override
-	public byte[] getRequestContext() {
-		return requestContext;
-	}
-	
-	@Override
-	public ICertificateEntry[] getEntries() {
-		return entries;
-	}
+    private final byte[] requestContext;
 
-	public static IHandshakeParser getParser() {
-		return PARSER;
-	}
+    private final ICertificateEntry[] entries;
 
-	static int calculateLength(ICertificateEntry[] entries) {
-		int len = 0;
-		
-		for (ICertificateEntry entry: entries) {
-			len += 3 + 2;
-			len += entry.getDataLength();
-			len += ExtensionsUtil.calculateLength(entry.getExtensions());
-		}
-		return len;
-	}
-	
-	@Override
-	public int getDataLength() {
-		return 1 
-			+ requestContext.length 
-			+ 3
-			+ calculateLength(entries);
-	}
+    private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		if (requestContext.length == 0) {
-			buffer.put((byte) 0);
-		}
-		else {
-			buffer.put((byte) requestContext.length);
-			buffer.put(requestContext);
-		}
-		
-		int len = calculateLength(entries);
-		
-		buffer.put((byte) (len >> 16));
-		buffer.putShort((short) (len & 0xffff));
-		for (ICertificateEntry entry: entries) {
-			len = entry.getDataLength();
-			buffer.put((byte) (len >> 16));
-			buffer.putShort((short) (len & 0xffff));
-			buffer.put(entry.getData());
-			buffer.putShort((short) ExtensionsUtil.calculateLength(entry.getExtensions()));
-			for (IExtension e: entry.getExtensions()) {
-				e.getBytes(buffer);
-			}
-		}
-	}
+        @Override
+        public HandshakeType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        @Override
+        public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
+
+    public Certificate(byte[] requestContext, ICertificateEntry[] entries) {
+        super(TYPE);
+        Args.checkMax(requestContext, 255, "requestContext");
+        Args.checkNull(entries, "entries");
+        this.requestContext = requestContext;
+        this.entries = entries;
+    }
+
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] getRequestContext() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ICertificateEntry[] getEntries() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IHandshakeParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static int calculateLength(ICertificateEntry[] entries) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

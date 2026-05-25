@@ -29,108 +29,51 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.snf4j.core.session.ISession;
 
-abstract class CompoundCodec<C extends ICodec<?,?>,I,O> implements ICodec<I,O> {
-	
-	private final List<C> codecs = new LinkedList<C>();
-	
-	private final int last;
-	
-	CompoundCodec(@SuppressWarnings("unchecked") C... codecs) {
-		int last = -1;
-		
-		if (getOutboundType() == Void.class) {
-			throw new IllegalStateException("compound " +type() + " with void output");
-		}
-		
-		if (codecs.length > 0) {
-			Class<?> inType = getInboundType();
-			Class<?> outType = null;
-			
-			for (int i=0; i<codecs.length; ++i) {
-				C codec = codecs[i];
-				
-				if (codec.getInboundType().isAssignableFrom(inType)) {
-					this.codecs.add(codec);
-					if (codec.getOutboundType() != Void.class) {
-						outType = inType = codec.getOutboundType();
-						last = i;
-					}
-				}
-				else {
-					throw new IllegalArgumentException("incompatible " + type() +"(s)");
-				}
-			}
-			if (outType != null) {
-				if (!getOutboundType().isAssignableFrom(outType)) {
-					throw new IllegalArgumentException("last " + type() + " has incompatible outbound type");
-				}
-			}
-			else {
-				throw new IllegalArgumentException("no " +type() + " produces output");
-			}
-		}
-		this.last = last;
-	}
-	
-	abstract void process(ICodec<?,?> codec, ISession session, Object data, List<Object> out) throws Exception;
+abstract class CompoundCodec<C extends ICodec<?, ?>, I, O> implements ICodec<I, O> {
 
-	abstract String type();
-	
-	@SuppressWarnings("unchecked")
-	final void process(ISession session, I data, List<O> out) throws Exception {
-		Iterator<C> i = codecs.iterator();
-		int current = -1;
-		List<Object> out0 = null;
-		List<Object> in = null, tmp;
-		boolean last;
-		
-		while (i.hasNext()) {
-			C codec = i.next();
-			last = ++current == this.last;
-			
-			if (codec.getOutboundType() == Void.class) {
-				if (out0 == null) {
-					process(codec, session, data, null);
-				}
-				else {
-					for (Object o: out0) {
-						process(codec, session, o, null);
-					}
-				}
-				continue;
-			}
-			
-			if (out0 == null) {
-				if (last) {
-					process(codec, session, data, (List<Object>) out);
-					out0 = (List<Object>) out;
-				}
-				else {
-					out0 = new ArrayList<Object>();
-					in = new ArrayList<Object>();
-					process(codec, session, data, out0);
-				}
-				continue;
-			}
-			
-			if (last) {
-				for (Object o: out0) {
-					process(codec, session, o, (List<Object>) out);
-					out0 = (List<Object>) out;
-				}
-			}
-			else {
-				tmp = in;
-				in = out0;
-				out0 = tmp;
-				for (Object o: in) {
-					process(codec, session, o, out0);
-				}
-			}
-		}
-	}
-	
+    private final List<C> codecs = new LinkedList<C>();
+
+    private final int last;
+
+    CompoundCodec(@SuppressWarnings("unchecked") C... codecs) {
+        int last = -1;
+        if (getOutboundType() == Void.class) {
+            throw new IllegalStateException("compound " + type() + " with void output");
+        }
+        if (codecs.length > 0) {
+            Class<?> inType = getInboundType();
+            Class<?> outType = null;
+            for (int i = 0; i < codecs.length; ++i) {
+                C codec = codecs[i];
+                if (codec.getInboundType().isAssignableFrom(inType)) {
+                    this.codecs.add(codec);
+                    if (codec.getOutboundType() != Void.class) {
+                        outType = inType = codec.getOutboundType();
+                        last = i;
+                    }
+                } else {
+                    throw new IllegalArgumentException("incompatible " + type() + "(s)");
+                }
+            }
+            if (outType != null) {
+                if (!getOutboundType().isAssignableFrom(outType)) {
+                    throw new IllegalArgumentException("last " + type() + " has incompatible outbound type");
+                }
+            } else {
+                throw new IllegalArgumentException("no " + type() + " produces output");
+            }
+        }
+        this.last = last;
+    }
+
+    abstract void process(ICodec<?, ?> codec, ISession session, Object data, List<Object> out) throws Exception;
+
+    abstract String type();
+
+    @SuppressWarnings("unchecked")
+    final void process(ISession session, I data, List<O> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

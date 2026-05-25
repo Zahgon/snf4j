@@ -26,36 +26,34 @@
 package org.snf4j.core.factory;
 
 import java.util.concurrent.ThreadFactory;
-
 import org.snf4j.core.thread.FastThreadLocalThread;
 
 /**
  * Default implementation of the {@link java.util.concurrent.ThreadFactory} interface that is
  * used by the API.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class DefaultThreadFactory implements ThreadFactory {
 
-	/**
-	 * A constant holding the default thread factory.
-	 */
-	public final static DefaultThreadFactory DEFAULT = new DefaultThreadFactory();
-	
-	private DefaultThreadFactory() {
-	}
-	
-	/**
-	 * Returns a new thread the will be created in the following way:
-	 * 
-	 * <pre>
-	 * return new FastThreadLocalThread(target, target.toString())
-	 * </pre>
-	 * @see FastThreadLocalThread
-	 */
-	@Override
-	public Thread newThread(Runnable target) {
-		return new FastThreadLocalThread(target, target.toString());
-	}
+    /**
+     * A constant holding the default thread factory.
+     */
+    public final static DefaultThreadFactory DEFAULT = new DefaultThreadFactory();
 
+    private DefaultThreadFactory() {
+    }
+
+    /**
+     * Returns a new thread the will be created in the following way:
+     *
+     * <pre>
+     * return new FastThreadLocalThread(target, target.toString())
+     * </pre>
+     * @see FastThreadLocalThread
+     */
+    @Override
+    public Thread newThread(Runnable target) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

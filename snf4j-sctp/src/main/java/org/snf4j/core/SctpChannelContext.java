@@ -33,133 +33,56 @@ import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.util.Iterator;
 import java.util.Set;
-
 import com.sun.nio.sctp.MessageInfo;
 import com.sun.nio.sctp.NotificationHandler;
 import com.sun.nio.sctp.SctpChannel;
 
 class SctpChannelContext extends AbstractSctpChannelContext<SctpSession> {
 
-	SctpChannelContext(SctpSession session) {
-		super(session);
-	}
-	
-	@Override
-	public boolean finishConnect(SelectableChannel channel) throws Exception {
-		return ((SctpChannel)channel).finishConnect();
-	}
-	
-	@Override
-	final boolean completeRegistration(SelectorLoop loop, SelectionKey key, SelectableChannel channel) throws Exception {
-		SctpChannel sc = (SctpChannel) channel;
-		boolean open = sc.isOpen();
-		
-		if (open) {
-			if (!sc.isConnectionPending()) {
-				try {
-					if (!sc.getRemoteAddresses().isEmpty()) {
-						key.interestOps(SelectionKey.OP_READ);
-						return true;
-					}
-				}
-				catch (ClosedChannelException e) {
-					open = false;
-				}
-			}
-		}
-			
-		if (open) {
-			key.interestOps(SelectionKey.OP_CONNECT);
-		}
-		else {
-			//If the channel is closed notify session
-			loop.fireCreatedEvent(getSession(), channel);
-			loop.fireEndingEvent(getSession(), false);
-		}			
-		return false;
-	}	
-	
-	@Override
-	ChannelContext<SctpSession> wrap(InternalSession session) {
-		return new SctpChannelContext((SctpSession) session);
-	}
+    SctpChannelContext(SctpSession session) {
+        super(session);
+    }
 
-	@Override
-	MessageInfo receive(SelectionKey key, ByteBuffer msg, final SctpSession session, NotificationHandler<InternalSctpSession> handler) throws Exception {
-		return ((SctpChannel)key.channel()).receive(msg, session, HANDLER);
-	}
-	
-	@Override
-	int send(SelectionKey key, ByteBuffer msg, MessageInfo msgInfo) throws Exception {
-		return ((SctpChannel)key.channel()).send(msg, msgInfo);
-	}
-	
-	@Override
-	final void shutdown(SelectableChannel channel) throws Exception {
-		((SctpChannel)channel).shutdown();
-	}
-	
-	static boolean append(StringBuilder sb, Set<SocketAddress> addrs) {
-		Iterator<SocketAddress> i = addrs.iterator();
-		
-		if (i.hasNext()) {
-			sb.append(i.next());
-			while (i.hasNext()) {
-				sb.append(',');
-				sb.append(i.next());
-			}
-			return true;
-		}
-		return false;
-	}
-	
-	static String toString(SctpChannel channel) {
-		StringBuilder sb = new StringBuilder(100);
-		Set<SocketAddress> addrs;
-		
-		sb.append(channel.getClass().getName());
-		sb.append('[');
-		try {
-			addrs = channel.getRemoteAddresses();
-			if (!addrs.isEmpty()) {
-				sb.append("connected ");
-			}
-			else if (channel.isConnectionPending()) {
-				sb.append("connection-pending ");
-			}
-			else {
-				sb.append("not-connected ");
-			}
-		} catch (IOException e) {
-			addrs = null;
-		}
-		sb.append("local=");
-		try {
-			if (!append(sb, channel.getAllLocalAddresses())) {
-				sb.append("not-bound");
-			}
-		} catch (IOException e) {
-			sb.append("unknown");
-		}
-		if (addrs != null) {
-			if (!addrs.isEmpty()) {
-				sb.append(" remote=");
-				append(sb, addrs);
-			}
-		}
-		else {
-			sb.append(" remote=unknown");
-		}
-		sb.append(']');
-		return sb.toString();
-	}
-	
-	@Override
-	final String toString(SelectableChannel channel) {
-		if (channel instanceof SctpChannel) {
-			return toString((SctpChannel) channel);
-		}
-		return super.toString(channel);
-	}
+    @Override
+    public boolean finishConnect(SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    final boolean completeRegistration(SelectorLoop loop, SelectionKey key, SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    ChannelContext<SctpSession> wrap(InternalSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    MessageInfo receive(SelectionKey key, ByteBuffer msg, final SctpSession session, NotificationHandler<InternalSctpSession> handler) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    int send(SelectionKey key, ByteBuffer msg, MessageInfo msgInfo) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final void shutdown(SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static boolean append(StringBuilder sb, Set<SocketAddress> addrs) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static String toString(SctpChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final String toString(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

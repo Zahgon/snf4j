@@ -27,80 +27,79 @@ package org.snf4j.core;
 
 /**
  * Base class for objects that are identified by an id and their name.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class IdentifiableObject {
-	
-	private final long id;
 
-	private final String name;
-	
-	private final String fullName;
-	
-	/**
-	 * 
-	 * Constructs an identifiable object with the specified prefix, id and name.
-	 * 
-	 * @param prefix
-	 *            the prefix used to generate string representation of this
-	 *            object
-	 * @param id
-	 *            the id of the object
-	 * @param name
-	 *            the name of the object or <code>null</code> if the name should
-	 *            be auto generated
-	 */
-	protected IdentifiableObject(String prefix, long id, String name) {
-		this.id = id;
-		fullName = prefix + ( name != null ? name : Long.toString(id));
-		this.name = name != null ? name : fullName;
-	}
+    private final long id;
 
-	/**
-	 * Returns a string representation of this object. It can be formatted in
-	 * the following ways:
-	 * <p>
-	 * a. if the name argument passed to the constructor was specified
-	 * 
-	 * <pre>
-	 * return prefix + name;
-	 * </pre>
-	 * 
-	 * b. if the name argument passed to the constructor was <code>null</code>
-	 * 
-	 * <pre>
-	 * return prefix + Long.toString(id);
-	 * </pre>
-	 * 
-	 * @return a string representation of this object
-	 */
-	@Override
-	public String toString() {
-		return fullName;
-	}
-	
-	/**
-	 * Returns the unique id of this object. The id is auto generated during the
-	 * construction of the object.
-	 * 
-	 * @return the unique id of this object
-	 */
-	public final long getId() {
-		return id;
-	}
-	
-	/**
-	 * Returns the name of this object. If the name passed to the constructor
-	 * was <code>null</code> it returns auto generated name that is formatted in
-	 * the following way:
-	 * 
-	 * <pre>
-	 * return prefix + Long.toString(id);
-	 * </pre>
-	 * @return the name of this object
-	 */
-	public final String getName() {
-		return name;
-	}
+    private final String name;
+
+    private final String fullName;
+
+    /**
+     * Constructs an identifiable object with the specified prefix, id and name.
+     *
+     * @param prefix
+     *            the prefix used to generate string representation of this
+     *            object
+     * @param id
+     *            the id of the object
+     * @param name
+     *            the name of the object or <code>null</code> if the name should
+     *            be auto generated
+     */
+    protected IdentifiableObject(String prefix, long id, String name) {
+        this.id = id;
+        fullName = prefix + (name != null ? name : Long.toString(id));
+        this.name = name != null ? name : fullName;
+    }
+
+    /**
+     * Returns a string representation of this object. It can be formatted in
+     * the following ways:
+     * <p>
+     * a. if the name argument passed to the constructor was specified
+     *
+     * <pre>
+     * return prefix + name;
+     * </pre>
+     *
+     * b. if the name argument passed to the constructor was <code>null</code>
+     *
+     * <pre>
+     * return prefix + Long.toString(id);
+     * </pre>
+     *
+     * @return a string representation of this object
+     */
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Returns the unique id of this object. The id is auto generated during the
+     * construction of the object.
+     *
+     * @return the unique id of this object
+     */
+    public final long getId() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Returns the name of this object. If the name passed to the constructor
+     * was <code>null</code> it returns auto generated name that is formatted in
+     * the following way:
+     *
+     * <pre>
+     * return prefix + Long.toString(id);
+     * </pre>
+     * @return the name of this object
+     */
+    public final String getName() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

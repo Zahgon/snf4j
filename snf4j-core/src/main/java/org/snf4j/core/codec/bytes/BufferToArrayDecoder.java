@@ -27,48 +27,37 @@ package org.snf4j.core.codec.bytes;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.codec.IDecoder;
 import org.snf4j.core.session.ISession;
 
 /**
  * A decoder transforming a {@link ByteBuffer} into an array of bytes.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public class BufferToArrayDecoder extends BufferToArrayCodec implements IDecoder<ByteBuffer,byte[]> {
+public class BufferToArrayDecoder extends BufferToArrayCodec implements IDecoder<ByteBuffer, byte[]> {
 
-	private final boolean release;
-	
-	/**
-	 * Constructs a decoder with a specified buffer releasing mode.
-	 * 
-	 * @param release the releasing mode determining if the input buffer should be
-	 *                released by the session's allocator
-	 */
-	public BufferToArrayDecoder(boolean release) {
-		this.release = release;
-	}
-	
-	/**
-	 * Constructs a decoder with no buffer releasing.
-	 */
-	public BufferToArrayDecoder() {
-		release = false;
-	}
-	
-	@Override
-	public void decode(ISession session, ByteBuffer data, List<byte[]> out) throws Exception {
-		if (release) {
-			byte[] array = new byte[data.remaining()];
-			
-			data.get(array);
-			out.add(array);
-			session.release(data);
-		}
-		else {
-			out.add(toArray(data));
-		}
-	}
+    private final boolean release;
 
+    /**
+     * Constructs a decoder with a specified buffer releasing mode.
+     *
+     * @param release the releasing mode determining if the input buffer should be
+     *                released by the session's allocator
+     */
+    public BufferToArrayDecoder(boolean release) {
+        this.release = release;
+    }
+
+    /**
+     * Constructs a decoder with no buffer releasing.
+     */
+    public BufferToArrayDecoder() {
+        release = false;
+    }
+
+    @Override
+    public void decode(ISession session, ByteBuffer data, List<byte[]> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

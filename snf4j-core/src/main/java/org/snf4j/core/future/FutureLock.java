@@ -26,17 +26,18 @@
 package org.snf4j.core.future;
 
 class FutureLock {
-	private int waiters;
-	
-	public final void incWaiters() {
-		++waiters;
-	}
-	
-	public final void decWaiters() {
-		--waiters;
-	}
-	
-	public final boolean hasWaiters() {
-		return waiters > 0;
-	}
+
+    private int waiters;
+
+    public final void incWaiters() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public final void decWaiters() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public final boolean hasWaiters() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

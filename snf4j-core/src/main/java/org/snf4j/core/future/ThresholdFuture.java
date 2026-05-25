@@ -27,48 +27,47 @@ package org.snf4j.core.future;
 
 class ThresholdFuture<V> extends AbstractBlockingFuture<V> {
 
-	final DataFuture<V> future;
-	
-	final long threshold;
-	
-	ThresholdFuture(DataFuture<V> future, long threshold) {
-		super(future.getSession());
-		this.future = future;
-		this.threshold = threshold;
-	}
-	
-	@Override
-	protected String toStringDetails() {
-		return "threshold=" + threshold;
-	}
-	
-	@Override
-	public boolean isDone() {
-		return isSuccessful() || future.isDone();
-	}
-	
-	@Override
-	public boolean isSuccessful() {
-		return future.size() >= threshold;
-	}
-	
-	@Override
-	public boolean isCancelled() {
-		return !isSuccessful() && future.isCancelled(); 
-	}
-	
-	@Override
-	public boolean isFailed() {
-		return !isSuccessful() && future.isFailed();
-	}
-	
-	public Throwable cause() {
-		return isSuccessful() ? null : future.cause();
-	}
-	
-	@Override
-	protected FutureLock getLock() {
-		return future.getLock();
-	}
+    final DataFuture<V> future;
 
+    final long threshold;
+
+    ThresholdFuture(DataFuture<V> future, long threshold) {
+        super(future.getSession());
+        this.future = future;
+        this.threshold = threshold;
+    }
+
+    @Override
+    protected String toStringDetails() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isDone() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isSuccessful() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isCancelled() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isFailed() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public Throwable cause() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected FutureLock getLock() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

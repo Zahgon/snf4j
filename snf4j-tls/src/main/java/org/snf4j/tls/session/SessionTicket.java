@@ -29,101 +29,94 @@ import org.snf4j.tls.cipher.CipherSuite;
 
 public class SessionTicket {
 
-	private final CipherSuite cipherSuite;
-	
-	private final String protocol;
-	
-	private final byte[] psk;
-	
-	private final byte[] ticket;
-	
-	private final long creationTime;
+    private final CipherSuite cipherSuite;
 
-	private final long expirationTime;
-	
-	private final long ageAdd;
-	
-	private final long maxEarlyDataSize;
-		
-	public SessionTicket(CipherSuite cipherSuite, String protocol, byte[] psk, byte[] ticket, long lifetime, long ageAdd, long maxEarlyDataSize, long creationTime) {
-		this.cipherSuite = cipherSuite;
-		this.protocol = protocol;
-		this.psk = psk;
-		this.ticket = ticket;
-		this.creationTime = creationTime;
-		this.ageAdd = ageAdd;
-		expirationTime = creationTime + lifetime * 1000;
-		this.maxEarlyDataSize = maxEarlyDataSize;
-	}
+    private final String protocol;
 
-	public SessionTicket(CipherSuite cipherSuite, String protocol, byte[] psk, byte[] ticket, long lifetime, long ageAdd, long maxEarlyDataSize) {
-		this(cipherSuite, protocol, psk, ticket, lifetime, ageAdd, maxEarlyDataSize, System.currentTimeMillis());
-	}
-	
-	public CipherSuite getCipherSuite() {
-		return cipherSuite;
-	}
+    private final byte[] psk;
 
-	public String getProtocol() {
-		return protocol;
-	}
-	
-	public byte[] getPsk() {
-		return psk;
-	}
+    private final byte[] ticket;
 
-	public byte[] getTicket() {
-		return ticket;
-	}
+    private final long creationTime;
 
-	public long getCreationTime() {
-		return creationTime;
-	}
+    private final long expirationTime;
 
-	public long getAgeAdd() {
-		return ageAdd;
-	}
+    private final long ageAdd;
 
-	public boolean isValid(long currentTime) {
-		return expirationTime > currentTime;
-	}
-	
-	public boolean isValid() {
-		return isValid(System.currentTimeMillis());
-	}
-	
-	public boolean forEarlyData() {
-		return maxEarlyDataSize > 0;
-	}
-	
-	/**
-	 * Tells if this ticket supports the early data and specified protocol name
-	 * (ALPN).
-	 * 
-	 * @param protocol the name of protocol or {@code null} if the protocol name is
-	 *                 not used
-	 * @return {@code true} if this ticket supports the early data and specified
-	 *         protocol name
-	 */
-	public boolean forEarlyData(String protocol) {
-		if (maxEarlyDataSize > 0) {
-			if (protocol == null) {
-				return this.protocol == null;
-			}
-			return protocol.equals(this.protocol);
-		}
-		return false;
-	}
-	
-	/**
-	 * Gets the maximum size of the early data that can be sent when using this
-	 * ticket. For tickets not supporting the early data it should return value less
-	 * than {@code 1}.
-	 * 
-	 * @return the maximum early data size
-	 */
-	public long getMaxEarlyDataSize() {
-		return maxEarlyDataSize;
-	}
-	
+    private final long maxEarlyDataSize;
+
+    public SessionTicket(CipherSuite cipherSuite, String protocol, byte[] psk, byte[] ticket, long lifetime, long ageAdd, long maxEarlyDataSize, long creationTime) {
+        this.cipherSuite = cipherSuite;
+        this.protocol = protocol;
+        this.psk = psk;
+        this.ticket = ticket;
+        this.creationTime = creationTime;
+        this.ageAdd = ageAdd;
+        expirationTime = creationTime + lifetime * 1000;
+        this.maxEarlyDataSize = maxEarlyDataSize;
+    }
+
+    public SessionTicket(CipherSuite cipherSuite, String protocol, byte[] psk, byte[] ticket, long lifetime, long ageAdd, long maxEarlyDataSize) {
+        this(cipherSuite, protocol, psk, ticket, lifetime, ageAdd, maxEarlyDataSize, System.currentTimeMillis());
+    }
+
+    public CipherSuite getCipherSuite() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public String getProtocol() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public byte[] getPsk() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public byte[] getTicket() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public long getCreationTime() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public long getAgeAdd() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean isValid(long currentTime) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean isValid() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean forEarlyData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Tells if this ticket supports the early data and specified protocol name
+     * (ALPN).
+     *
+     * @param protocol the name of protocol or {@code null} if the protocol name is
+     *                 not used
+     * @return {@code true} if this ticket supports the early data and specified
+     *         protocol name
+     */
+    public boolean forEarlyData(String protocol) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the maximum size of the early data that can be sent when using this
+     * ticket. For tickets not supporting the early data it should return value less
+     * than {@code 1}.
+     *
+     * @return the maximum early data size
+     */
+    public long getMaxEarlyDataSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

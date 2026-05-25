@@ -29,22 +29,22 @@ import java.nio.ByteBuffer;
 
 class SyncCache extends Cache {
 
-	SyncCache(int capacity, int minSize, int maxSize, int ageThreshold, Cache[] group) {
-		super(capacity, minSize, maxSize, ageThreshold, group);
-	}
+    SyncCache(int capacity, int minSize, int maxSize, int ageThreshold, Cache[] group) {
+        super(capacity, minSize, maxSize, ageThreshold, group);
+    }
 
-	@Override
-	synchronized void purge() {
-		super.purge();
-	}
-	
-	@Override
-	synchronized boolean put(ByteBuffer b, long touch, long touchAll) {
-		return super.put(b, touch, touchAll);
-	}
-	
-	@Override
-	synchronized ByteBuffer get(int capacity, long touch, long touchAll) {
-		return super.get(capacity, touch, touchAll);
-	}
+    @Override
+    synchronized void purge() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    synchronized boolean put(ByteBuffer b, long touch, long touchAll) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    synchronized ByteBuffer get(int capacity, long touch, long touchAll) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

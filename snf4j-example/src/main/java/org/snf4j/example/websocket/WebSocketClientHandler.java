@@ -26,7 +26,6 @@
 package org.snf4j.example.websocket;
 
 import java.net.URI;
-
 import org.snf4j.core.EndingAction;
 import org.snf4j.core.handler.SessionEvent;
 import org.snf4j.websocket.AbstractWebSocketHandler;
@@ -36,43 +35,28 @@ import org.snf4j.websocket.frame.BinaryFrame;
 
 public class WebSocketClientHandler extends AbstractWebSocketHandler {
 
-	private final URI requestUri;
-	
-	private final boolean compress;
-	
-	WebSocketClientHandler(URI requestUri, boolean compress) {
-		this.requestUri = requestUri;
-		this.compress = compress;
-	}
-	
-	@Override
-	public void read(Object msg) {
-		getSession().writenf(msg);
-	}
-	
-	@SuppressWarnings("incomplete-switch")
-	@Override
-	public void event(SessionEvent event) {
-		switch (event) {
-		case READY:
-			byte[] payload = new byte[WebSocketClient.SIZE];
-			
-			for (int i=0; i<payload.length; ++i) {
-				payload[i] = (byte)i;
-			}
-			getSession().writenf(new BinaryFrame(payload));
-			break;
-		}
-	}
-	
-	@Override
-	public IWebSocketSessionConfig getConfig() {
-		SessionConfig config = new SessionConfig(requestUri);
-				
-		config.setEndingAction(EndingAction.STOP);		
-		if (compress) {
-			config.setSupportedExtensions(new PerMessageDeflateExtension());
-		}
-		return config;
-	}
+    private final URI requestUri;
+
+    private final boolean compress;
+
+    WebSocketClientHandler(URI requestUri, boolean compress) {
+        this.requestUri = requestUri;
+        this.compress = compress;
+    }
+
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IWebSocketSessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

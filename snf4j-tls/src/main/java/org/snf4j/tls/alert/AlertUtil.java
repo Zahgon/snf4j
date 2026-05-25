@@ -30,64 +30,48 @@ import java.util.Map;
 
 class AlertUtil {
 
-	private AlertUtil() {}
-	
-	private final static Map<Integer, Alert> ALERTS = new HashMap<Integer, Alert>();
-	
-	private static String message(AlertDescription description) {
-		return "Received '" + description.name() + "' error alert";
-	}
-	
-	static void put(String className, AlertDescription desc) {
-		try {
-			Alert alert = (Alert) Class.forName(className)
-					.getConstructor(String.class)
-					.newInstance(message(desc));
-			
-			ALERTS.put(alert.getDescription().value(), alert);
-		} catch (Exception e) {
-			//Ignore
-		}
-	}
-	
-	private static String className(AlertDescription desc) {
-		String name = desc.name();
-		int len = name.length();
-		StringBuilder className = new StringBuilder(len+5);
-		boolean upper = true;
-		
-		for (int i=0; i<len; ++i) {
-			char c = name.charAt(i);
-			
-			if (c == '_') {
-				upper = true;
-				continue;
-			}
-			className.append(upper ? Character.toUpperCase(c) : c);
-			upper = false;
-		}
-		className.append("Alert");
-		return className.toString();
-	}
-	
-	static {
-		String alertClassName = Alert.class.getName();
-		
-		for (int i=0; i<256; ++i) {
-			AlertDescription desc = AlertDescription.of(i);
-			
-			if (desc.isKnown()) {
-				put(alertClassName.replace("Alert", className(desc)), desc);
-			}
-		}
-	}
-	
-	public static Alert of(AlertLevel level, AlertDescription description) {
-		Alert alert = ALERTS.get(description.value());
-		
-		if (alert == null) {
-			return new Alert(message(description), level, description);
-		}
-		return alert;
-	}
+    private AlertUtil() {
+    }
+
+    private final static Map<Integer, Alert> ALERTS = new HashMap<Integer, Alert>();
+
+    private static String message(AlertDescription description) {
+        return "Received '" + description.name() + "' error alert";
+    }
+
+    static void put(String className, AlertDescription desc) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private static String className(AlertDescription desc) {
+        String name = desc.name();
+        int len = name.length();
+        StringBuilder className = new StringBuilder(len + 5);
+        boolean upper = true;
+        for (int i = 0; i < len; ++i) {
+            char c = name.charAt(i);
+            if (c == '_') {
+                upper = true;
+                continue;
+            }
+            className.append(upper ? Character.toUpperCase(c) : c);
+            upper = false;
+        }
+        className.append("Alert");
+        return className.toString();
+    }
+
+    static {
+        String alertClassName = Alert.class.getName();
+        for (int i = 0; i < 256; ++i) {
+            AlertDescription desc = AlertDescription.of(i);
+            if (desc.isKnown()) {
+                put(alertClassName.replace("Alert", className(desc)), desc);
+            }
+        }
+    }
+
+    public static Alert of(AlertLevel level, AlertDescription description) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

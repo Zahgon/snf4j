@@ -26,7 +26,6 @@
 package org.snf4j.core;
 
 import java.net.SocketAddress;
-
 import org.snf4j.core.handler.IDatagramHandler;
 import org.snf4j.core.logger.ILogger;
 import org.snf4j.core.logger.LoggerFactory;
@@ -37,95 +36,95 @@ import org.snf4j.core.session.SSLEngineCreateException;
  * <p>
  * It uses {@link javax.net.ssl.SSLEngine SSLEngine} to handle the Datagram
  * Transport Layer Security protocol.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class DTLSSession extends EngineDatagramSession {
-	
-	private final static ILogger LOGGER = LoggerFactory.getLogger(DTLSSession.class);
-	
-	/**
-	 * Constructs a named DTLS session associated with a handler. It should be used
-	 * for sessions that will be associated with a not connected datagram channel.
-	 * 
-	 * @param name          the name for this session, or <code>null</code> if the
-	 *                      handler's name should be used for this session's name
-	 * @param remoteAddress the address of the remote peer
-	 * @param handler       the handler that should be associated with this session
-	 * @param clientMode    <code>true</code> if the engine should start its
-	 *                      handshaking in "client" mode
-	 * @throws SSLEngineCreateException when the SSL engine could not be created
-	 * @throws IllegalStateException if no timer was configured. The exception can
-	 *                               be ignored by setting the system property
-	 *                               {@link org.snf4j.core.Constants#IGNORE_NO_SESSION_TIMER_EXCEPTION
-	 *                               IGNORE_NO_SESSION_TIMER_EXCEPTION}
-	 */
-	public DTLSSession(String name, SocketAddress remoteAddress, IDatagramHandler handler, boolean clientMode) throws SSLEngineCreateException {
-		super(name, new InternalSSLEngine(remoteAddress, handler.getConfig(), clientMode), remoteAddress, handler, LOGGER);
-	}
-	
-	/**
-	 * Constructs a DTLS session associated with a handler. It should be used for
-	 * sessions that will be associated with a not connected datagram channel.
-	 * 
-	 * @param remoteAddress the address of the remote peer
-	 * @param handler       the handler that should be associated with this session
-	 * @param clientMode    <code>true</code> if the engine should start its
-	 *                      handshaking in "client" mode
-	 * @throws SSLEngineCreateException when the SSL engine could not be created
-	 * @throws IllegalStateException if no timer was configured. The exception can
-	 *                               be ignored by setting the system property
-	 *                               {@link org.snf4j.core.Constants#IGNORE_NO_SESSION_TIMER_EXCEPTION
-	 *                               IGNORE_NO_SESSION_TIMER_EXCEPTION}
-	 */
-	public DTLSSession(SocketAddress remoteAddress, IDatagramHandler handler, boolean clientMode) throws SSLEngineCreateException {
-		super(new InternalSSLEngine(remoteAddress, handler.getConfig(), clientMode), remoteAddress, handler, LOGGER);
-	}
-	
-	/**
-	 * Constructs a named DTLS session associated with a handler. It should be used
-	 * for sessions that will be associated with a connected datagram channel.
-	 * 
-	 * @param name       the name for this session, or <code>null</code> if the
-	 *                   handler's name should be used for this session's name
-	 * @param handler    the handler that should be associated with this session
-	 * @param clientMode <code>true</code> if the engine should start its
-	 *                   handshaking in "client" mode
-	 * @throws SSLEngineCreateException when the SSL engine could not be created
-	 * @throws IllegalStateException if no timer was configured. The exception can
-	 *                               be ignored by setting the system property
-	 *                               {@link org.snf4j.core.Constants#IGNORE_NO_SESSION_TIMER_EXCEPTION
-	 *                               IGNORE_NO_SESSION_TIMER_EXCEPTION}
-	 */
-	public DTLSSession(String name, IDatagramHandler handler, boolean clientMode) throws SSLEngineCreateException {
-		super(name, new InternalSSLEngine(null, handler.getConfig(), clientMode), handler, LOGGER);
-	}
-	
-	/**
-	 * Constructs a DTLS session associated with a handler. It should be used for
-	 * sessions that will be associated with a connected datagram channel.
-	 * 
-	 * @param handler    the handler that should be associated with this session
-	 * @param clientMode <code>true</code> if the engine should start its
-	 *                   handshaking in "client" mode
-	 * @throws SSLEngineCreateException when the SSL engine could not be created
-	 * @throws IllegalStateException if no timer was configured. The exception can
-	 *                               be ignored by setting the system property
-	 *                               {@link org.snf4j.core.Constants#IGNORE_NO_SESSION_TIMER_EXCEPTION
-	 *                               IGNORE_NO_SESSION_TIMER_EXCEPTION}
-	 */
-	public DTLSSession(IDatagramHandler handler, boolean clientMode) throws SSLEngineCreateException {
-		super(new InternalSSLEngine(null, handler.getConfig(), clientMode), handler, LOGGER);
-	}
-	
-	/**
-	 * Returns the {@link javax.net.ssl.SSLSession SSLSession} in use in the
-	 * {@link javax.net.ssl.SSLEngine SSLEngine} driving this session.
-	 * 
-	 * @return the {@code SSLSession}
-	 */
-	@Override
-	public javax.net.ssl.SSLSession getEngineSession() {
-		return (javax.net.ssl.SSLSession) super.getEngineSession();
-	}	
+
+    private final static ILogger LOGGER = LoggerFactory.getLogger(DTLSSession.class);
+
+    /**
+     * Constructs a named DTLS session associated with a handler. It should be used
+     * for sessions that will be associated with a not connected datagram channel.
+     *
+     * @param name          the name for this session, or <code>null</code> if the
+     *                      handler's name should be used for this session's name
+     * @param remoteAddress the address of the remote peer
+     * @param handler       the handler that should be associated with this session
+     * @param clientMode    <code>true</code> if the engine should start its
+     *                      handshaking in "client" mode
+     * @throws SSLEngineCreateException when the SSL engine could not be created
+     * @throws IllegalStateException if no timer was configured. The exception can
+     *                               be ignored by setting the system property
+     *                               {@link org.snf4j.core.Constants#IGNORE_NO_SESSION_TIMER_EXCEPTION
+     *                               IGNORE_NO_SESSION_TIMER_EXCEPTION}
+     */
+    public DTLSSession(String name, SocketAddress remoteAddress, IDatagramHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(name, new InternalSSLEngine(remoteAddress, handler.getConfig(), clientMode), remoteAddress, handler, LOGGER);
+    }
+
+    /**
+     * Constructs a DTLS session associated with a handler. It should be used for
+     * sessions that will be associated with a not connected datagram channel.
+     *
+     * @param remoteAddress the address of the remote peer
+     * @param handler       the handler that should be associated with this session
+     * @param clientMode    <code>true</code> if the engine should start its
+     *                      handshaking in "client" mode
+     * @throws SSLEngineCreateException when the SSL engine could not be created
+     * @throws IllegalStateException if no timer was configured. The exception can
+     *                               be ignored by setting the system property
+     *                               {@link org.snf4j.core.Constants#IGNORE_NO_SESSION_TIMER_EXCEPTION
+     *                               IGNORE_NO_SESSION_TIMER_EXCEPTION}
+     */
+    public DTLSSession(SocketAddress remoteAddress, IDatagramHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(new InternalSSLEngine(remoteAddress, handler.getConfig(), clientMode), remoteAddress, handler, LOGGER);
+    }
+
+    /**
+     * Constructs a named DTLS session associated with a handler. It should be used
+     * for sessions that will be associated with a connected datagram channel.
+     *
+     * @param name       the name for this session, or <code>null</code> if the
+     *                   handler's name should be used for this session's name
+     * @param handler    the handler that should be associated with this session
+     * @param clientMode <code>true</code> if the engine should start its
+     *                   handshaking in "client" mode
+     * @throws SSLEngineCreateException when the SSL engine could not be created
+     * @throws IllegalStateException if no timer was configured. The exception can
+     *                               be ignored by setting the system property
+     *                               {@link org.snf4j.core.Constants#IGNORE_NO_SESSION_TIMER_EXCEPTION
+     *                               IGNORE_NO_SESSION_TIMER_EXCEPTION}
+     */
+    public DTLSSession(String name, IDatagramHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(name, new InternalSSLEngine(null, handler.getConfig(), clientMode), handler, LOGGER);
+    }
+
+    /**
+     * Constructs a DTLS session associated with a handler. It should be used for
+     * sessions that will be associated with a connected datagram channel.
+     *
+     * @param handler    the handler that should be associated with this session
+     * @param clientMode <code>true</code> if the engine should start its
+     *                   handshaking in "client" mode
+     * @throws SSLEngineCreateException when the SSL engine could not be created
+     * @throws IllegalStateException if no timer was configured. The exception can
+     *                               be ignored by setting the system property
+     *                               {@link org.snf4j.core.Constants#IGNORE_NO_SESSION_TIMER_EXCEPTION
+     *                               IGNORE_NO_SESSION_TIMER_EXCEPTION}
+     */
+    public DTLSSession(IDatagramHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(new InternalSSLEngine(null, handler.getConfig(), clientMode), handler, LOGGER);
+    }
+
+    /**
+     * Returns the {@link javax.net.ssl.SSLSession SSLSession} in use in the
+     * {@link javax.net.ssl.SSLEngine SSLEngine} driving this session.
+     *
+     * @return the {@code SSLSession}
+     */
+    @Override
+    public javax.net.ssl.SSLSession getEngineSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

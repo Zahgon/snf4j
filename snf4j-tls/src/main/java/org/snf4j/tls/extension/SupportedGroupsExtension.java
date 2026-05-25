@@ -26,72 +26,52 @@
 package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.handshake.HandshakeType;
 
 public class SupportedGroupsExtension extends KnownExtension implements ISupportedGroupsExtension {
-	
-	private final static ExtensionType TYPE = ExtensionType.SUPPORTED_GROUPS;
-	
-	private final NamedGroup[] groups;
-	
-	private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
 
-		@Override
-		public ExtensionType getType() {
-			return TYPE;
-		}
+    private final static ExtensionType TYPE = ExtensionType.SUPPORTED_GROUPS;
 
-		@Override
-		public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
-			if (remaining >= 4) {
-				int len = srcs.getUnsignedShort();
-				
-				if ((len & 1) != 0 || len == 0) {
-					throw decodeError("Incorrect length");
-				}
-				remaining -= 2;
-				if (len == remaining) {
-					NamedGroup[] groups = new NamedGroup[len/2];
-					
-					for (int i=0; i<groups.length; ++i) {
-						groups[i] = NamedGroup.of(srcs.getUnsignedShort());
-					}
-					return new SupportedGroupsExtension(groups);
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}
-	};
-	
-	public SupportedGroupsExtension(NamedGroup... groups) {
-		super(TYPE);
-		Args.checkMin(groups, 1, "groups");
-		this.groups = groups;
-	}
+    private final NamedGroup[] groups;
 
-	public static IExtensionParser getParser() {
-		return PARSER;
-	}
+    private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
 
-	@Override
-	public NamedGroup[] getGroups() {
-		return groups;
-	}
-	
-	@Override
-	public int getDataLength() {
-		return 2 + groups.length*2;
-	}
+        @Override
+        public ExtensionType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.putShort((short) (groups.length*2));
-		for (NamedGroup group: groups) {
-			buffer.putShort((short)group.value());
-		}
-	}
+        @Override
+        public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
+
+    public SupportedGroupsExtension(NamedGroup... groups) {
+        super(TYPE);
+        Args.checkMin(groups, 1, "groups");
+        this.groups = groups;
+    }
+
+    public static IExtensionParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public NamedGroup[] getGroups() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

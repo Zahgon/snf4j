@@ -27,54 +27,38 @@ package org.snf4j.core.codec.bytes;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.IByteBufferHolder;
 import org.snf4j.core.codec.IDecoder;
 import org.snf4j.core.session.ISession;
 
 /**
  * A decoder transforming an {@link IByteBufferHolder} into an array of bytes.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public class BufferHolderToArrayDecoder extends BufferHolderToArrayCodec implements IDecoder<IByteBufferHolder,byte[]> {
+public class BufferHolderToArrayDecoder extends BufferHolderToArrayCodec implements IDecoder<IByteBufferHolder, byte[]> {
 
-	private final boolean release;
-	
-	/**
-	 * Constructs a decoder with a specified buffer releasing mode.
-	 * 
-	 * @param release the releasing mode determining if buffers in the input buffer
-	 *                holder should be released by the session's allocator
-	 */
-	public BufferHolderToArrayDecoder(boolean release) {
-		this.release = release;
-	}
-	
-	/**
-	 * Constructs a decoder with no buffer releasing.
-	 */
-	public BufferHolderToArrayDecoder() {
-		release = false;
-	}
+    private final boolean release;
 
-	@Override
-	public void decode(ISession session, IByteBufferHolder data, List<byte[]> out) throws Exception {
-		if (release) {
-			byte[] array = new byte[data.remaining()];
-			int remaining, off = 0;
-			
-			for (ByteBuffer buf: data.toArray()) {
-				remaining = buf.remaining();
-				buf.get(array, off, remaining);
-				off += remaining;
-				session.release(buf);
-			}
-			out.add(array);
-		}
-		else {
-			out.add(toArray(data));
-		}
-	}
+    /**
+     * Constructs a decoder with a specified buffer releasing mode.
+     *
+     * @param release the releasing mode determining if buffers in the input buffer
+     *                holder should be released by the session's allocator
+     */
+    public BufferHolderToArrayDecoder(boolean release) {
+        this.release = release;
+    }
 
+    /**
+     * Constructs a decoder with no buffer releasing.
+     */
+    public BufferHolderToArrayDecoder() {
+        release = false;
+    }
+
+    @Override
+    public void decode(ISession session, IByteBufferHolder data, List<byte[]> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

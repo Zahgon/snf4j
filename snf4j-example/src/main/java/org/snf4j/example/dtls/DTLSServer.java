@@ -28,7 +28,6 @@ package org.snf4j.example.dtls;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.channels.DatagramChannel;
-
 import org.snf4j.core.DTLSServerHandler;
 import org.snf4j.core.DatagramServerHandler;
 import org.snf4j.core.SelectorLoop;
@@ -36,44 +35,14 @@ import org.snf4j.core.factory.IDatagramHandlerFactory;
 import org.snf4j.core.handler.IDatagramHandler;
 
 public class DTLSServer {
-	static final String PREFIX = "org.snf4j.";
-	static final int PORT = Integer.getInteger(PREFIX+"Port", 8001);
-	static final int SECURE = Integer.getInteger(PREFIX+"Secure", 1);
-	
-	public static void main(String[] args) throws Exception {
-		SelectorLoop loop = new SelectorLoop();
 
-		try {
-			loop.start();
-			
-			// Initialize the connection
-			DatagramChannel channel = DatagramChannel.open();
-			channel.configureBlocking(false);
-			channel.socket().bind(new InetSocketAddress(PORT));
+    static final String PREFIX = "org.snf4j.";
 
-			// Create handler factory
-			IDatagramHandlerFactory factory = new IDatagramHandlerFactory() {
+    static final int PORT = Integer.getInteger(PREFIX + "Port", 8001);
 
-				@Override
-				public IDatagramHandler create(SocketAddress remoteAddress) {
-					return new SessionHandler(false);
-				}
-			};
-			
-			// Register the channel
-			if (SECURE == 0) { 
-				loop.register(channel, new DatagramServerHandler(factory, null, SessionStructureFactory.INSTANCE));
-			}
-			else {
-				loop.register(channel, new DTLSServerHandler(factory, null, SessionStructureFactory.INSTANCE));
-			}
-			
-			// Wait till the loop ends
-			loop.join();
-		}
-		finally {
-			loop.stop();
-		}
-	
-	}
+    static final int SECURE = Integer.getInteger(PREFIX + "Secure", 1);
+
+    public static void main(String[] args) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -29,63 +29,62 @@ import java.util.List;
 
 /**
  * Aggregated Web Socket text frame.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class AggregatedTextFrame extends TextFrame implements IAggregatedFrame {
-	
-	private final PayloadAggregator aggregator;
 
-	/**
-	 * Constructs an aggregated Web Socket text frame.
-	 * <p>
-	 * NOTE: The binary data in the {@code payload} argument should be a valid UTF-8
-	 * encoding.
-	 * 
-	 * @param finalFragment determines if the created frame is the final fragment in
-	 *                      a message
-	 * @param rsvBits       reserved bits for extensions or future versions
-	 * @param payload       payload data
-	 */
-	public AggregatedTextFrame(boolean finalFragment, int rsvBits, byte[] payload) {
-		super(finalFragment, rsvBits, EMPTY_PAYLOAD);
-		aggregator = new PayloadAggregator(payload);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * NOTE: The binary data in the {@code payload} argument should be a valid UTF-8
-	 * encoding.
-	 */
-	@Override
-	public void addFragment(byte[] payload) {
-		aggregator.add(payload);
-	}
-	
-	public List<byte[]> getFragments() {
-		return aggregator.getFragments();
-	}
-	
-	@Override
-	public int getPayloadLength() {
-		return aggregator.getLength();
-	}
-	
-	@Override
-	public byte[] getPayload() {
-		return aggregator.get();
-	}
-	
-	/**
-	 * Returns a text created by decoding the specified array of bytes in the UTF-8
-	 * encoding.
-	 * 
-	 * @param fragment the array of bytes to decode the text from
-	 * @return the text being decoded
-	 */
-	public static String toText(byte[] fragment) {
-		return fromBytes(fragment);
-	}
+    private final PayloadAggregator aggregator;
 
+    /**
+     * Constructs an aggregated Web Socket text frame.
+     * <p>
+     * NOTE: The binary data in the {@code payload} argument should be a valid UTF-8
+     * encoding.
+     *
+     * @param finalFragment determines if the created frame is the final fragment in
+     *                      a message
+     * @param rsvBits       reserved bits for extensions or future versions
+     * @param payload       payload data
+     */
+    public AggregatedTextFrame(boolean finalFragment, int rsvBits, byte[] payload) {
+        super(finalFragment, rsvBits, EMPTY_PAYLOAD);
+        aggregator = new PayloadAggregator(payload);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * NOTE: The binary data in the {@code payload} argument should be a valid UTF-8
+     * encoding.
+     */
+    @Override
+    public void addFragment(byte[] payload) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public List<byte[]> getFragments() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getPayloadLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] getPayload() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Returns a text created by decoding the specified array of bytes in the UTF-8
+     * encoding.
+     *
+     * @param fragment the array of bytes to decode the text from
+     * @return the text being decoded
+     */
+    public static String toText(byte[] fragment) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -27,62 +27,60 @@ package org.snf4j.tls.engine;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.tls.extension.IExtension;
 import org.snf4j.tls.handshake.HandshakeType;
 import org.snf4j.tls.handshake.IHandshake;
 
 public class EarlyData implements IHandshake {
 
-	private final byte[] data;
-	
-	public EarlyData(byte[] data) {
-		this.data = data;
-	}
-	
-	@Override
-	public HandshakeType getType() {
-		return null;
-	}
+    private final byte[] data;
 
-	@Override
-	public void getBytes(ByteBuffer buffer) {
-		buffer.put(data);
-	}
+    public EarlyData(byte[] data) {
+        this.data = data;
+    }
 
-	@Override
-	public int getLength() {
-		return data.length;
-	}
+    @Override
+    public HandshakeType getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int getDataLength() {
-		return data.length;
-	}
+    @Override
+    public void getBytes(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isKnown() {
-		return true;
-	}
+    @Override
+    public int getLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public boolean isPrepared() {
-		return true;
-	}
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public byte[] prepare() {
-		return data;
-	}
+    @Override
+    public boolean isKnown() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public byte[] getPrepared() {
-		return prepare();
-	}
+    @Override
+    public boolean isPrepared() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public List<IExtension> getExtensions() {
-		return null;
-	}
+    @Override
+    public byte[] prepare() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public byte[] getPrepared() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

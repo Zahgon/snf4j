@@ -26,36 +26,34 @@
 package org.snf4j.tls.handshake;
 
 import java.util.List;
-
 import org.snf4j.tls.Args;
 import org.snf4j.tls.extension.IExtension;
 
 public class CertificateEntry implements ICertificateEntry {
-	
-	private final byte[] data;
-	
-	private final List<IExtension> extensions;
-	
-	public CertificateEntry(byte[] data, List<IExtension> extensions) {
-		Args.checkNull(data, "data");
-		Args.checkNull(extensions, "extensions");
-		this.data = data;
-		this.extensions = extensions;
-	}
-	
-	@Override
-	public byte[] getData() {
-		return data;
-	}
 
-	@Override
-	public int getDataLength() {
-		return data.length;
-	}
-	
-	@Override
-	public List<IExtension> getExtensions() {
-		return extensions;
-	}
+    private final byte[] data;
 
+    private final List<IExtension> extensions;
+
+    public CertificateEntry(byte[] data, List<IExtension> extensions) {
+        Args.checkNull(data, "data");
+        Args.checkNull(extensions, "extensions");
+        this.data = data;
+        this.extensions = extensions;
+    }
+
+    @Override
+    public byte[] getData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

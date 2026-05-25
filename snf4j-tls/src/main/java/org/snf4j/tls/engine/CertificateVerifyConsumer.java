@@ -29,7 +29,6 @@ import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-
 import org.snf4j.tls.IntConstant;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.DecryptErrorAlert;
@@ -44,185 +43,108 @@ import org.snf4j.tls.handshake.IHandshake;
 
 public class CertificateVerifyConsumer implements IHandshakeConsumer {
 
-	@Override
-	public HandshakeType getType() {
-		return HandshakeType.CERTIFICATE_VERIFY;
-	}
+    @Override
+    public HandshakeType getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private static SignatureScheme[] cloneCertSchemes(IEngineParameters params) {
-		SignatureScheme[] certSchemes = params.getCertSignatureSchemes();
-		if (certSchemes == null) {
-			certSchemes = params.getSignatureSchemes();
-		}
-		return certSchemes.clone();
-	}
-	
-	private void consumeClient(EngineState state, ICertificateVerify certificateVerify, ByteBuffer[] data) throws Alert {
-		IEngineParameters params = state.getParameters();
-		SignatureScheme algorithm = IntConstant.find(
-				params.getSignatureSchemes(), 
-				certificateVerify.getAlgorithm());
-		
-		if (algorithm == null) {
-			throw new IllegalParameterAlert("Unexpected signature algorithm");
-		}
-		
-		ICertificate certificate = state.getRetainedHandshake();
-		AbstractEngineTask task = new CertificateTask(
-				state.getHandler().getCertificateValidator(),
-				new CertificateValidateCriteria(false, params.getPeerHost(), cloneCertSchemes(params)),
-				certificate.getEntries(),
-				algorithm,
-				certificateVerify.getSignature(),
-				state.getTranscriptHash().getHash(HandshakeType.CERTIFICATE, false),
-				false);
-		
-		state.getTranscriptHash().update(certificateVerify.getType(), data);
-		
-		state.retainHandshake(null);
-		if (params.getDelegatedTaskMode().certificates()) {
-			state.changeState(MachineState.CLI_WAIT_TASK);
-			state.addTask(task);
-		}
-		else {
-			task.run(state);
-		}
-	}
+    private static SignatureScheme[] cloneCertSchemes(IEngineParameters params) {
+        SignatureScheme[] certSchemes = params.getCertSignatureSchemes();
+        if (certSchemes == null) {
+            certSchemes = params.getSignatureSchemes();
+        }
+        return certSchemes.clone();
+    }
 
-	private void consumeServer(EngineState state, ICertificateVerify certificateVerify, ByteBuffer[] data) throws Alert {
-		IEngineParameters params = state.getParameters();
-		SignatureScheme algorithm = IntConstant.find(
-				params.getSignatureSchemes(), 
-				certificateVerify.getAlgorithm());
-		
-		if (algorithm == null) {
-			throw new IllegalParameterAlert("Unexpected signature algorithm");
-		}
+    private void consumeClient(EngineState state, ICertificateVerify certificateVerify, ByteBuffer[] data) throws Alert {
+        IEngineParameters params = state.getParameters();
+        SignatureScheme algorithm = IntConstant.find(params.getSignatureSchemes(), certificateVerify.getAlgorithm());
+        if (algorithm == null) {
+            throw new IllegalParameterAlert("Unexpected signature algorithm");
+        }
+        ICertificate certificate = state.getRetainedHandshake();
+        AbstractEngineTask task = new CertificateTask(state.getHandler().getCertificateValidator(), new CertificateValidateCriteria(false, params.getPeerHost(), cloneCertSchemes(params)), certificate.getEntries(), algorithm, certificateVerify.getSignature(), state.getTranscriptHash().getHash(HandshakeType.CERTIFICATE, false), false);
+        state.getTranscriptHash().update(certificateVerify.getType(), data);
+        state.retainHandshake(null);
+        if (params.getDelegatedTaskMode().certificates()) {
+            state.changeState(MachineState.CLI_WAIT_TASK);
+            state.addTask(task);
+        } else {
+            task.run(state);
+        }
+    }
 
-		ICertificate certificate = state.getRetainedHandshake();
-		AbstractEngineTask task = new CertificateTask(
-				state.getHandler().getCertificateValidator(),
-				new CertificateValidateCriteria(true, state.getHostName(), cloneCertSchemes(params)),
-				certificate.getEntries(),
-				algorithm,
-				certificateVerify.getSignature(),
-				state.getTranscriptHash().getHash(HandshakeType.CERTIFICATE, true),
-				true);
+    private void consumeServer(EngineState state, ICertificateVerify certificateVerify, ByteBuffer[] data) throws Alert {
+        IEngineParameters params = state.getParameters();
+        SignatureScheme algorithm = IntConstant.find(params.getSignatureSchemes(), certificateVerify.getAlgorithm());
+        if (algorithm == null) {
+            throw new IllegalParameterAlert("Unexpected signature algorithm");
+        }
+        ICertificate certificate = state.getRetainedHandshake();
+        AbstractEngineTask task = new CertificateTask(state.getHandler().getCertificateValidator(), new CertificateValidateCriteria(true, state.getHostName(), cloneCertSchemes(params)), certificate.getEntries(), algorithm, certificateVerify.getSignature(), state.getTranscriptHash().getHash(HandshakeType.CERTIFICATE, true), true);
+        state.getTranscriptHash().update(certificateVerify.getType(), data);
+        state.retainHandshake(null);
+        if (params.getDelegatedTaskMode().certificates()) {
+            state.changeState(MachineState.SRV_WAIT_TASK);
+            state.addTask(task);
+        } else {
+            task.run(state);
+        }
+    }
 
-		state.getTranscriptHash().update(certificateVerify.getType(), data);
-		
-		state.retainHandshake(null);
-		if (params.getDelegatedTaskMode().certificates()) {
-			state.changeState(MachineState.SRV_WAIT_TASK);
-			state.addTask(task);
-		}
-		else {
-			task.run(state);
-		}
-	}
-	
-	@Override
-	public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR)	throws Alert {
-		switch (state.getState()) {
-		case CLI_WAIT_CV:
-			consumeClient(state, (ICertificateVerify) handshake, data);
-			break;
-			
-		case SRV_WAIT_CV:
-			consumeServer(state, (ICertificateVerify) handshake, data);
-			break;
-			
-		default:
-			throw new UnexpectedMessageAlert("Unexpected CertificateVerify");
-		}
-	}
+    @Override
+    public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	static class CertificateTask extends AbstractEngineTask {
+    static class CertificateTask extends AbstractEngineTask {
 
-		private final ICertificateValidator validator;
-		
-		private final ICertificateEntry[] entries;
-		
-		private final CertificateValidateCriteria criteria;
-		
-		private final SignatureScheme algorithm;
-		
-		private final byte[] signature;
-		
-		private final byte[] content;
-		
-		private final boolean client;
-		
-		private volatile X509Certificate[] certs;
-		
-		private volatile Alert alert;
-		
-		CertificateTask(ICertificateValidator validator, CertificateValidateCriteria criteria, ICertificateEntry[] entries, SignatureScheme algorithm, byte[] signature, byte[] content, boolean client) {
-			this.validator = validator;
-			this.criteria = criteria;
-			this.entries = entries;
-			this.algorithm = algorithm;
-			this.signature = signature;
-			this.content = content;
-			this.client = client;
-		}
-		
-		@Override
-		public String name() {
-			return "Certificate";
-		}
+        private final ICertificateValidator validator;
 
-		@Override
-		public boolean isProducing() {
-			return false;
-		}
+        private final ICertificateEntry[] entries;
 
-		@Override
-		public void finish(EngineState state) throws Alert {
-			if (alert != null) {
-				throw alert;
-			}
-			state.getSessionInfo().peerCerts(certs);
-			state.changeState(state.isClientMode() 
-					? MachineState.CLI_WAIT_FINISHED
-					: MachineState.SRV_WAIT_FINISHED);
-		}
+        private final CertificateValidateCriteria criteria;
 
-		@Override
-		void execute() throws Exception {
-			CertificateFactory factory = CertificateFactory.getInstance("X.509");
-			X509Certificate[] certs = new X509Certificate[entries.length];
-			Alert alert;
-			boolean verified = false;
-			
-			for (int i=0; i<certs.length; ++i) {
-				certs[i] = (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(entries[i].getData()));
-				if (i == 0) {
-					verified = ConsumerUtil.verify(signature, 
-							content,
-							algorithm,
-							certs[0].getPublicKey(), 
-							client);
-					if (!verified) {
-						break;
-					}
-				}
-			}
-			
-			if (verified) {
-				alert = validator.validateCertificates(criteria, certs);
-			}
-			else {
-				alert = new DecryptErrorAlert("Failed to verify certificate");
-			}
-			
-			if (alert == null) {
-				this.certs = certs;
-			}
-			else {
-				this.alert = alert;
-			}
-		}
-	}
-	
+        private final SignatureScheme algorithm;
+
+        private final byte[] signature;
+
+        private final byte[] content;
+
+        private final boolean client;
+
+        private volatile X509Certificate[] certs;
+
+        private volatile Alert alert;
+
+        CertificateTask(ICertificateValidator validator, CertificateValidateCriteria criteria, ICertificateEntry[] entries, SignatureScheme algorithm, byte[] signature, byte[] content, boolean client) {
+            this.validator = validator;
+            this.criteria = criteria;
+            this.entries = entries;
+            this.algorithm = algorithm;
+            this.signature = signature;
+            this.content = content;
+            this.client = client;
+        }
+
+        @Override
+        public String name() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        @Override
+        public boolean isProducing() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        @Override
+        public void finish(EngineState state) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        @Override
+        void execute() throws Exception {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    }
 }

@@ -28,7 +28,6 @@ package org.snf4j.websocket;
 import java.net.SocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-
 import org.snf4j.core.StreamSession;
 import org.snf4j.core.factory.IStreamSessionFactory;
 
@@ -39,72 +38,66 @@ import org.snf4j.core.factory.IStreamSessionFactory;
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 abstract public class AbstractWebSocketSessionFactory implements IStreamSessionFactory {
-	
-	private final boolean ssl;
 
-	/**
-	 * Constructs a factory that creates the basic Web Socket sessions.
-	 */
-	protected AbstractWebSocketSessionFactory() {
-		ssl = false;
-	}
-	
-	/**
-	 * Constructs a factory that creates Web Socket sessions of the given type
-	 * (basic or SSL/TLS).
-	 * 
-	 * @param ssl the type of created sessions. <code>true</code> for SSL/TLS
-	 *            sessions handshaking in server mode and <code>false</code> for
-	 *            basic stream-oriented sessions.
-	 */
-	protected AbstractWebSocketSessionFactory(boolean ssl) {
-		this.ssl = ssl;
-	}
-	
-	/**
-	 * Creates a Web Socket session for a newly accepted connection. The returned
-	 * session will be associated with the handler returned by the
-	 * <code>createHandler</code> method.
-	 * 
-	 * @param channel the socket channel associated with the accepted connection.
-	 * @return a Web Socket session that will be associated with the accepted
-	 *         connection
-	 * @throws Exception
-	 *             when a Web Socket session could not be created
-	 */
-	@Override
-	public StreamSession create(SocketChannel channel) throws Exception {
-		if (ssl) {
-			SocketAddress peer = channel.socket().getRemoteSocketAddress();
-			
-			if (peer != null) {
-				return new SSLWebSocketSession(peer, createHandler(channel), false);
-			}
-			return new SSLWebSocketSession(createHandler(channel), false);
-		}
-		return new WebSocketSession(createHandler(channel), false);
-	}
-	
-	/**
-	 * Creates a Web Socket handler for a newly accepted connection. This method can
-	 * be also used to configure the newly accepted channel.
-	 * 
-	 * @param channel the socket channel associated with the accepted connection.
-	 * @return a Web Socket handler that will be associated with the session
-	 *         returned by the <code>create</code> method
-	 */
-	protected abstract IWebSocketHandler createHandler(SocketChannel channel);	
+    private final boolean ssl;
 
-	@Override
-	public void registered(ServerSocketChannel channel) {
-	}
+    /**
+     * Constructs a factory that creates the basic Web Socket sessions.
+     */
+    protected AbstractWebSocketSessionFactory() {
+        ssl = false;
+    }
 
-	@Override
-	public void closed(ServerSocketChannel channel) {
-	}
+    /**
+     * Constructs a factory that creates Web Socket sessions of the given type
+     * (basic or SSL/TLS).
+     *
+     * @param ssl the type of created sessions. <code>true</code> for SSL/TLS
+     *            sessions handshaking in server mode and <code>false</code> for
+     *            basic stream-oriented sessions.
+     */
+    protected AbstractWebSocketSessionFactory(boolean ssl) {
+        this.ssl = ssl;
+    }
 
-	@Override
-	public void exception(ServerSocketChannel channel, Throwable exception) {
-	}
+    /**
+     * Creates a Web Socket session for a newly accepted connection. The returned
+     * session will be associated with the handler returned by the
+     * <code>createHandler</code> method.
+     *
+     * @param channel the socket channel associated with the accepted connection.
+     * @return a Web Socket session that will be associated with the accepted
+     *         connection
+     * @throws Exception
+     *             when a Web Socket session could not be created
+     */
+    @Override
+    public StreamSession create(SocketChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    /**
+     * Creates a Web Socket handler for a newly accepted connection. This method can
+     * be also used to configure the newly accepted channel.
+     *
+     * @param channel the socket channel associated with the accepted connection.
+     * @return a Web Socket handler that will be associated with the session
+     *         returned by the <code>create</code> method
+     */
+    protected abstract IWebSocketHandler createHandler(SocketChannel channel);
+
+    @Override
+    public void registered(ServerSocketChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void closed(ServerSocketChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void exception(ServerSocketChannel channel, Throwable exception) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

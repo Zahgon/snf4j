@@ -32,83 +32,65 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAKey;
-
 import javax.crypto.Cipher;
 
 public class RSAPKCS1Signature implements ISignature {
 
-	private final static String RSA = "RSA";
-	
-	public final static RSAPKCS1Signature RSA_PKCS1_SHA1 = new RSAPKCS1Signature("SHA1withRSA", 511);
+    private final static String RSA = "RSA";
 
-	public final static RSAPKCS1Signature RSA_PKCS1_SHA256 = new RSAPKCS1Signature("SHA256withRSA", 511);
-	
-	public final static RSAPKCS1Signature RSA_PKCS1_SHA384 = new RSAPKCS1Signature("SHA384withRSA", 768);
+    public final static RSAPKCS1Signature RSA_PKCS1_SHA1 = new RSAPKCS1Signature("SHA1withRSA", 511);
 
-	public final static RSAPKCS1Signature RSA_PKCS1_SHA512 = new RSAPKCS1Signature("SHA512withRSA", 768);
-	
-	private final String algorithm;
-	
-	private final int minKeySize;
-	
-	public RSAPKCS1Signature(String algorithm, int minKeySize) {
-		this.algorithm = algorithm;
-		this.minKeySize = minKeySize;
-	}
-	
-	@Override
-	public boolean isImplemented() {
-		return true;
-	}
+    public final static RSAPKCS1Signature RSA_PKCS1_SHA256 = new RSAPKCS1Signature("SHA256withRSA", 511);
 
-	@Override
-	public Signature createSignature() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-		return Signature.getInstance(algorithm);
-	}
+    public final static RSAPKCS1Signature RSA_PKCS1_SHA384 = new RSAPKCS1Signature("SHA384withRSA", 768);
 
-	@Override
-	public String algorithm() {
-		return algorithm;
-	}
-	
-	@Override
-	public String keyAlgorithm() {
-		return RSA;
-	}
+    public final static RSAPKCS1Signature RSA_PKCS1_SHA512 = new RSAPKCS1Signature("SHA512withRSA", 768);
 
-	@Override
-	public boolean matches(X509Certificate cert) {
-		return algorithm.equals(cert.getSigAlgName()) && keySizeMatches(RSA, cert.getPublicKey(), minKeySize); 
-	}
-	
-	@Override
-	public boolean matchesByKey(X509Certificate cert) {
-		PublicKey key = cert.getPublicKey();
-		
-		return RSA.equals(key.getAlgorithm()) && keySizeMatches(RSA, key, minKeySize);
-	}
+    private final String algorithm;
 
-	static boolean keySizeMatches(String algorithm, Key key, int minKeySize) {
-		if (key instanceof RSAKey) {
-			if (((RSAKey)key).getModulus().bitLength() < minKeySize) {
-				try {
-					Cipher rsa = Cipher.getInstance(algorithm);
+    private final int minKeySize;
 
-					rsa.init(Cipher.ENCRYPT_MODE, key);
-					return rsa.getOutputSize(0) * Byte.SIZE >= minKeySize;
-				}
-				catch (Exception e) {
-					return false;
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public int minKeySize() {
-		return minKeySize;
-	}
-	
+    public RSAPKCS1Signature(String algorithm, int minKeySize) {
+        this.algorithm = algorithm;
+        this.minKeySize = minKeySize;
+    }
+
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Signature createSignature() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String algorithm() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String keyAlgorithm() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean matches(X509Certificate cert) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean matchesByKey(X509Certificate cert) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static boolean keySizeMatches(String algorithm, Key key, int minKeySize) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int minKeySize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

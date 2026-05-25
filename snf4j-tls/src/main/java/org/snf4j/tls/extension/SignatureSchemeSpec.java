@@ -33,50 +33,50 @@ import org.snf4j.tls.crypto.RSASSAPSSSignature;
 
 public class SignatureSchemeSpec implements ISignatureSchemeSpec {
 
-	public final static SignatureSchemeSpec RSA_PSS_RSAE_SHA256 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_RSAE_SHA256);
+    public final static SignatureSchemeSpec RSA_PSS_RSAE_SHA256 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_RSAE_SHA256);
 
-	public final static SignatureSchemeSpec RSA_PSS_RSAE_SHA384 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_RSAE_SHA384);
+    public final static SignatureSchemeSpec RSA_PSS_RSAE_SHA384 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_RSAE_SHA384);
 
-	public final static SignatureSchemeSpec RSA_PSS_RSAE_SHA512 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_RSAE_SHA512);
+    public final static SignatureSchemeSpec RSA_PSS_RSAE_SHA512 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_RSAE_SHA512);
 
-	public final static SignatureSchemeSpec RSA_PSS_PSS_SHA256 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_PSS_SHA256);
+    public final static SignatureSchemeSpec RSA_PSS_PSS_SHA256 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_PSS_SHA256);
 
-	public final static SignatureSchemeSpec RSA_PSS_PSS_SHA384 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_PSS_SHA384);
+    public final static SignatureSchemeSpec RSA_PSS_PSS_SHA384 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_PSS_SHA384);
 
-	public final static SignatureSchemeSpec RSA_PSS_PSS_SHA512 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_PSS_SHA512);
-	
-	public final static SignatureSchemeSpec ECDSA_SHA1 = new SignatureSchemeSpec(ECDSASignature.ECDSA_SHA1);
+    public final static SignatureSchemeSpec RSA_PSS_PSS_SHA512 = new SignatureSchemeSpec(RSASSAPSSSignature.RSA_PSS_PSS_SHA512);
 
-	public final static SignatureSchemeSpec ECDSA_SECP256R1_SHA256 = new SignatureSchemeSpec(ECDSASignature.ECDSA_SECP256R1_SHA256);
-	
-	public final static SignatureSchemeSpec ECDSA_SECP384R1_SHA384 = new SignatureSchemeSpec(ECDSASignature.ECDSA_SECP384R1_SHA384);
-	
-	public final static SignatureSchemeSpec ECDSA_SECP521R1_SHA512 = new SignatureSchemeSpec(ECDSASignature.ECDSA_SECP521R1_SHA512);
+    public final static SignatureSchemeSpec ECDSA_SHA1 = new SignatureSchemeSpec(ECDSASignature.ECDSA_SHA1);
 
-	public final static SignatureSchemeSpec RSA_PKCS1_SHA1 = new SignatureSchemeSpec(RSAPKCS1Signature.RSA_PKCS1_SHA1);
+    public final static SignatureSchemeSpec ECDSA_SECP256R1_SHA256 = new SignatureSchemeSpec(ECDSASignature.ECDSA_SECP256R1_SHA256);
 
-	public final static SignatureSchemeSpec RSA_PKCS1_SHA256 = new SignatureSchemeSpec(RSAPKCS1Signature.RSA_PKCS1_SHA256);
+    public final static SignatureSchemeSpec ECDSA_SECP384R1_SHA384 = new SignatureSchemeSpec(ECDSASignature.ECDSA_SECP384R1_SHA384);
 
-	public final static SignatureSchemeSpec RSA_PKCS1_SHA384 = new SignatureSchemeSpec(RSAPKCS1Signature.RSA_PKCS1_SHA384);
+    public final static SignatureSchemeSpec ECDSA_SECP521R1_SHA512 = new SignatureSchemeSpec(ECDSASignature.ECDSA_SECP521R1_SHA512);
 
-	public final static SignatureSchemeSpec RSA_PKCS1_SHA512 = new SignatureSchemeSpec(RSAPKCS1Signature.RSA_PKCS1_SHA512);
+    public final static SignatureSchemeSpec RSA_PKCS1_SHA1 = new SignatureSchemeSpec(RSAPKCS1Signature.RSA_PKCS1_SHA1);
 
-	public final static SignatureSchemeSpec ED25519 = new SignatureSchemeSpec(EdDSASignature.ED25519);
+    public final static SignatureSchemeSpec RSA_PKCS1_SHA256 = new SignatureSchemeSpec(RSAPKCS1Signature.RSA_PKCS1_SHA256);
 
-	public final static SignatureSchemeSpec ED448 = new SignatureSchemeSpec(EdDSASignature.ED448);
-	
-	private final ISignature signature;
-	
-	public SignatureSchemeSpec(ISignature signature) {
-		this.signature = signature;
-	}
-	
-	public ISignature getSignature() {
-		return signature;
-	}
+    public final static SignatureSchemeSpec RSA_PKCS1_SHA384 = new SignatureSchemeSpec(RSAPKCS1Signature.RSA_PKCS1_SHA384);
 
-	@Override
-	public boolean isImplemented() {
-		return signature.isImplemented();
-	}
+    public final static SignatureSchemeSpec RSA_PKCS1_SHA512 = new SignatureSchemeSpec(RSAPKCS1Signature.RSA_PKCS1_SHA512);
+
+    public final static SignatureSchemeSpec ED25519 = new SignatureSchemeSpec(EdDSASignature.ED25519);
+
+    public final static SignatureSchemeSpec ED448 = new SignatureSchemeSpec(EdDSASignature.ED448);
+
+    private final ISignature signature;
+
+    public SignatureSchemeSpec(ISignature signature) {
+        this.signature = signature;
+    }
+
+    public ISignature getSignature() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

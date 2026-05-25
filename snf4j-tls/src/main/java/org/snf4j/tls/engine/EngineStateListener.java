@@ -39,205 +39,75 @@ import org.snf4j.tls.record.RecordType;
 
 public class EngineStateListener implements IEngineStateListener, IEncryptorHolder, IDecryptorHolder {
 
-	private final Encryptor[] encryptors = new Encryptor[RecordType.values().length];
+    private final Encryptor[] encryptors = new Encryptor[RecordType.values().length];
 
-	private final Decryptor[] decryptors = new Decryptor[RecordType.values().length];
-	
-	private int decryptor;
-	
-	private int encryptor;
-	
-	@Override
-	public Decryptor getDecryptor() {
-		return decryptors[decryptor];
-	}
+    private final Decryptor[] decryptors = new Decryptor[RecordType.values().length];
 
-	@Override
-	public Encryptor getEncryptor(RecordType type) {
-		return encryptors[type.ordinal()];
-	}
-	
-	@Override
-	public Encryptor getEncryptor() {
-		return encryptors[encryptor];
-	}
+    private int decryptor;
 
-	private long keyLimit(IEngineState state, TrafficKeys keys) {
-		return state.getHandler().getKeyLimit(
-				state.getCipherSuite(), 
-				keys.getAead().getKeyLimit());
-	}
-	
-	@Override
-	public void onNewTrafficSecrets(IEngineState state, RecordType recordType) throws Alert {
-		TrafficKeys keys;
-		
-		try {
-			switch (recordType) {
-			case ZERO_RTT:
-				keys = state.getKeySchedule().deriveEarlyTrafficKeys();
-				break;
+    private int encryptor;
 
-			case HANDSHAKE:
-				keys = state.getKeySchedule().deriveHandshakeTrafficKeys();
-				break;
+    @Override
+    public Decryptor getDecryptor() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			case APPLICATION:
-				keys = state.getKeySchedule().deriveApplicationTrafficKeys();
-				break;
+    @Override
+    public Encryptor getEncryptor(RecordType type) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			default:
-				return;
-			}
+    @Override
+    public Encryptor getEncryptor() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			int index = recordType.ordinal();
-			long keyLimit = keyLimit(state, keys);
-			
-			if (state.isClientMode()) {
-				encryptors[index] = new Encryptor(
-						keys.getAeadEncrypt(true),
-						keys.getIv(true),
-						keyLimit);
-				if (keys.getKey(false) != null) {
-					decryptors[index] = new Decryptor(
-							keys.getAeadDecrypt(false),
-							keys.getIv(false),
-							keyLimit);
-				}
-			}
-			else {
-				if (keys.getKey(false) != null) {
-					encryptors[index] = new Encryptor(
-							keys.getAeadEncrypt(false),
-							keys.getIv(false),
-							keyLimit);
-				}
-				decryptors[index] = new Decryptor(
-						keys.getAeadDecrypt(true),
-						keys.getIv(true),
-						keyLimit);
-			}
-			keys.clear();
-		}
-		catch (Exception e) {
-			throw new InternalErrorAlert("Failed to derive new traffic keys", e);
-		}
-	}
+    private long keyLimit(IEngineState state, TrafficKeys keys) {
+        return state.getHandler().getKeyLimit(state.getCipherSuite(), keys.getAead().getKeyLimit());
+    }
 
-	@Override
-	public void onNewReceivingTraficKey(IEngineState state, RecordType recordType) throws Alert {
-		Decryptor toErase;
-		
-		if (recordType == RecordType.NEXT_GEN) {
-			boolean client = !state.isClientMode();
-			int index = RecordType.APPLICATION.ordinal();
-			TrafficKeys keys;
-			
-			try {
-				keys = state.getKeySchedule().deriveNextGenerationTrafficKey(client);
-				toErase = decryptors[index];
-				decryptors[index] = new Decryptor(
-						keys.getAeadDecrypt(client),
-						keys.getIv(client),
-						keyLimit(state, keys));
-			} catch (Exception e) {
-				throw new InternalErrorAlert("Failed to derive next generation receiving traffic key", e);
-			}
-		}
-		else {
-			int index = recordType.ordinal();
-			
-			if (decryptor != index) {
-				toErase = decryptors[decryptor];
-				decryptors[decryptor] = null;
-			}
-			else {
-				toErase = null;
-			}
-			decryptor = index;
-		}
-		if (toErase != null) {
-			toErase.erase();
-		}
-	}
+    @Override
+    public void onNewTrafficSecrets(IEngineState state, RecordType recordType) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void onNewSendingTraficKey(IEngineState state, RecordType recordType) throws Alert {
-		Encryptor toErase;
+    @Override
+    public void onNewReceivingTraficKey(IEngineState state, RecordType recordType) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		if (recordType == RecordType.NEXT_GEN) {
-			boolean client = state.isClientMode();
-			int index = RecordType.APPLICATION.ordinal();
-			TrafficKeys keys;
+    @Override
+    public void onNewSendingTraficKey(IEngineState state, RecordType recordType) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			try {
-				keys = state.getKeySchedule().deriveNextGenerationTrafficKey(client);
-				toErase = encryptors[index]; 
-				encryptors[index] = new Encryptor(
-						keys.getAeadEncrypt(client),
-						keys.getIv(client),
-						keyLimit(state, keys));
-			} catch (Exception e) {
-				throw new InternalErrorAlert("Failed to derive next generation sending traffic key", e);
-			}
-		}
-		else {
-			int index = recordType.ordinal();
-			
-			if (encryptor != index) {
-				toErase = encryptors[encryptor];
-				encryptors[encryptor] = null;
-			}
-			else {
-				toErase = null;
-			}
-			encryptor = index;
-		}
-		if (toErase != null) {
-			toErase.erase();
-		}
-	}
-	
-	@Override
-	public void onKeyUpdate(IEngineState state, KeyUpdateRequest request) {		
-	}
-	
-	@Override
-	public void onHandshake(IEngineState state, IHandshake handshake) throws Alert {
-	}
-	
-	@Override
-	public void onHandshakeCreate(IEngineState state, IHandshake handshake, boolean isHRR) {
-	}
-	
-	@Override
-	public void onCleanup(IEngineState state) {
-		for (int i=0; i<encryptors.length; ++i) {
-			Cryptor cryptor = encryptors[i];
-			
-			if (cryptor != null) {
-				cryptor.erase();
-				encryptors[i] = null;
-			}
-			cryptor = decryptors[i];
-			if (cryptor != null) {
-				cryptor.erase();
-				decryptors[i] = null;
-			}
-		}
-	}
-	
-	@Override
-	public void produceChangeCipherSpec(IEngineProducer producer) {
-		producer.produce(new ProducedHandshake(
-				ChangeCipherSpec.INSTANCE, 
-				ProducedHandshake.Type.CHANGE_CIPHER_SPEC));
-	}
+    @Override
+    public void onKeyUpdate(IEngineState state, KeyUpdateRequest request) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void prepareChangeCipherSpec(IEngineProducer producer) {
-		producer.prepare(new ProducedHandshake(
-				ChangeCipherSpec.INSTANCE, 
-				ProducedHandshake.Type.CHANGE_CIPHER_SPEC));
-	}
+    @Override
+    public void onHandshake(IEngineState state, IHandshake handshake) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void onHandshakeCreate(IEngineState state, IHandshake handshake, boolean isHRR) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void onCleanup(IEngineState state) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void produceChangeCipherSpec(IEngineProducer producer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void prepareChangeCipherSpec(IEngineProducer producer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

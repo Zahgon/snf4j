@@ -29,43 +29,42 @@ import java.util.List;
 
 /**
  * Aggregated Web Socket binary frame.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class AggregatedBinaryFrame extends BinaryFrame implements IAggregatedFrame {
-	
-	private final PayloadAggregator aggregator;
-	
-	/**
-	 * Constructs an aggregated Web Socket binary frame.
-	 * 
-	 * @param finalFragment determines if the created frame is the final fragment in
-	 *                      a message
-	 * @param rsvBits       reserved bits for extensions or future versions
-	 * @param payload       payload data
-	 */
-	public AggregatedBinaryFrame(boolean finalFragment, int rsvBits, byte[] payload) {
-		super(finalFragment, rsvBits, EMPTY_PAYLOAD);
-		aggregator = new PayloadAggregator(payload);
-	}
 
-	@Override
-	public void addFragment(byte[] data) {
-		aggregator.add(data);
-	}
-	
-	public List<byte[]> getFragments() {
-		return aggregator.getFragments();
-	}
-	
-	@Override
-	public int getPayloadLength() {
-		return aggregator.getLength();
-	}
-	
-	@Override
-	public byte[] getPayload() {
-		return aggregator.get();
-	}
-	
+    private final PayloadAggregator aggregator;
+
+    /**
+     * Constructs an aggregated Web Socket binary frame.
+     *
+     * @param finalFragment determines if the created frame is the final fragment in
+     *                      a message
+     * @param rsvBits       reserved bits for extensions or future versions
+     * @param payload       payload data
+     */
+    public AggregatedBinaryFrame(boolean finalFragment, int rsvBits, byte[] payload) {
+        super(finalFragment, rsvBits, EMPTY_PAYLOAD);
+        aggregator = new PayloadAggregator(payload);
+    }
+
+    @Override
+    public void addFragment(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public List<byte[]> getFragments() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getPayloadLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] getPayload() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

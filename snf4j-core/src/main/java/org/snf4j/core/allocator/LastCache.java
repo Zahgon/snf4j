@@ -29,63 +29,33 @@ import java.nio.ByteBuffer;
 
 class LastCache extends Cache {
 
-	private int capacity;
-	
-	private final int capacityThreshold;
-	
-	LastCache(int capacity, int minSize, int maxSize, int reduceThreshold, Cache[] group) {
-		super(capacity, minSize, maxSize, reduceThreshold, group);
-		this.capacity = capacity;
-		this.capacityThreshold = capacity << 1;
-	}
-	
-	@Override
-	int capacity() {
-		return capacity;
-	}
-	
-	@Override
-	void purge() {
-		super.purge();
-		capacity = super.capacity;
-	}
-	
-	@Override
-	boolean put(ByteBuffer b, long touch, long touchAll) {
-		int bc = b.capacity();
+    private int capacity;
 
-		touchAll(touch, touchAll);
-		if (capacity > bc) {
-			return false;
-		}
-		else if (capacity < bc) {
-			capacity = bc;
-			for (int i=1; i<size; ++i) {
-				cache[i] = null;
-			}
-			size = 0;
-		}
-		if (prePut(touch)) {
-			cache[size++] = b;
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	ByteBuffer get(int capacity, long touch, long touchAll) {
-		if (capacity <= this.capacity) {
-			ByteBuffer b = super.get(capacity, touch, touchAll);
-			
-			if (b != null && size == 0) {
-				if (this.capacity > capacityThreshold) {
-					this.capacity = capacityThreshold;
-				}
-			}
-			return b;
-		}
-		touchAll(touch, touchAll);
-		return null;
-	}
+    private final int capacityThreshold;
 
+    LastCache(int capacity, int minSize, int maxSize, int reduceThreshold, Cache[] group) {
+        super(capacity, minSize, maxSize, reduceThreshold, group);
+        this.capacity = capacity;
+        this.capacityThreshold = capacity << 1;
+    }
+
+    @Override
+    int capacity() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    void purge() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    boolean put(ByteBuffer b, long touch, long touchAll) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    ByteBuffer get(int capacity, long touch, long touchAll) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

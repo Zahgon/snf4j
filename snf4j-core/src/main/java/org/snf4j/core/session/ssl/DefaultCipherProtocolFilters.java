@@ -30,32 +30,33 @@ import java.util.Set;
 /**
  * Default set of cipher and protocol filters that do not do any filtering. If
  * no cipher or protocol is requested they return the recommended values.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public final class DefaultCipherProtocolFilters implements CipherFilter, ProtocolFilter {
 
-	/** The instance of this class */
-	public static final DefaultCipherProtocolFilters INSATNCE = new DefaultCipherProtocolFilters();
-	
-	private DefaultCipherProtocolFilters() {}
+    /**
+     * The instance of this class
+     */
+    public static final DefaultCipherProtocolFilters INSATNCE = new DefaultCipherProtocolFilters();
 
-	private final String[] filter(String[] items, String[] recommendedItems, Set<String> supportedItems) {
-		if (items == null) {
-			return recommendedItems;
-		}
-		return items;
-	}
-	
-	@Override
-	public String[] filterCiphers(String[] ciphers, String[] recommendedCiphers, Set<String> supportedCiphers) {
-		return filter(ciphers, recommendedCiphers, supportedCiphers);
-	}
+    private DefaultCipherProtocolFilters() {
+    }
 
-	@Override
-	public String[] filterProtocols(String[] protocols, String[] recommendedProtocols, Set<String> supportedProtocols) {
-		return filter(protocols, recommendedProtocols, supportedProtocols);
-	}
-	
-	
+    private final String[] filter(String[] items, String[] recommendedItems, Set<String> supportedItems) {
+        if (items == null) {
+            return recommendedItems;
+        }
+        return items;
+    }
+
+    @Override
+    public String[] filterCiphers(String[] ciphers, String[] recommendedCiphers, Set<String> supportedCiphers) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String[] filterProtocols(String[] protocols, String[] recommendedProtocols, Set<String> supportedProtocols) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

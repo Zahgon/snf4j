@@ -27,7 +27,6 @@ package org.snf4j.core.factory;
 
 import org.snf4j.core.SctpSession;
 import org.snf4j.core.handler.ISctpHandler;
-
 import com.sun.nio.sctp.SctpChannel;
 import com.sun.nio.sctp.SctpServerChannel;
 
@@ -38,45 +37,47 @@ import com.sun.nio.sctp.SctpServerChannel;
  */
 public abstract class AbstractSctpSessionFactory implements ISctpSessionFactory {
 
-	/**
-	 * Constructs a factory that creates the basic SCTP sessions.
-	 */
-	protected AbstractSctpSessionFactory() {	
-	}
-	
-	/**
-	 * Creates an SCTP session for a newly accepted connection. The returned session
-	 * will be associated with the handler returned by the
-	 * {@link #createHandler} method.
-	 * 
-	 * @param channel the SCTP channel associated with the accepted connection.
-	 * @return an SCTP session that will be associated with the accepted connection
-	 */
-	@Override
-	public SctpSession create(SctpChannel channel) {
-		return new SctpSession(createHandler(channel));
-	}
+    /**
+     * Constructs a factory that creates the basic SCTP sessions.
+     */
+    protected AbstractSctpSessionFactory() {
+    }
 
-	/**
-	 * Creates an SCTP handler for a newly accepted connection. This
-	 * method can be also used to configure the newly accepted channel.
-	 * 
-	 * @param channel the SCTP channel associated with the accepted connection.
-	 * @return an SCTP handler that will be associated with the session
-	 *         returned by the {@link #create} method
-	 */
-	abstract protected ISctpHandler createHandler(SctpChannel channel);
-	
-	@Override
-	public void registered(SctpServerChannel channel) {
-	}
+    /**
+     * Creates an SCTP session for a newly accepted connection. The returned session
+     * will be associated with the handler returned by the
+     * {@link #createHandler} method.
+     *
+     * @param channel the SCTP channel associated with the accepted connection.
+     * @return an SCTP session that will be associated with the accepted connection
+     */
+    @Override
+    public SctpSession create(SctpChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void closed(SctpServerChannel channel) {
-	}
+    /**
+     * Creates an SCTP handler for a newly accepted connection. This
+     * method can be also used to configure the newly accepted channel.
+     *
+     * @param channel the SCTP channel associated with the accepted connection.
+     * @return an SCTP handler that will be associated with the session
+     *         returned by the {@link #create} method
+     */
+    abstract protected ISctpHandler createHandler(SctpChannel channel);
 
-	@Override
-	public void exception(SctpServerChannel channel, Throwable exception) {
-	}
+    @Override
+    public void registered(SctpServerChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public void closed(SctpServerChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void exception(SctpServerChannel channel, Throwable exception) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

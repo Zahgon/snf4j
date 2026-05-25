@@ -27,7 +27,6 @@ package org.snf4j.example.websocket;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
 import org.snf4j.core.handler.SessionEvent;
 import org.snf4j.core.session.IStreamSession;
 import org.snf4j.websocket.AbstractWebSocketHandler;
@@ -40,94 +39,43 @@ import org.snf4j.websocket.frame.PongFrame;
 import org.snf4j.websocket.frame.TextFrame;
 
 public class WebSocketServerHandler extends AbstractWebSocketHandler {
-	
-	final private static String USER_ID = "user-id";
-	
-	final private static ConcurrentMap<Long,IStreamSession> sessions = new ConcurrentHashMap<Long,IStreamSession>();
 
-	final private String host;
-	
-	final private boolean compress;
+    final private static String USER_ID = "user-id";
 
-	private boolean chatMode;
-	
-	WebSocketServerHandler(String host, boolean compress) {
-		this.host = host;
-		this.compress = compress;
-	}
-	
-	@Override
-	public void read(Object msg) {
-		if (msg instanceof Frame) {
-			handle((Frame)msg);
-		}
-	}
+    final private static ConcurrentMap<Long, IStreamSession> sessions = new ConcurrentHashMap<Long, IStreamSession>();
 
-	void handle(Frame frame) {
-		if (frame.getOpcode() == Opcode.PING) {
-			getSession().writenf(new PongFrame(frame.getPayload()));
-		}
-		else if (chatMode) {
-			if (frame.getOpcode() == Opcode.TEXT) {
-				send(((TextFrame)frame).getText());
-			}
-		}
-		else {
-			getSession().writenf(frame);
-		}
-	}
-	
-	void send(String msg) {
-		for (Long sessionId: sessions.keySet()) {
-			IStreamSession session = sessions.get(sessionId);
-			String source;
-			
-			if (session == getSession()) {
-				source = "[me] ";
-			}
-			else {
-				source = "[" + getSession().getAttributes().get(USER_ID) + "] ";
-			}
-			session.writenf(new TextFrame(source + msg));
-		}
-	}
-	
-	@SuppressWarnings("incomplete-switch")
-	@Override
-	public void event(SessionEvent event) {
-		IWebSocketSession session = (IWebSocketSession) getSession();
-		
-		switch (event) {
-		case CREATED:
-			session.getCodecPipeline().addFirst(IndexPageDecoder.INDEX_PAGE_DECODER, new IndexPageDecoder(host));
-			break;
-			
-		case READY:
-			chatMode = SessionConfig.CHAT_PATH.equalsIgnoreCase(session.getHandshaker().getUri().getPath());
-			if (chatMode) {
-				session.getAttributes().put(USER_ID, session.getRemoteAddress());
-				sessions.put(session.getId(), session);
-				send("connected");
-			}
-			break;
-			
-		case CLOSED:
-			if (chatMode) {
-				if (sessions.remove(session.getId()) != null) {
-					send("disconnected");
-				}
-			}
-			break;
-		}
-	}
-	
-	@Override
-	public IWebSocketSessionConfig getConfig() {
-		SessionConfig config = new SessionConfig();
-		
-		if (compress) {
-			config.setSupportedExtensions(new PerMessageDeflateExtension());
-		}
-		return config;
-	}
+    final private String host;
+
+    final private boolean compress;
+
+    private boolean chatMode;
+
+    WebSocketServerHandler(String host, boolean compress) {
+        this.host = host;
+        this.compress = compress;
+    }
+
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void handle(Frame frame) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void send(String msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IWebSocketSessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

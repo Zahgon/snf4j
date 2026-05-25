@@ -27,7 +27,6 @@ package org.snf4j.example.earlydata;
 
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-
 import org.snf4j.core.StreamSession;
 import org.snf4j.core.factory.IStreamSessionFactory;
 import org.snf4j.tls.TLSSession;
@@ -36,38 +35,32 @@ import org.snf4j.tls.engine.EngineParameters;
 
 public class SessionFactory implements IStreamSessionFactory {
 
-	private final EngineParameters params;
-	
-	private final EngineHandlerBuilder builder;
-	
-	public SessionFactory(EngineParameters params, EngineHandlerBuilder builder) {
-		this.params = params;
-		this.builder = builder;
-	}
-	
-	@Override
-	public StreamSession create(SocketChannel channel) throws Exception {
-		EarlyDataServerHandler handler = new EarlyDataServerHandler();
-		
-		return new TLSSession(
-				params, 
-				builder.build(handler), 
-				handler, 
-				false);
-	}
+    private final EngineParameters params;
 
-	@Override
-	public void registered(ServerSocketChannel channel) {
-		Logger.inf("listening on " + channel.socket().getLocalPort());
-	}
+    private final EngineHandlerBuilder builder;
 
-	@Override
-	public void closed(ServerSocketChannel channel) {
-	}
+    public SessionFactory(EngineParameters params, EngineHandlerBuilder builder) {
+        this.params = params;
+        this.builder = builder;
+    }
 
-	@Override
-	public void exception(ServerSocketChannel channel, Throwable exception) {
-		Logger.err(exception.getMessage());
-	}
+    @Override
+    public StreamSession create(SocketChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public void registered(ServerSocketChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void closed(ServerSocketChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void exception(ServerSocketChannel channel, Throwable exception) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

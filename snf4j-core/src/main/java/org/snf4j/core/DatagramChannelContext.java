@@ -32,76 +32,37 @@ import java.nio.channels.SelectionKey;
 
 class DatagramChannelContext extends SessionChannelContext<DatagramSession> {
 
-	DatagramChannelContext(DatagramSession session) {
-		super(session);
-	}
+    DatagramChannelContext(DatagramSession session) {
+        super(session);
+    }
 
-	@Override
-	final void close(SelectableChannel channel) throws IOException {		
-		((DatagramChannel)channel).disconnect();
-		super.close(channel);
-	}
-	
-	@Override
-	final String toString(SelectableChannel channel) {
-		if (channel != null) {
-			StringBuilder sb = new StringBuilder(100);
-			
-			sb.append(channel.getClass().getName());
-			sb.append("[local=");
-			try {
-				sb.append(((DatagramChannel)channel).socket().getLocalSocketAddress().toString());
-			}
-			catch (Exception e) {
-				sb.append("unknown");
-			}
-			if (((DatagramChannel)channel).isConnected()) {
-				sb.append(",remote=");
-				try {
-					sb.append(((DatagramChannel)channel).socket().getRemoteSocketAddress().toString());
-				}
-				catch (Exception e) {
-					sb.append("unknown");
-				}
-			}
-			sb.append("]");
-			return sb.toString();			
-		}
-		return super.toString(channel);
-	}
-	
-	@Override
-	final void handle(final SelectorLoop loop, final SelectionKey key) {	
-		boolean doWrite = false;
-		
-		if (key.isReadable()) {
-			loop.handleReading(context, key);
-			doWrite = key.isValid() && ((key.interestOps() & SelectionKey.OP_WRITE) != 0);
-		}
-		else if (key.isWritable()) {
-			doWrite = true;
-		}
-		if (doWrite) {
-			int spinCount = context.maxWriteSpinCount;
+    @Override
+    final void close(SelectableChannel channel) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			do {
-				spinCount = loop.handleWriting(context, key, spinCount);
-			} while (spinCount > 0 && key.isValid() && ((key.interestOps() & SelectionKey.OP_WRITE) != 0));
-		}
-	}	
-	
-	@Override
-	final ChannelContext<DatagramSession> wrap(InternalSession session) {
-		return new DatagramChannelContext((DatagramSession) session);
-	}
-	
-	@Override
-	final void shutdown(SelectableChannel channel) {
-	}
-	
-	@Override
-	final boolean exceptionOnDecodingFailure() {
-		return false;
-	}
-	
+    @Override
+    final String toString(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final void handle(final SelectorLoop loop, final SelectionKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final ChannelContext<DatagramSession> wrap(InternalSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final void shutdown(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final boolean exceptionOnDecodingFailure() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

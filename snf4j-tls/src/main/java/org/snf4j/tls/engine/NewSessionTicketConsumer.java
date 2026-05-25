@@ -26,7 +26,6 @@
 package org.snf4j.tls.engine;
 
 import static org.snf4j.tls.extension.ExtensionsUtil.find;
-
 import java.nio.ByteBuffer;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.InternalErrorAlert;
@@ -41,45 +40,13 @@ import org.snf4j.tls.session.SessionTicket;
 
 public class NewSessionTicketConsumer implements IHandshakeConsumer {
 
-	@Override
-	public HandshakeType getType() {
-		return HandshakeType.NEW_SESSION_TICKET;
-	}
+    @Override
+    public HandshakeType getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
-		if (state.getState() != MachineState.CLI_CONNECTED) {
-			throw new UnexpectedMessageAlert("Unexpected NewSessionTicket");
-		}
-		
-		INewSessionTicket nst = (INewSessionTicket) handshake;
-		long maxEarlyDataSize;
-		
-		IEarlyDataExtension earlyData = find(handshake, ExtensionType.EARLY_DATA);
-		if (earlyData != null) {
-			maxEarlyDataSize = earlyData.getMaxSize();
-		}
-		else {
-			maxEarlyDataSize = -1;
-		}
-		
-		try {
-			ISession session = state.getSession();
-			
-			if (session.isValid()) {
-				session.getManager().putTicket(session, 
-						new SessionTicket(
-								state.getCipherSuite(),
-								state.getApplicationProtocol(),
-								state.getKeySchedule().computePsk(nst.getNonce()), 
-								nst.getTicket(), 
-								nst.getLifetime(), 
-								nst.getAgeAdd(),
-								maxEarlyDataSize));
-			}
-		} catch (Exception e) {
-			throw new InternalErrorAlert("Failed to compute PSK", e);
-		}
-	}
-
+    @Override
+    public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

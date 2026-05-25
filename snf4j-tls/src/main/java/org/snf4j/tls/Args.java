@@ -26,118 +26,63 @@
 package org.snf4j.tls;
 
 public final class Args {
-	
-	private Args() {}
-	
-	public static void checkNull(Object value, String name) {
-		if (value == null) {
-			throw new IllegalArgumentException(name + " is null");
-		}
-	}
 
-	public static void checkFixed(byte[] array, int fixed, String name) {
-		if (array == null) {
-			throw new IllegalArgumentException(name + " is null");
-		}
-		if (array.length != fixed) {
-			throw new IllegalArgumentException(name + "'s length is not " + fixed);
-		}
-	}
+    private Args() {
+    }
 
-	public static void checkFixed(Object[] array, int fixed, String name) {
-		if (array == null) {
-			throw new IllegalArgumentException(name + " is null");
-		}
-		if (array.length != fixed) {
-			throw new IllegalArgumentException(name + "'s length is not " + fixed);
-		}
-	}
+    public static void checkNull(Object value, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public static void checkFixed(int[] array, int fixed, String name) {
-		if (array == null) {
-			throw new IllegalArgumentException(name + " is null");
-		}
-		if (array.length != fixed) {
-			throw new IllegalArgumentException(name + "'s length is not " + fixed);
-		}
-	}
-	
-	public static void checkRange(int value, int min, int max, String name) {
-		if (value < min) {
-			throw new IllegalArgumentException(name + " is less than " + min);
-		}
-		if (value > max) {
-			throw new IllegalArgumentException(name + " is greater than " + max);
-		}
-	}
+    public static void checkFixed(byte[] array, int fixed, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public static void checkRange(long value, long min, long max, String name) {
-		if (value < min) {
-			throw new IllegalArgumentException(name + " is less than " + min);
-		}
-		if (value > max) {
-			throw new IllegalArgumentException(name + " is greater than " + max);
-		}
-	}
-	
-	public static void checkMax(int value, int max, String name) {
-		if (value > max) {
-			throw new IllegalArgumentException(name + " is greater than " + max);
-		}
-	}
+    public static void checkFixed(Object[] array, int fixed, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public static void checkMax(long value, long max, String name) {
-		if (value > max) {
-			throw new IllegalArgumentException(name + " is greater than " + max);
-		}
-	}
+    public static void checkFixed(int[] array, int fixed, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public static void checkMax(byte[] array, int max, String name) {
-		if (array == null) {
-			throw new IllegalArgumentException(name + " is null");
-		}
-		if (array.length > max) {
-			throw new IllegalArgumentException(name + "'s length is greater than " + max);
-		}
-	}
-	
-	public static void checkMin(int value, int min, String name) {
-		if (value < min) {
-			throw new IllegalArgumentException(name + " is less than " + min);
-		}
-	}
+    public static void checkRange(int value, int min, int max, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public static void checkMin(Object[] array, int min, String name) {
-		if (array == null) {
-			throw new IllegalArgumentException(name + " is null");
-		}
-		if (array.length < min) {
-			throw new IllegalArgumentException(name + "'s length is less than " + min);
-		}
-	}
+    public static void checkRange(long value, long min, long max, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public static void checkMin(byte[] array, int min, String name) {
-		if (array == null) {
-			throw new IllegalArgumentException(name + " is null");
-		}
-		if (array.length < min) {
-			throw new IllegalArgumentException(name + "'s length is less than " + min);
-		}
-	}
+    public static void checkMax(int value, int max, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public static void checkMin(int[] array, int min, String name) {
-		if (array == null) {
-			throw new IllegalArgumentException(name + " is null");
-		}
-		if (array.length < min) {
-			throw new IllegalArgumentException(name + "'s length is less than " + min);
-		}
-	}
-	
+    public static void checkMax(long value, long max, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static void checkMax(byte[] array, int max, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static void checkMin(int value, int min, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static void checkMin(Object[] array, int min, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static void checkMin(byte[] array, int min, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static void checkMin(int[] array, int min, String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
     public static void checkBounds(int offset, int length, int size) {
-        if ((offset | length | (offset + length) | (size - (offset + length))) < 0) {
-        	throw new IndexOutOfBoundsException();        	
-        }
-    } 
-
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

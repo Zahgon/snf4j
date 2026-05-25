@@ -26,54 +26,37 @@
 package org.snf4j.tls;
 
 public class IntConstant extends Constant {
-	
-	private final int value;
-	
-	protected IntConstant(String name, int value) {
-		super(name);
-		this.value = value;
-	}
 
-	protected IntConstant(int value) {
-		this.value = value;
-	}
-	
-	public final int value() { return value; }
-	
-	@Override
-	public int hashCode() {
-		return Integer.hashCode(value);
-	}
+    private final int value;
 
-	@Override
+    protected IntConstant(String name, int value) {
+        super(name);
+        this.value = value;
+    }
+
+    protected IntConstant(int value) {
+        this.value = value;
+    }
+
+    public final int value() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
     public boolean equals(Object obj) {
-        if (obj instanceof IntConstant) {
-            return value == ((IntConstant)obj).value();
-        }
-        return false;
-    } 
-	
-	public static <T extends IntConstant> T findMatch(T[] primary, T[] secondary) {
-		for (T p: primary) {
-			int pValue = p.value();
-			
-			for (T s: secondary) {
-				if (pValue == s.value()) {
-					return p;
-				}
-			}
-		}
-		return null;
-	}
-	
-	public static <T extends IntConstant> T find(T[] constants, T constant) {
-		int value = constant.value();
-		
-		for (T c: constants) {
-			if (value == c.value()) {
-				return c;
-			}
-		}
-		return null;
-	}
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static <T extends IntConstant> T findMatch(T[] primary, T[] secondary) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static <T extends IntConstant> T find(T[] constants, T constant) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

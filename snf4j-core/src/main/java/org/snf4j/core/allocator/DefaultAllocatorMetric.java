@@ -30,169 +30,166 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Metric for the {@link DefaultAllocator}.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class DefaultAllocatorMetric implements IDefaultAllocatorMetricCollector {
 
-	private final AtomicLong allocatingCount = new AtomicLong();
-	
-	private final AtomicLong allocatedCount = new AtomicLong();
-	
-	private final AtomicLong releasingCount = new AtomicLong();
-	
-	private final AtomicLong releasedCount = new AtomicLong();
-	
-	private final AtomicLong ensureSomeCount = new AtomicLong();
+    private final AtomicLong allocatingCount = new AtomicLong();
 
-	private final AtomicLong ensureCount = new AtomicLong();
-	
-	private final AtomicLong reduceCount = new AtomicLong();
-	
-	private final AtomicLong extendCount = new AtomicLong();
-	
-	private final AtomicInteger maxCapacity = new AtomicInteger();
+    private final AtomicLong allocatedCount = new AtomicLong();
 
-	private final void setMaxCapacity(final int size) {
-		int current;
-		
-		do {
-			current = maxCapacity.get();
-		} while (size > current && !maxCapacity.compareAndSet(current, size));
-	}
-	
-	@Override
-	public void allocating(int capacity) {
-		allocatingCount.incrementAndGet();
-	}
-	
-	@Override
-	public void allocated(int capacity) {
-		allocatedCount.incrementAndGet();
-		setMaxCapacity(capacity);
-	}
-	
-	@Override
-	public void released(int capacity) {
-		releasedCount.incrementAndGet();
-	}
-	
-	@Override
-	public void releasing(int capacity) {
-		releasingCount.incrementAndGet();
-	}
-	
-	@Override
-	public void ensureSome() {
-		ensureSomeCount.incrementAndGet();
-	}
-	
-	@Override
-	public void ensure() {
-		ensureCount.incrementAndGet();
-	}
-	
-	@Override
-	public void reduce() {
-		reduceCount.incrementAndGet();
-	}
-	
-	@Override
-	public void extend() {
-		extendCount.incrementAndGet();
-	}
-	
-	/**
-	 * Gets the total number of allocations that have been performed by 
-	 * the associated allocator. 
-	 * 
-	 * @return the total number of allocations
-	 */
-	public long getAllocatingCount() {
-		return allocatingCount.get();
-	}
-	
-	/**
-	 * Gets the total number of true allocations that have been performed by the
-	 * associated allocator.
-	 * 
-	 * @return the total number of real allocations
-	 */
-	public long getAllocatedCount() {
-		return allocatedCount.get();
-	}
-	
-	/**
-	 * Gets the total number of buffers that have been requested for releasing by the
-	 * associated allocator.
-	 * 
-	 * @return the total number of released buffers
-	 */
-	public long getReleasingCount() {
-		return releasingCount.get();
-	}
-	
-	/**
-	 * Gets the total number of buffers that have been released by the associated
-	 * allocator.
-	 * 
-	 * @return the total number of released buffers
-	 */
-	public long getReleasedCount() {
-		return releasedCount.get();
-	}
-	
-	/**
-	 * Gets the total number of re-allocations that have been performed by 
-	 * the {@link IByteBufferAllocator#ensureSome ensureSome} method in
-	 * the associated allocator.
-	 * 
-	 * @return the total number of re-allocations
-	 */
-	public long getEnsureSomeCount() {
-		return ensureSomeCount.get();
-	}
+    private final AtomicLong releasingCount = new AtomicLong();
 
-	/**
-	 * Gets the total number of re-allocations that have been performed by 
-	 * the {@link IByteBufferAllocator#ensure ensure} method in
-	 * the associated allocator.
-	 * 
-	 * @return the total number of re-allocations
-	 */
-	public long getEnsureCount() {
-		return ensureCount.get();
-	}
+    private final AtomicLong releasedCount = new AtomicLong();
 
-	/**
-	 * Gets the total number of re-allocations that have been performed by 
-	 * the {@link IByteBufferAllocator#reduce reduce} method in
-	 * the associated allocator.
-	 * 
-	 * @return the total number of re-allocations
-	 */
-	public long getReduceCount() {
-		return reduceCount.get();
-	}
+    private final AtomicLong ensureSomeCount = new AtomicLong();
 
-	/**
-	 * Gets the total number of re-allocations that have been performed by 
-	 * the {@link IByteBufferAllocator#extend extend} method in
-	 * the associated allocator.
-	 * 
-	 * @return the total number of re-allocations
-	 */
-	public long getExtendCount() {
-		return extendCount.get();
-	}
+    private final AtomicLong ensureCount = new AtomicLong();
 
-	/**
-	 * Gets the capacity of the biggest buffer allocated by the associated allocator.
-	 * 
-	 * @return the max capacity
-	 */
-	public int getMaxCapacity() {
-		return maxCapacity.get();
-	}
-	
+    private final AtomicLong reduceCount = new AtomicLong();
+
+    private final AtomicLong extendCount = new AtomicLong();
+
+    private final AtomicInteger maxCapacity = new AtomicInteger();
+
+    private final void setMaxCapacity(final int size) {
+        int current;
+        do {
+            current = maxCapacity.get();
+        } while (size > current && !maxCapacity.compareAndSet(current, size));
+    }
+
+    @Override
+    public void allocating(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void allocated(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void released(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void releasing(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void ensureSome() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void ensure() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void reduce() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void extend() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the total number of allocations that have been performed by
+     * the associated allocator.
+     *
+     * @return the total number of allocations
+     */
+    public long getAllocatingCount() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the total number of true allocations that have been performed by the
+     * associated allocator.
+     *
+     * @return the total number of real allocations
+     */
+    public long getAllocatedCount() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the total number of buffers that have been requested for releasing by the
+     * associated allocator.
+     *
+     * @return the total number of released buffers
+     */
+    public long getReleasingCount() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the total number of buffers that have been released by the associated
+     * allocator.
+     *
+     * @return the total number of released buffers
+     */
+    public long getReleasedCount() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the total number of re-allocations that have been performed by
+     * the {@link IByteBufferAllocator#ensureSome ensureSome} method in
+     * the associated allocator.
+     *
+     * @return the total number of re-allocations
+     */
+    public long getEnsureSomeCount() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the total number of re-allocations that have been performed by
+     * the {@link IByteBufferAllocator#ensure ensure} method in
+     * the associated allocator.
+     *
+     * @return the total number of re-allocations
+     */
+    public long getEnsureCount() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the total number of re-allocations that have been performed by
+     * the {@link IByteBufferAllocator#reduce reduce} method in
+     * the associated allocator.
+     *
+     * @return the total number of re-allocations
+     */
+    public long getReduceCount() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the total number of re-allocations that have been performed by
+     * the {@link IByteBufferAllocator#extend extend} method in
+     * the associated allocator.
+     *
+     * @return the total number of re-allocations
+     */
+    public long getExtendCount() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Gets the capacity of the biggest buffer allocated by the associated allocator.
+     *
+     * @return the max capacity
+     */
+    public int getMaxCapacity() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

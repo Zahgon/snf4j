@@ -26,57 +26,41 @@
 package org.snf4j.tls.engine;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.HandshakeFailureAlert;
 import org.snf4j.tls.alert.InternalErrorAlert;
 
 abstract public class AbstractEngineTask implements IEngineTask {
 
-	private final AtomicBoolean started = new AtomicBoolean();
-	
-	private volatile Throwable cause;
-	
-	private volatile boolean done;
-	
-	@Override
-	public void run() {
-		if (!started.compareAndSet(false, true)) {
-			throw new IllegalStateException("Task has already started");
-		}
-		try {
-			execute();
-		} catch (Exception e) {
-			cause = e;
-		}
-		done = true;
-	}
+    private final AtomicBoolean started = new AtomicBoolean();
 
-	public void run(EngineState state) throws Alert {
-		try {
-			execute();
-		} catch (CertificateSelectorException e) {
-			throw new HandshakeFailureAlert(e.getMessage());
-		} catch (Exception e) {
-			throw new InternalErrorAlert(name() + " task failed", e);
-		}
-		finish(state);
-	}
-	
-	@Override
-	public boolean isDone() {
-		return done;
-	}
+    private volatile Throwable cause;
 
-	@Override
-	public boolean isSuccessful() {
-		return cause == null;
-	}
-	
-	@Override
-	public Throwable cause() {
-		return cause;
-	}
-	
-	abstract void execute() throws Exception;
+    private volatile boolean done;
+
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void run(EngineState state) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isDone() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isSuccessful() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Throwable cause() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    abstract void execute() throws Exception;
 }

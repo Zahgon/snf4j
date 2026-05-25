@@ -26,36 +26,27 @@
 package org.snf4j.core.proxy;
 
 enum Socks4Status {
-	
-	SUCCESS(90, "Request granted"),
-	REJECTED_OR_FAILED(91, "Request rejected or failed"),
-	IDENTD_UNREACHABLE(92, "Request rejected becasue SOCKS server cannot connect to identd on the client"),
-	IDENTD_AUTH_FAILURE(93, "Request rejected because the client program and identd report different user-ids"),
-	UNKNOWN(-1, "Unknown");
-	
-	private final int code;
-	
-	private final String description;
-	
-	Socks4Status(int code, String description) {
-		this.code = code;
-		this.description = description;
-	}
-	
-	public int code() {
-		return code;
-	}
-	
-	public String description() {
-		return description;
-	}
-	
-	public static Socks4Status valueOf(int code) {
-		for (Socks4Status value: values()) {
-			if (value.code == code) {
-				return value;
-			}
-		}
-		return UNKNOWN;
-	}
+
+    SUCCESS(90, "Request granted"), REJECTED_OR_FAILED(91, "Request rejected or failed"), IDENTD_UNREACHABLE(92, "Request rejected becasue SOCKS server cannot connect to identd on the client"), IDENTD_AUTH_FAILURE(93, "Request rejected because the client program and identd report different user-ids"), UNKNOWN(-1, "Unknown");
+
+    private final int code;
+
+    private final String description;
+
+    Socks4Status(int code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+
+    public int code() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public String description() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static Socks4Status valueOf(int code) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

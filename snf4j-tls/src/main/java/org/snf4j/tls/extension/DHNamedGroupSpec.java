@@ -30,7 +30,6 @@ import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.crypto.DHKeyExchange;
@@ -39,90 +38,75 @@ import org.snf4j.tls.crypto.IKeyExchange;
 
 public class DHNamedGroupSpec extends AbstractNamedGroupSpec {
 
-	public final static DHNamedGroupSpec FFDHE2048 = new DHNamedGroupSpec(DHKeyExchange.FFDHE2048);
+    public final static DHNamedGroupSpec FFDHE2048 = new DHNamedGroupSpec(DHKeyExchange.FFDHE2048);
 
-	public final static DHNamedGroupSpec FFDHE3072 = new DHNamedGroupSpec(DHKeyExchange.FFDHE3072);
+    public final static DHNamedGroupSpec FFDHE3072 = new DHNamedGroupSpec(DHKeyExchange.FFDHE3072);
 
-	public final static DHNamedGroupSpec FFDHE4096 = new DHNamedGroupSpec(DHKeyExchange.FFDHE4096);
-	
-	public final static DHNamedGroupSpec FFDHE6144 = new DHNamedGroupSpec(DHKeyExchange.FFDHE6144);
-	
-	public final static DHNamedGroupSpec FFDHE8192 = new DHNamedGroupSpec(DHKeyExchange.FFDHE8192);
-	
-	private final IDHKeyExchange keyExchange;
-	
-	public DHNamedGroupSpec(IDHKeyExchange keyExchange) {
-		this.keyExchange = keyExchange;
-	}
-	
-	@Override
-	public boolean isImplemented() {
-		return keyExchange.isImplemented();
-	}
+    public final static DHNamedGroupSpec FFDHE4096 = new DHNamedGroupSpec(DHKeyExchange.FFDHE4096);
 
-	@Override
-	public IKeyExchange getKeyExchange() {
-		return keyExchange;
-	}
+    public final static DHNamedGroupSpec FFDHE6144 = new DHNamedGroupSpec(DHKeyExchange.FFDHE6144);
 
-	@Override
-	public ParsedKey parse(ByteBufferArray srcs, int remaining) throws Alert {
-		if (remaining != getDataLength()) {
-			throw decodeError("DH key exchange unexpected size");
-		}
-		
-		byte[] y = new byte[keyExchange.getPLength()];
+    public final static DHNamedGroupSpec FFDHE8192 = new DHNamedGroupSpec(DHKeyExchange.FFDHE8192);
 
-		srcs.get(y);
-		return new DHParsedKey(y);
-	}
+    private final IDHKeyExchange keyExchange;
 
-	@Override
-	public PublicKey generateKey(ParsedKey key) throws Alert {
-		try {
-			return generatePublicKey(new BigInteger(1, ((DHParsedKey)key).getY()));
-		} catch (NoSuchAlgorithmException e) {
-			throw internalError("No DH algorithm", e);
-		} catch (InvalidKeySpecException e) {
-			throw internalError("Invalid DH key specification", e);
-		} catch (Exception e) {
-			throw internalError("DH key generation failure", e);
-		}
-	}
-	
-	protected PublicKey generatePublicKey(BigInteger y) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		return keyExchange.generatePublicKey(y);
-	}
-	
-	@Override
-	public int getDataLength() {
-		return keyExchange.getPLength();
-	}
+    public DHNamedGroupSpec(IDHKeyExchange keyExchange) {
+        this.keyExchange = keyExchange;
+    }
 
-	@Override
-	public void getData(ByteBuffer buffer, PublicKey key) {
-		getData(buffer, keyExchange.getY(key).toByteArray());
-	}
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void getData(ByteBuffer buffer, ParsedKey key) {
-		getData(buffer, ((DHParsedKey)key).getY());
-	}
-	
-	void getData(ByteBuffer buffer, byte[] y) {
-		getDataWithLeftPadding(buffer, y, keyExchange.getPLength());
-	}
-	
-	private class DHParsedKey implements ParsedKey {
-		
-		private final byte[] y;
-		
-		DHParsedKey(byte[] y) {
-			this.y = y;
-		}
+    @Override
+    public IKeyExchange getKeyExchange() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		public byte[] getY() {
-			return y;
-		}
-	}
+    @Override
+    public ParsedKey parse(ByteBufferArray srcs, int remaining) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public PublicKey generateKey(ParsedKey key) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    protected PublicKey generatePublicKey(BigInteger y) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void getData(ByteBuffer buffer, PublicKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void getData(ByteBuffer buffer, ParsedKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void getData(ByteBuffer buffer, byte[] y) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private class DHParsedKey implements ParsedKey {
+
+        private final byte[] y;
+
+        DHParsedKey(byte[] y) {
+            this.y = y;
+        }
+
+        public byte[] getY() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    }
 }

@@ -28,7 +28,6 @@ package org.snf4j.example.earlydata;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Queue;
-
 import org.snf4j.core.codec.ICodecExecutor;
 import org.snf4j.core.handler.SessionEvent;
 import org.snf4j.core.session.ISession;
@@ -36,74 +35,44 @@ import org.snf4j.tls.engine.IEarlyDataHandler;
 
 public class EarlyDataClientHandler extends EarlyDataHandler implements IEarlyDataHandler {
 
-	private final String cmd;
+    private final String cmd;
 
-	private Queue<byte[]> earlyData;
-	
-	private boolean earlyDataAccepted;
-	
-	public EarlyDataClientHandler(String cmd) {
-		this.cmd = cmd;
-	}
-	
-	@SuppressWarnings("incomplete-switch")
-	@Override
-	public void event(SessionEvent event) {
-		super.event(event);
+    private Queue<byte[]> earlyData;
 
-		if (!earlyDataAccepted) {
-			switch (event) {
-			case READY:
-				getSession().writenf(cmd);
-				break;
-			}
-		}
-	}
-	
-	@Override
-	public void read(Object msg) {
-		Logger.inf("response: " + msg);
-	}
+    private boolean earlyDataAccepted;
 
-	@Override
-	public boolean hasEarlyData() {
-		return true;
-	}
+    public EarlyDataClientHandler(String cmd) {
+        this.cmd = cmd;
+    }
 
-	@Override
-	public byte[] nextEarlyData(String protocol) {
-		if (earlyData == null) {
-			earlyData = new LinkedList<byte[]>();
+    @SuppressWarnings("incomplete-switch")
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			try {
-				ISession session = getSession();
-				ICodecExecutor executor = SessionConfig.createCodecExecutor(protocol, true);
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-				executor.syncEncoders(session);
-				for (Object data: executor.encode(session, cmd)) {
-					ByteBuffer buffer = (ByteBuffer) data;
-					byte[] bytes = new byte[buffer.remaining()];
+    @Override
+    public boolean hasEarlyData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-					buffer.get(bytes);
-					getSession().release(buffer);
-					earlyData.add(bytes);
-				}
-			} catch (Exception e) {
-				Logger.err(e.getMessage());
-			}
-		}
-		return earlyData.poll();
-	}
+    @Override
+    public byte[] nextEarlyData(String protocol) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void acceptedEarlyData() {
-		Logger.inf("early data accepted");
-		earlyDataAccepted = true;
-	}
+    @Override
+    public void acceptedEarlyData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void rejectedEarlyData() {
-		Logger.inf("early data rejected");
-	}
-	
+    @Override
+    public void rejectedEarlyData() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -28,42 +28,41 @@ package org.snf4j.core;
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-
 import org.snf4j.core.factory.IStreamSessionFactory;
 
-class ServerSocketChannelContext extends ServerChannelContext<IStreamSessionFactory>{
+class ServerSocketChannelContext extends ServerChannelContext<IStreamSessionFactory> {
 
-	ServerSocketChannelContext(IStreamSessionFactory factory) {
-		super(factory);
-	}
+    ServerSocketChannelContext(IStreamSessionFactory factory) {
+        super(factory);
+    }
 
-	@Override
-	final void postClose(SelectableChannel channel) {
-		context.closed((ServerSocketChannel) channel);
-	}
-	
-	@Override
-	final void postRegistration(SelectableChannel channel) {
-		context.registered((ServerSocketChannel) channel);
-	}
-	
-	@Override
-	final void exception(SelectableChannel channel, Throwable t) {
-		context.exception((ServerSocketChannel) channel, t);
-	}
-	
-	@Override
-	final InternalSession create(SelectableChannel channel) throws Exception {
-		return context.create((SocketChannel) channel);
-	}
+    @Override
+    final void postClose(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	final SelectableChannel accept(SelectableChannel channel) throws Exception {
-		return ((ServerSocketChannel) channel).accept();
-	}	
-	
-	@Override
-	final ChannelContext<StreamSession> wrap(InternalSession session) {
-		return new SocketChannelContext((StreamSession) session);
-	}
+    @Override
+    final void postRegistration(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final void exception(SelectableChannel channel, Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final InternalSession create(SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final SelectableChannel accept(SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final ChannelContext<StreamSession> wrap(InternalSession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

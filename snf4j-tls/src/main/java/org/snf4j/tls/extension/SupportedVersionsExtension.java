@@ -26,9 +26,7 @@
 package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
-
 import static org.snf4j.tls.handshake.HandshakeType.CLIENT_HELLO;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -36,91 +34,58 @@ import org.snf4j.tls.handshake.HandshakeType;
 
 public class SupportedVersionsExtension extends KnownExtension implements ISupportedVersionsExtension {
 
-	private final static ExtensionType TYPE = ExtensionType.SUPPORTED_VERSIONS;
-	
-	private final Mode mode;
-	
-	private final int[] versions;
-	
-	private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
+    private final static ExtensionType TYPE = ExtensionType.SUPPORTED_VERSIONS;
 
-		@Override
-		public ExtensionType getType() {
-			return TYPE;
-		}
+    private final Mode mode;
 
-		@Override
-		public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
-			if (remaining >= 2) {
-				if (handshakeType.value() == CLIENT_HELLO.value()) {
-					int len = srcs.getUnsigned();
-					
-					if ((len & 1) != 0 || len == 0) {
-						throw decodeError("Incorrect length");
-					}
-					--remaining;
-					if (len == remaining) {
-						int[] versions = new int[len/2];
-						
-						for (int i=0; i<versions.length; ++i) {
-							versions[i] = srcs.getUnsignedShort();
-						}
-						return new SupportedVersionsExtension(Mode.CLIENT_HELLO, versions);
-					}
-				}
-				else if (remaining == 2) {
-					return new SupportedVersionsExtension(Mode.SERVER_HELLO, srcs.getUnsignedShort());
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}
-	};
-	
-	public SupportedVersionsExtension(Mode mode, int... versions) {
-		super(TYPE);
-		Args.checkNull(mode, "mode");
-		this.mode = mode;
-		if (mode == Mode.CLIENT_HELLO) {
-			Args.checkMin(versions, 1, "versions");
-		}
-		else {
-			Args.checkFixed(versions, 1, "versions");
-		}
-		this.versions = versions;
-	}
+    private final int[] versions;
 
-	public static IExtensionParser getParser() {
-		return PARSER;
-	}
-	
-	@Override
-	public int getDataLength() {
-		if (mode == Mode.CLIENT_HELLO) {
-			return 1 + versions.length * 2;
-		}
-		return 2;
-	}
+    private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		if (mode == Mode.CLIENT_HELLO) {
-			buffer.put((byte) (versions.length*2));
-			for (int version: versions) {
-				buffer.putShort((short) version);
-			}
-		}
-		else {
-			buffer.putShort((short) versions[0]);
-		}
-	}
+        @Override
+        public ExtensionType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	@Override
-	public int[] getVersions() {
-		return versions;
-	}
+        @Override
+        public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	@Override
-	public Mode getMode() {
-		return mode;
-	}
+    public SupportedVersionsExtension(Mode mode, int... versions) {
+        super(TYPE);
+        Args.checkNull(mode, "mode");
+        this.mode = mode;
+        if (mode == Mode.CLIENT_HELLO) {
+            Args.checkMin(versions, 1, "versions");
+        } else {
+            Args.checkFixed(versions, 1, "versions");
+        }
+        this.versions = versions;
+    }
+
+    public static IExtensionParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int[] getVersions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Mode getMode() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

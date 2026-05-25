@@ -32,37 +32,22 @@ import javax.net.ssl.TrustManagerFactory;
 
 public class KeyStoreLoader {
 
-	static final char[] PASSWORD = "password".toCharArray();
-	
-	private static void load(KeyStore ks, String fileName, char[] password) throws Exception {
-		InputStream in = KeyStoreLoader.class.getResourceAsStream(fileName);
-		
-		try {
-			ks.load(in, password);
-		}
-		finally {
-			in.close();
-		}
-	}
+    static final char[] PASSWORD = "password".toCharArray();
 
-	static KeyManagerFactory keyManagerFactory() throws Exception {
-		KeyStore ks = KeyStore.getInstance("JKS");
-		KeyManagerFactory kmf;
-		
-		load(ks, "/keystore.jks", PASSWORD);
-		kmf = KeyManagerFactory.getInstance("SunX509");
-		kmf.init(ks, PASSWORD);
-		return kmf;
-	}
+    private static void load(KeyStore ks, String fileName, char[] password) throws Exception {
+        InputStream in = KeyStoreLoader.class.getResourceAsStream(fileName);
+        try {
+            ks.load(in, password);
+        } finally {
+            in.close();
+        }
+    }
 
-	static TrustManagerFactory trustManagerFactory() throws Exception {
-		KeyStore ks = KeyStore.getInstance("JKS");
-		TrustManagerFactory tmf;
-		
-		load(ks, "/keystore.jks", PASSWORD);
-		tmf = TrustManagerFactory.getInstance("SunX509");
-		tmf.init(ks);
-		return tmf;
-	}
+    static KeyManagerFactory keyManagerFactory() throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    static TrustManagerFactory trustManagerFactory() throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

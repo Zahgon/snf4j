@@ -28,64 +28,33 @@ package org.snf4j.core.proxy;
 import java.nio.ByteBuffer;
 
 class Socks5InitState extends AbstractSocksState implements ISocks5 {
-	
-	final static byte METHOD_INDEX = 1;
 
-	private final static int RESPONSE_SIZE = 2;
+    final static byte METHOD_INDEX = 1;
 
-	private final Socks5AuthMethod[] authMethods;
-	
-	private final AbstractSocksState[] nextStates;
-	
-	Socks5InitState(Socks5ProxyHandler handler, Socks5AuthMethod[] authMethods, AbstractSocksState[] nextStates) {
-		super(handler);
-		this.authMethods = authMethods;
-		this.nextStates = nextStates;
-	}
+    private final static int RESPONSE_SIZE = 2;
 
-	@Override
-	int responseSize() {
-		return RESPONSE_SIZE;
-	}
-	
-	@Override
-	AbstractSocksState read(byte[] data) {
-		if (data[VER_INDEX] != VERSION) {
-			throw new ProxyConnectionException("Unsupported SOCKS5 reply version: " + data[0]);
-		}
-		
-		byte methodCode = data[METHOD_INDEX];
-		
-		if (methodCode == Socks5AuthMethod.UNACCEPTED.code()) {
-			throw new ProxyConnectionException("No acceptable authentication method");
-		}
-		
-		Socks5AuthMethod method = null;
-		AbstractSocksState next = null;
-		
-		for (int i=0; i<authMethods.length; ++i) {
-			if (authMethods[i].code() == methodCode) {
-				method = authMethods[i];
-				next = nextStates[i];
-				break;
-			}
-		}
-		if (method == null) {
-			throw new ProxyConnectionException("Unexpected authentication method: " + methodCode);
-		}
-		return next;
-	}
+    private final Socks5AuthMethod[] authMethods;
 
-	@Override
-	void handleReady() {
-		ByteBuffer buf = handler.getSession().allocate(2 + authMethods.length);
-		
-		buf.put(VERSION);
-		buf.put((byte)authMethods.length);
-		for (int i=0; i<authMethods.length; ++i) {
-			buf.put(authMethods[i].code());
-		}
-		handler.flipAndWrite(buf);
-	}
+    private final AbstractSocksState[] nextStates;
 
+    Socks5InitState(Socks5ProxyHandler handler, Socks5AuthMethod[] authMethods, AbstractSocksState[] nextStates) {
+        super(handler);
+        this.authMethods = authMethods;
+        this.nextStates = nextStates;
+    }
+
+    @Override
+    int responseSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    AbstractSocksState read(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    void handleReady() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

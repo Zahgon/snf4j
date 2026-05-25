@@ -40,135 +40,99 @@ import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-
 import javax.crypto.KeyAgreement;
 
 public class XDHKeyExchange implements IXDHKeyExchange {
 
-	public final static XDHKeyExchange X25519 = new XDHKeyExchange("X25519");
-	
-	public final static XDHKeyExchange X448 = new XDHKeyExchange("X448");
-	
-	private final static String PARAMETER_SPEC_NAME = "java.security.spec.NamedParameterSpec";
-	
-	private final static String KEY_SPEC_NAME = "java.security.spec.XECPublicKeySpec";
-	
-	private final static String KEY_NAME = "java.security.interfaces.XECPublicKey";
-	
-	private final static boolean IMPLEMENTED;
+    public final static XDHKeyExchange X25519 = new XDHKeyExchange("X25519");
 
-	private final static Constructor<?> PARAMETER_SPEC;
+    public final static XDHKeyExchange X448 = new XDHKeyExchange("X448");
 
-	private final static Constructor<?> KEY_SPEC;
-	
-	private final static Method GET_U;
-	
-	static Constructor<?> constructor(String clazzName, Class<?>... argTypes) {
-		try {
-			return Class.forName(clazzName).getConstructor(argTypes);
-		} catch (Exception e) {
-			return null;
-		}		
-	}
+    private final static String PARAMETER_SPEC_NAME = "java.security.spec.NamedParameterSpec";
 
-	static Method method(String clazzName, String name, Class<?>... argTypes) {
-		try {
-			return Class.forName(clazzName).getMethod(name, argTypes);
-		} catch (Exception e) {
-			return null;
-		}		
-	}
-	
-	static boolean implemented(String clazzName) {
-		try {
-			Class.forName(clazzName);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}		
-	}
-	
-	static {
-		PARAMETER_SPEC = constructor(PARAMETER_SPEC_NAME, String.class);
-		KEY_SPEC = constructor(KEY_SPEC_NAME, AlgorithmParameterSpec.class, BigInteger.class);
-		GET_U = method(KEY_NAME, "getU");
-		IMPLEMENTED = implemented(KEY_NAME);
-	}
-	
-	private final String dh;
-	
-	private final String algorithm;
-	
-	public XDHKeyExchange(String algorithm) {
-		this("XDH", algorithm);
-	}
+    private final static String KEY_SPEC_NAME = "java.security.spec.XECPublicKeySpec";
 
-	XDHKeyExchange(String dh, String algorithm) {
-		this.algorithm = algorithm;
-		this.dh = dh;
-	}
-	
-	@Override
-	public String getAlgorithm() {
-		return algorithm;
-	}
+    private final static String KEY_NAME = "java.security.interfaces.XECPublicKey";
 
-	@Override
-	public boolean isImplemented() {
-		return IMPLEMENTED;
-	}
+    private final static boolean IMPLEMENTED;
 
-	@Override
-	public byte[] generateSecret(PrivateKey privateKey, PublicKey publicKey, SecureRandom random) throws NoSuchAlgorithmException, InvalidKeyException {
-        KeyAgreement keyAgreement = KeyAgreement.getInstance(dh);
-        
-        keyAgreement.init(privateKey, random);
-        keyAgreement.doPhase(publicKey, true);
-        return keyAgreement.generateSecret();
-	}
+    private final static Constructor<?> PARAMETER_SPEC;
 
-	AlgorithmParameterSpec paramSpec(Constructor<?> paramSpec) throws NoSuchAlgorithmException {
-		try {
-			return (AlgorithmParameterSpec) paramSpec.newInstance(algorithm);
-		} catch (Exception e) {
-			throw new NoSuchAlgorithmException();
-		}
-	}
-	
-	@Override
-	public KeyPair generateKeyPair(SecureRandom random) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(dh);
-        keyPairGenerator.initialize(paramSpec(PARAMETER_SPEC), random);
-		return keyPairGenerator.genKeyPair();
-	}
+    private final static Constructor<?> KEY_SPEC;
 
-	KeySpec keySpec(Constructor<?> paramSpec, Constructor<?> keySpec, BigInteger u) throws NoSuchAlgorithmException {
-		try {
-			return  (KeySpec) keySpec.newInstance((AlgorithmParameterSpec) paramSpec.newInstance(algorithm), u);
-		} catch (Exception e) {
-			throw new NoSuchAlgorithmException();
-		}
-	}
-	
-	@Override
-	public PublicKey generatePublicKey(BigInteger u)  throws NoSuchAlgorithmException, InvalidKeySpecException {
-		return KeyFactory.getInstance(dh).generatePublic(keySpec(PARAMETER_SPEC, KEY_SPEC, u));
-	}
+    private final static Method GET_U;
 
-	
-	BigInteger getU(Method getU, PublicKey key) {
-		if (getU != null) {
-			try {
-				return (BigInteger) getU.invoke(key);
-			} catch (Exception e) {
-			}
-		}
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public BigInteger getU(PublicKey key) {
-		return getU(GET_U, key);
-	}
+    static Constructor<?> constructor(String clazzName, Class<?>... argTypes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    static Method method(String clazzName, String name, Class<?>... argTypes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static boolean implemented(String clazzName) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static {
+        PARAMETER_SPEC = constructor(PARAMETER_SPEC_NAME, String.class);
+        KEY_SPEC = constructor(KEY_SPEC_NAME, AlgorithmParameterSpec.class, BigInteger.class);
+        GET_U = method(KEY_NAME, "getU");
+        IMPLEMENTED = implemented(KEY_NAME);
+    }
+
+    private final String dh;
+
+    private final String algorithm;
+
+    public XDHKeyExchange(String algorithm) {
+        this("XDH", algorithm);
+    }
+
+    XDHKeyExchange(String dh, String algorithm) {
+        this.algorithm = algorithm;
+        this.dh = dh;
+    }
+
+    @Override
+    public String getAlgorithm() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] generateSecret(PrivateKey privateKey, PublicKey publicKey, SecureRandom random) throws NoSuchAlgorithmException, InvalidKeyException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    AlgorithmParameterSpec paramSpec(Constructor<?> paramSpec) throws NoSuchAlgorithmException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public KeyPair generateKeyPair(SecureRandom random) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    KeySpec keySpec(Constructor<?> paramSpec, Constructor<?> keySpec, BigInteger u) throws NoSuchAlgorithmException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public PublicKey generatePublicKey(BigInteger u) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    BigInteger getU(Method getU, PublicKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public BigInteger getU(PublicKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

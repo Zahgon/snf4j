@@ -26,7 +26,6 @@
 package org.snf4j.websocket;
 
 import java.net.SocketAddress;
-
 import org.snf4j.core.SSLSession;
 import org.snf4j.core.future.IFuture;
 import org.snf4j.core.future.TaskFuture;
@@ -35,110 +34,106 @@ import org.snf4j.websocket.handshake.IHandshaker;
 
 /**
  * The Secure Web Socket session implementing the WebSocket Protocol described in RFC 6455.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class SSLWebSocketSession extends SSLSession implements IWebSocketSession {
 
-	private final TaskFuture<Void> readyFuture;
-	
-	/**
-	 * Constructs a named Secure Web Socket session associated with a handler and a
-	 * remote peer.
-	 * 
-	 * @param name          the name for this session, or <code>null</code> if the
-	 *                      handler's name should be used for this session's name
-	 * @param remoteAddress the address of the remote peer
-	 * @param handler       the Web Socket handler that should be associated with
-	 *                      this session
-	 * @param clientMode    <code>true</code> if the session should start its
-	 *                      handshaking (SSL/TLS and Web Socket) in "client" mode
-	 * @throws SSLEngineCreateException when the SSL engine could not be created
-	 */
-	public SSLWebSocketSession(String name, SocketAddress remoteAddress, IWebSocketHandler handler, boolean clientMode) 
-			throws SSLEngineCreateException {
-		super(name, remoteAddress, new WebSocketSessionHandler(handler, clientMode), clientMode);
-		readyFuture = new TaskFuture<Void>(this);
-	}
+    private final TaskFuture<Void> readyFuture;
 
-	/**
-	 * Constructs a Secure Web Socket session associated with a handler and a
-	 * remote peer.
-	 * 
-	 * @param remoteAddress the address of the remote peer
-	 * @param handler       the Web Socket handler that should be associated with
-	 *                      this session
-	 * @param clientMode    <code>true</code> if the session should start its
-	 *                      handshaking (SSL/TLS and Web Socket) in "client" mode
-	 * @throws SSLEngineCreateException when the SSL engine could not be created
-	 */
-	public SSLWebSocketSession(SocketAddress remoteAddress, IWebSocketHandler handler, boolean clientMode)
-			throws SSLEngineCreateException {
-		super(remoteAddress, new WebSocketSessionHandler(handler, clientMode), clientMode);
-		readyFuture = new TaskFuture<Void>(this);
-	}
-	
-	/**
-	 * Constructs a named Secure Web Socket session associated with a handler.
-	 * 
-	 * @param name          the name for this session, or <code>null</code> if the
-	 *                      handler's name should be used for this session's name
-	 * @param handler       the Web Socket handler that should be associated with
-	 *                      this session
-	 * @param clientMode    <code>true</code> if the session should start its
-	 *                      handshaking (SSL/TLS and Web Socket) in "client" mode
-	 * @throws SSLEngineCreateException when the SSL engine could not be created
-	 */
-	public SSLWebSocketSession(String name, IWebSocketHandler handler, boolean clientMode) 
-			throws SSLEngineCreateException {
-		super(name, new WebSocketSessionHandler(handler, clientMode), clientMode);
-		readyFuture = new TaskFuture<Void>(this);
-	}
-	
-	/**
-	 * Constructs a Secure Web Socket session associated with a handler.
-	 * 
-	 * @param handler       the Web Socket handler that should be associated with
-	 *                      this session
-	 * @param clientMode    <code>true</code> if the session should start its
-	 *                      handshaking (SSL/TLS and Web Socket) in "client" mode
-	 * @throws SSLEngineCreateException when the SSL engine could not be created
-	 */
-	public SSLWebSocketSession(IWebSocketHandler handler, boolean clientMode)
-			throws SSLEngineCreateException {
-		super(new WebSocketSessionHandler(handler, clientMode), clientMode);
-		readyFuture = new TaskFuture<Void>(this);
-	}
+    /**
+     * Constructs a named Secure Web Socket session associated with a handler and a
+     * remote peer.
+     *
+     * @param name          the name for this session, or <code>null</code> if the
+     *                      handler's name should be used for this session's name
+     * @param remoteAddress the address of the remote peer
+     * @param handler       the Web Socket handler that should be associated with
+     *                      this session
+     * @param clientMode    <code>true</code> if the session should start its
+     *                      handshaking (SSL/TLS and Web Socket) in "client" mode
+     * @throws SSLEngineCreateException when the SSL engine could not be created
+     */
+    public SSLWebSocketSession(String name, SocketAddress remoteAddress, IWebSocketHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(name, remoteAddress, new WebSocketSessionHandler(handler, clientMode), clientMode);
+        readyFuture = new TaskFuture<Void>(this);
+    }
 
-	/**
-	 * Gets the future that can be use to wait for the completion of the Web Socket
-	 * handshake phase.
-	 * 
-	 * @return the future associated with the Web Socket handshake phase of this
-	 *         session
-	 */
-	@Override
-	public IFuture<Void> getReadyFuture() {
-		return readyFuture;
-	}	
-	
-	@Override
-	public IWebSocketHandler getWebSocketHandler() {
-		return ((WebSocketSessionHandler)getHandler()).getHandler();
-	}	
-	
-	@Override
-	public IHandshaker getHandshaker() {
-		return ((WebSocketSessionHandler)getHandler()).getHandshaker();
-	}
-	
-	@Override
-	public void close(int status) {
-		executenf(new WebSocketSession.CloseTask(this, status, null));
-	}
+    /**
+     * Constructs a Secure Web Socket session associated with a handler and a
+     * remote peer.
+     *
+     * @param remoteAddress the address of the remote peer
+     * @param handler       the Web Socket handler that should be associated with
+     *                      this session
+     * @param clientMode    <code>true</code> if the session should start its
+     *                      handshaking (SSL/TLS and Web Socket) in "client" mode
+     * @throws SSLEngineCreateException when the SSL engine could not be created
+     */
+    public SSLWebSocketSession(SocketAddress remoteAddress, IWebSocketHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(remoteAddress, new WebSocketSessionHandler(handler, clientMode), clientMode);
+        readyFuture = new TaskFuture<Void>(this);
+    }
 
-	@Override
-	public void close(int status, String reason) {
-		executenf(new WebSocketSession.CloseTask(this, status, reason));
-	}	
+    /**
+     * Constructs a named Secure Web Socket session associated with a handler.
+     *
+     * @param name          the name for this session, or <code>null</code> if the
+     *                      handler's name should be used for this session's name
+     * @param handler       the Web Socket handler that should be associated with
+     *                      this session
+     * @param clientMode    <code>true</code> if the session should start its
+     *                      handshaking (SSL/TLS and Web Socket) in "client" mode
+     * @throws SSLEngineCreateException when the SSL engine could not be created
+     */
+    public SSLWebSocketSession(String name, IWebSocketHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(name, new WebSocketSessionHandler(handler, clientMode), clientMode);
+        readyFuture = new TaskFuture<Void>(this);
+    }
+
+    /**
+     * Constructs a Secure Web Socket session associated with a handler.
+     *
+     * @param handler       the Web Socket handler that should be associated with
+     *                      this session
+     * @param clientMode    <code>true</code> if the session should start its
+     *                      handshaking (SSL/TLS and Web Socket) in "client" mode
+     * @throws SSLEngineCreateException when the SSL engine could not be created
+     */
+    public SSLWebSocketSession(IWebSocketHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(new WebSocketSessionHandler(handler, clientMode), clientMode);
+        readyFuture = new TaskFuture<Void>(this);
+    }
+
+    /**
+     * Gets the future that can be use to wait for the completion of the Web Socket
+     * handshake phase.
+     *
+     * @return the future associated with the Web Socket handshake phase of this
+     *         session
+     */
+    @Override
+    public IFuture<Void> getReadyFuture() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IWebSocketHandler getWebSocketHandler() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IHandshaker getHandshaker() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void close(int status) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void close(int status, String reason) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

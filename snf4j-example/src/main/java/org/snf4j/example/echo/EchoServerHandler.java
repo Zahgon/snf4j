@@ -36,50 +36,40 @@ import org.snf4j.core.session.ISessionConfig;
 import org.snf4j.core.session.ssl.SSLEngineBuilder;
 
 public class EchoServerHandler extends AbstractStreamHandler {
-	
-	private static final IByteBufferAllocator ALLOCATOR = new ThreadLocalCachingAllocator(true);
 
-	private final DefaultSessionConfig config;
-	
-	EchoServerHandler(SSLEngineBuilder builder) {	
-		config = new SessionConfig(EchoServer.PIPELINE_SIZE)
-				.setOptimizeDataCopying(true)
-				.setMinOutBufferCapacity(EchoClient.SIZE << 1);
-		if (builder != null) {
-			config.addSSLEngineBuilder(builder);
-		}
-	}
-	
-	@Override
-	public void read(Object msg) {
-		getSession().writenf(msg);
-	}
-	
-	@Override
-	public void exception(Throwable e) {
-		Logger.err(e.toString());
-	}
-	
-	@Override
-	public boolean incident(SessionIncident incident, Throwable t) {
-		Logger.err(incident + ": " + t.toString());
-		return true;
-	}
-	
-	@Override
-	public ISessionConfig getConfig() {
-		return config;
-	}
-	
-	@Override
-	public ISessionStructureFactory getFactory() {
-		return new DefaultSessionStructureFactory() {
-			
-			@Override
-			public IByteBufferAllocator getAllocator() {
-				return ALLOCATOR;
-			}
-		};
-	}
-	
+    private static final IByteBufferAllocator ALLOCATOR = new ThreadLocalCachingAllocator(true);
+
+    private final DefaultSessionConfig config;
+
+    EchoServerHandler(SSLEngineBuilder builder) {
+        config = new SessionConfig(EchoServer.PIPELINE_SIZE).setOptimizeDataCopying(true).setMinOutBufferCapacity(EchoClient.SIZE << 1);
+        if (builder != null) {
+            config.addSSLEngineBuilder(builder);
+        }
+    }
+
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void exception(Throwable e) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean incident(SessionIncident incident, Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionStructureFactory getFactory() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

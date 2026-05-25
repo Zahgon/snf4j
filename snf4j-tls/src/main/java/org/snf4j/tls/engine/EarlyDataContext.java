@@ -29,62 +29,53 @@ import static org.snf4j.tls.engine.EarlyDataState.PROCESSED;
 import static org.snf4j.tls.engine.EarlyDataState.PROCESSING;
 import static org.snf4j.tls.engine.EarlyDataState.REJECTED;
 import static org.snf4j.tls.engine.EarlyDataState.REJECTING;
-
 import org.snf4j.tls.cipher.CipherSuite;
 
 public class EarlyDataContext implements IEarlyDataContext {
-	
-	private final CipherSuite cipherSuite;
 
-	private EarlyDataState state;
-	
-	private long sizeCountdown;
-		
-	public EarlyDataContext(CipherSuite cipherSuite, boolean rejecting, long maxSize) {
-		state = rejecting ? REJECTING : PROCESSING;
-		this.sizeCountdown = maxSize;
-		this.cipherSuite = cipherSuite;
-	}
+    private final CipherSuite cipherSuite;
 
-	public EarlyDataContext(CipherSuite cipherSuite, long maxSize) {
-		this(cipherSuite, false, maxSize);
-	}
-	
-	@Override
-	public EarlyDataState getState() {
-		return state;
-	}
-	
-	@Override
-	public void complete() {
-		if (state == PROCESSING) {
-			state = PROCESSED;
-		}
-		else if (state == REJECTING) {
-			state= REJECTED;
-		}
-	}
-	
-	@Override
-	public void rejecting() {
-		if (state == PROCESSING) {
-			state = REJECTING;
-		}
-	}
-	
-	@Override
-	public void incProcessedBytes(int amount) {
-		sizeCountdown -= amount;
-	}
-	
-	@Override
-	public boolean isSizeLimitExceeded() {
-		return sizeCountdown < 0;
-	}
+    private EarlyDataState state;
 
-	@Override
-	public CipherSuite getCipherSuite() {
-		return cipherSuite;
-	}
+    private long sizeCountdown;
 
+    public EarlyDataContext(CipherSuite cipherSuite, boolean rejecting, long maxSize) {
+        state = rejecting ? REJECTING : PROCESSING;
+        this.sizeCountdown = maxSize;
+        this.cipherSuite = cipherSuite;
+    }
+
+    public EarlyDataContext(CipherSuite cipherSuite, long maxSize) {
+        this(cipherSuite, false, maxSize);
+    }
+
+    @Override
+    public EarlyDataState getState() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void complete() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void rejecting() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void incProcessedBytes(int amount) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isSizeLimitExceeded() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public CipherSuite getCipherSuite() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -29,31 +29,22 @@ import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 
 public abstract class AbstractExtension implements IExtension {
-	
-	private final ExtensionType type;
-	
-	protected AbstractExtension(ExtensionType type) {
-		this.type = type;
-	}
-	
-	@Override
-	public ExtensionType getType() {
-		return type;
-	}
 
-	@Override
-	public void getBytes(ByteBuffer buffer) {
-		int len = getDataLength();
-		
-		if (buffer.remaining() >= len+4) {
-			buffer.putShort((short) getType().value());
-			buffer.putShort((short) len);
-			getData(buffer);
-			return;
-		}
-		throw new BufferOverflowException();
-	}
-	
-	protected abstract void getData(ByteBuffer buffer);
-	
+    private final ExtensionType type;
+
+    protected AbstractExtension(ExtensionType type) {
+        this.type = type;
+    }
+
+    @Override
+    public ExtensionType getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void getBytes(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    protected abstract void getData(ByteBuffer buffer);
 }

@@ -26,52 +26,48 @@
 package org.snf4j.core.codec.zip;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.codec.ICodec;
 
 /**
  * The base {@code class} for compressors and decompressors transforming an
  * array of bytes in the <a href="http://en.wikipedia.org/wiki/Zlib">zlib</a>
  * compression format into a {@link ByteBuffer}.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public class ZlibCodec implements ICodec<byte[],ByteBuffer> {
+public class ZlibCodec implements ICodec<byte[], ByteBuffer> {
 
-	/**
-	 * Modes determining how the
-	 * <a href="http://en.wikipedia.org/wiki/Zlib">zlib</a> compressors and
-	 * decompressors should work.
-	 */
-	public enum Mode {
-		
-		/**
-		 * The ZLIB mode as specified in
-		 * <a href="http://tools.ietf.org/html/rfc1950">RFC 1950</a>.
-		 */
-		ZLIB,
-		
-	    /**
-	     * Raw mode for DEFLATE stream only (no header and no footer).
-	     */ 		
-		RAW,
-		
-		/**
-		 * The mode ({@link Mode#ZLIB ZLIB} or {@link Mode#RAW RAW}) should be determined
-		 * automatically by decompressors. For compressors this mode always means
-		 * {@link Mode#ZLIB ZLIB}.
-		 */
-		AUTO
-	}
-	
-	@Override
-	public Class<byte[]> getInboundType() {
-		return byte[].class;
-	}
+    /**
+     * Modes determining how the
+     * <a href="http://en.wikipedia.org/wiki/Zlib">zlib</a> compressors and
+     * decompressors should work.
+     */
+    public enum Mode {
 
-	@Override
-	public Class<ByteBuffer> getOutboundType() {
-		return ByteBuffer.class;
-	}
+        /**
+         * The ZLIB mode as specified in
+         * <a href="http://tools.ietf.org/html/rfc1950">RFC 1950</a>.
+         */
+        ZLIB,
+        /**
+         * Raw mode for DEFLATE stream only (no header and no footer).
+         */
+        RAW,
+        /**
+         * The mode ({@link Mode#ZLIB ZLIB} or {@link Mode#RAW RAW}) should be determined
+         * automatically by decompressors. For compressors this mode always means
+         * {@link Mode#ZLIB ZLIB}.
+         */
+        AUTO
+    }
 
+    @Override
+    public Class<byte[]> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Class<ByteBuffer> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

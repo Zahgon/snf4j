@@ -27,34 +27,20 @@ package org.snf4j.tls.handshake;
 
 public class ServerHelloRandom {
 
-	private final static byte[] RANDOM = new byte[] {
-			(byte)0xCF,0x21,(byte)0xAD,0x74,(byte)0xE5,(byte)0x9A,0x61,0x11,
-			(byte)0xBE,0x1D,(byte)0x8C,0x02,0x1E,0x65,(byte)0xB8,(byte)0x91,
-			(byte)0xC2,(byte)0xA2,0x11,0x16,0x7A,(byte)0xBB,(byte)0x8C,0x5E,
-			0x07,(byte)0x9E,0x09,(byte)0xE2,(byte)0xC8,(byte)0xA8,0x33,
-			(byte)0x9C
-	};
-	
-	private ServerHelloRandom() {
-	}
-	
-	public static byte[] getHelloRetryRequestRandom() {
-		return RANDOM.clone();
-	}
+    private final static byte[] RANDOM = new byte[] { (byte) 0xCF, 0x21, (byte) 0xAD, 0x74, (byte) 0xE5, (byte) 0x9A, 0x61, 0x11, (byte) 0xBE, 0x1D, (byte) 0x8C, 0x02, 0x1E, 0x65, (byte) 0xB8, (byte) 0x91, (byte) 0xC2, (byte) 0xA2, 0x11, 0x16, 0x7A, (byte) 0xBB, (byte) 0x8C, 0x5E, 0x07, (byte) 0x9E, 0x09, (byte) 0xE2, (byte) 0xC8, (byte) 0xA8, 0x33, (byte) 0x9C };
 
-	public static boolean isHelloRetryRequest(byte[] random) {
-		if (random.length != 32 || random[0] != (byte)0xCF) {
-			return false;
-		}
-		for (int i=1; i<32; ++i) {
-			if (RANDOM[i] != random[i]) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public static boolean isHelloRetryRequest(IServerHello serverHello) {
-		return isHelloRetryRequest(serverHello.getRandom());
-	}
+    private ServerHelloRandom() {
+    }
+
+    public static byte[] getHelloRetryRequestRandom() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static boolean isHelloRetryRequest(byte[] random) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static boolean isHelloRetryRequest(IServerHello serverHello) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

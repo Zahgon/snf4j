@@ -32,64 +32,58 @@ import java.security.cert.X509Certificate;
 
 public class EdDSASignature implements ISignature {
 
-	public final static EdDSASignature ED25519 = new EdDSASignature("Ed25519");
+    public final static EdDSASignature ED25519 = new EdDSASignature("Ed25519");
 
-	public final static EdDSASignature ED448 = new EdDSASignature("Ed448");
-	
-	private final String algorithm;
+    public final static EdDSASignature ED448 = new EdDSASignature("Ed448");
 
-	private final static boolean IMPLEMENTED;
-	
-	static boolean implemented(String algorithm) {
-		try {
-			Signature.getInstance(algorithm);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-	
-	static {
-		IMPLEMENTED = implemented("Ed25519");
-	}
-	
-	public EdDSASignature(String algorithm) {
-		this.algorithm = algorithm;
-	}
-	
-	@Override
-	public boolean isImplemented() {
-		return IMPLEMENTED;
-	}
+    private final String algorithm;
 
-	@Override
-	public String algorithm() {
-		return algorithm;
-	}
-	
-	@Override
-	public String keyAlgorithm() {
-		return "EdDSA";
-	}
+    private final static boolean IMPLEMENTED;
 
-	@Override
-	public boolean matches(X509Certificate cert) {
-		return algorithm.equals(cert.getSigAlgName());
-	}
-		
-	@Override
-	public boolean matchesByKey(X509Certificate cert) {
-		return matches(cert);
-	}
-	
-	@Override
-	public int minKeySize() {
-		return -1;
-	}
-	
-	@Override
-	public Signature createSignature() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-		return Signature.getInstance(algorithm);
-	}
+    static boolean implemented(String algorithm) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    static {
+        IMPLEMENTED = implemented("Ed25519");
+    }
+
+    public EdDSASignature(String algorithm) {
+        this.algorithm = algorithm;
+    }
+
+    @Override
+    public boolean isImplemented() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String algorithm() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String keyAlgorithm() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean matches(X509Certificate cert) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean matchesByKey(X509Certificate cert) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int minKeySize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Signature createSignature() throws NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

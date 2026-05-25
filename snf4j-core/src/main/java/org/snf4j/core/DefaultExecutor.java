@@ -26,36 +26,34 @@
 package org.snf4j.core;
 
 import java.util.concurrent.Executor;
-
 import org.snf4j.core.factory.DefaultThreadFactory;
 
 /**
  * Default implementation of the {@link java.util.concurrent.Executor} interface that is
  * used by the API.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class DefaultExecutor implements Executor {
 
-	/**
-	 * A constant holding the default executor.
-	 */
-	public final static DefaultExecutor DEFAULT = new DefaultExecutor();
-	
-	private DefaultExecutor() {
-	}
+    /**
+     * A constant holding the default executor.
+     */
+    public final static DefaultExecutor DEFAULT = new DefaultExecutor();
 
-	/**
-	 * Executes the given command in the following way:
-	 * 
-	 * <pre>
-	 * DefaultThreadFactory.DEFAULT.newThread(command).start()
-	 * </pre>
-	 * @see DefaultThreadFactory
-	 */
-	@Override
-	public void execute(Runnable command) {
-		DefaultThreadFactory.DEFAULT.newThread(command).start();
-	}
+    private DefaultExecutor() {
+    }
 
+    /**
+     * Executes the given command in the following way:
+     *
+     * <pre>
+     * DefaultThreadFactory.DEFAULT.newThread(command).start()
+     * </pre>
+     * @see DefaultThreadFactory
+     */
+    @Override
+    public void execute(Runnable command) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

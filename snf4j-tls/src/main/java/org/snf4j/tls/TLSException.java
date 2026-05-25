@@ -26,40 +26,39 @@
 package org.snf4j.tls;
 
 import java.io.IOException;
-
 import org.snf4j.tls.alert.Alert;
 
 public class TLSException extends IOException {
 
-	private static final long serialVersionUID = 1L;
-	
-	private final Alert alert;
+    private static final long serialVersionUID = 1L;
 
-	public TLSException() {
-		alert = null;
-	}
-	
-	public TLSException(Throwable cause) {
-		super(cause);
-		this.alert = cause instanceof Alert ? (Alert)cause : null; 
-	}
+    private final Alert alert;
 
-	public TLSException(String message, Throwable cause) {
-		super(message, cause);
-		this.alert = cause instanceof Alert ? (Alert)cause : null; 
-	}
-	
-	public TLSException(Alert alert) {
-		super(alert);
-		this.alert = alert;
-	}
+    public TLSException() {
+        alert = null;
+    }
 
-	public TLSException(String message, Alert alert) {
-		super(message, alert);
-		this.alert = alert;
-	}
-	
-	public Alert getAlert() {
-		return alert;
-	}
+    public TLSException(Throwable cause) {
+        super(cause);
+        this.alert = cause instanceof Alert ? (Alert) cause : null;
+    }
+
+    public TLSException(String message, Throwable cause) {
+        super(message, cause);
+        this.alert = cause instanceof Alert ? (Alert) cause : null;
+    }
+
+    public TLSException(Alert alert) {
+        super(alert);
+        this.alert = alert;
+    }
+
+    public TLSException(String message, Alert alert) {
+        super(message, alert);
+        this.alert = alert;
+    }
+
+    public Alert getAlert() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -28,47 +28,36 @@ package org.snf4j.tls.cipher;
 import org.snf4j.tls.IntConstant;
 
 public class CipherSuite extends IntConstant {
-	
-	public static final CipherSuite TLS_AES_128_GCM_SHA256 = new CipherSuite("TLS_AES_128_GCM_SHA256",0x1301,CipherSuiteSpec.TLS_AES_128_GCM_SHA256);
-	public static final CipherSuite TLS_AES_256_GCM_SHA384 = new CipherSuite("TLS_AES_256_GCM_SHA384",0x1302,CipherSuiteSpec.TLS_AES_256_GCM_SHA384);
-	public static final CipherSuite TLS_CHACHA20_POLY1305_SHA256 = new CipherSuite("TLS_CHACHA20_POLY1305_SHA256",0x1303,CipherSuiteSpec.TLS_CHACHA20_POLY1305_SHA256);
-	public static final CipherSuite TLS_AES_128_CCM_SHA256 = new CipherSuite("TLS_AES_128_CCM_SHA256",0x1304,null);
-	public static final CipherSuite TLS_AES_128_CCM_8_SHA256 = new CipherSuite("TLS_AES_128_CCM_8_SHA256",0x1305,null);
-	
-	private final static CipherSuite[] KNOWN = new CipherSuite[] {
-			null, 
-			TLS_AES_128_GCM_SHA256, 
-			TLS_AES_256_GCM_SHA384, 
-			TLS_CHACHA20_POLY1305_SHA256, 
-			TLS_AES_128_CCM_SHA256, 
-			TLS_AES_128_CCM_8_SHA256,
-			null,null,null,null,null,null,null,null,null,null};
-	
-	private final ICipherSuiteSpec spec;
-	
-	protected CipherSuite(String name, int value, ICipherSuiteSpec spec) {
-		super(name, value);
-		this.spec = spec;
-	}
 
-	protected CipherSuite(int value) {
-		super(value);
-		spec = null;
-	}
+    public static final CipherSuite TLS_AES_128_GCM_SHA256 = new CipherSuite("TLS_AES_128_GCM_SHA256", 0x1301, CipherSuiteSpec.TLS_AES_128_GCM_SHA256);
 
-	public ICipherSuiteSpec spec() {
-		return spec;
-	}
-	
-	public static CipherSuite of(int value) {
-		if ((value & 0xfff0) == 0x1300) {
-			CipherSuite known = KNOWN[value & 0xf];
-			
-			if (known != null) {
-				return known;
-			}
-		}
-		return new CipherSuite(value);
-	}
-	
+    public static final CipherSuite TLS_AES_256_GCM_SHA384 = new CipherSuite("TLS_AES_256_GCM_SHA384", 0x1302, CipherSuiteSpec.TLS_AES_256_GCM_SHA384);
+
+    public static final CipherSuite TLS_CHACHA20_POLY1305_SHA256 = new CipherSuite("TLS_CHACHA20_POLY1305_SHA256", 0x1303, CipherSuiteSpec.TLS_CHACHA20_POLY1305_SHA256);
+
+    public static final CipherSuite TLS_AES_128_CCM_SHA256 = new CipherSuite("TLS_AES_128_CCM_SHA256", 0x1304, null);
+
+    public static final CipherSuite TLS_AES_128_CCM_8_SHA256 = new CipherSuite("TLS_AES_128_CCM_8_SHA256", 0x1305, null);
+
+    private final static CipherSuite[] KNOWN = new CipherSuite[] { null, TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384, TLS_CHACHA20_POLY1305_SHA256, TLS_AES_128_CCM_SHA256, TLS_AES_128_CCM_8_SHA256, null, null, null, null, null, null, null, null, null, null };
+
+    private final ICipherSuiteSpec spec;
+
+    protected CipherSuite(String name, int value, ICipherSuiteSpec spec) {
+        super(name, value);
+        this.spec = spec;
+    }
+
+    protected CipherSuite(int value) {
+        super(value);
+        spec = null;
+    }
+
+    public ICipherSuiteSpec spec() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static CipherSuite of(int value) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

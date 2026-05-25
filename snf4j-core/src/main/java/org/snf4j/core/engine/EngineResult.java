@@ -27,74 +27,71 @@ package org.snf4j.core.engine;
 
 /**
  * The default implementation of the {@link IEngineResult} interface.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class EngineResult implements IEngineResult {
 
-	private final Status status;
-	
-	private final HandshakeStatus handshakeStatus;
-	
-	private final int bytesConsumed;
+    private final Status status;
 
-	private final int bytesProduced;
-	
-	/**
-	 * Initializes a new instance of this class.
-	 * 
-	 * @param status
-	 *            the return value of the operation
-	 * @param handshakeStatus
-	 *            the current handshaking status
-	 * @param bytesConsumed
-	 *            the number of bytes consumed from the input buffer
-	 * @param bytesProduced
-	 *            the number of bytes placed into the output buffer
-	 * @throws IllegalArgumentException
-	 *             if the <code>status</code> or <code>handshakeStatus</code>
-	 *             arguments are null, or if <code>bytesConsumed</code> or <code>bytesProduced</code> is
-	 *             negative.
-	 */
-	public EngineResult(Status status, HandshakeStatus handshakeStatus,
-            int bytesConsumed,
-            int bytesProduced) {
-		if (status == null) {
-			throw new IllegalArgumentException("status is null");
-		}
-		if (handshakeStatus == null) {
-			throw new IllegalArgumentException("handshakeStatus is null");
-		}
-		if (bytesConsumed < 0) {
-			throw new IllegalArgumentException("bytesConsumed is negative");
-		}
-		if (bytesProduced < 0) {
-			throw new IllegalArgumentException("bytesProduced is negative");
-		}
-		this.status = status;
-		this.handshakeStatus = handshakeStatus;
-		this.bytesConsumed = bytesConsumed;
-		this.bytesProduced = bytesProduced;
-	}
-	
-	@Override
-	public final int bytesConsumed() {
-		return bytesConsumed;
-	}
+    private final HandshakeStatus handshakeStatus;
 
-	@Override
-	public final int bytesProduced() {
-		return bytesProduced;
-	}
+    private final int bytesConsumed;
 
-	@Override
-	public final Status getStatus() {
-		return status;
-	}
+    private final int bytesProduced;
 
-	@Override
-	public final HandshakeStatus getHandshakeStatus() {
-		return handshakeStatus;
-	}
+    /**
+     * Initializes a new instance of this class.
+     *
+     * @param status
+     *            the return value of the operation
+     * @param handshakeStatus
+     *            the current handshaking status
+     * @param bytesConsumed
+     *            the number of bytes consumed from the input buffer
+     * @param bytesProduced
+     *            the number of bytes placed into the output buffer
+     * @throws IllegalArgumentException
+     *             if the <code>status</code> or <code>handshakeStatus</code>
+     *             arguments are null, or if <code>bytesConsumed</code> or <code>bytesProduced</code> is
+     *             negative.
+     */
+    public EngineResult(Status status, HandshakeStatus handshakeStatus, int bytesConsumed, int bytesProduced) {
+        if (status == null) {
+            throw new IllegalArgumentException("status is null");
+        }
+        if (handshakeStatus == null) {
+            throw new IllegalArgumentException("handshakeStatus is null");
+        }
+        if (bytesConsumed < 0) {
+            throw new IllegalArgumentException("bytesConsumed is negative");
+        }
+        if (bytesProduced < 0) {
+            throw new IllegalArgumentException("bytesProduced is negative");
+        }
+        this.status = status;
+        this.handshakeStatus = handshakeStatus;
+        this.bytesConsumed = bytesConsumed;
+        this.bytesProduced = bytesProduced;
+    }
 
+    @Override
+    public final int bytesConsumed() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final int bytesProduced() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final Status getStatus() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final HandshakeStatus getHandshakeStatus() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

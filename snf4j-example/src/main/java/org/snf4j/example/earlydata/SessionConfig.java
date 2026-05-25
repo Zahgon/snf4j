@@ -31,40 +31,33 @@ import org.snf4j.core.codec.ICodecPipeline;
 import org.snf4j.core.session.DefaultSessionConfig;
 
 public class SessionConfig extends DefaultSessionConfig {
-	
-	public final static String DECODER = "DECODER";
 
-	public final static String ENCODER = "ENCODER";
-	
-	@Override
-	public ICodecExecutor createCodecExecutor() {
-		return createCodecExecutor(0, false);
-	}
+    public final static String DECODER = "DECODER";
 
-	static int shift(String protocol) {
-		return Integer.parseInt(protocol.substring(1));
-	}
+    public final static String ENCODER = "ENCODER";
 
-	static ICodecExecutor createCodecExecutor(String protocol, boolean onlyEncoders) {
-		return createCodecExecutor(shift(protocol), onlyEncoders);
-	}
-	
-	static ICodecExecutor createCodecExecutor(int shift, boolean onlyEncoders) {
-		DefaultCodecExecutor executor = new DefaultCodecExecutor();
-		
-		if (!onlyEncoders) {
-			executor.getPipeline().add(DECODER, new Decoder(shift));
-		}
-		executor.getPipeline().add(ENCODER, new Encoder(shift));
-		return executor;
-	}
-	
-	static void updateCodecPipeline(ICodecPipeline pipeline, String protocol) {
-		updateCodecPipeline(pipeline, shift(protocol));
-	}
-	
-	static void updateCodecPipeline(ICodecPipeline pipeline, int shift) {
-		pipeline.replace(DECODER, DECODER, new Decoder(shift));
-		pipeline.replace(ENCODER, ENCODER, new Encoder(shift));
-	}
+    @Override
+    public ICodecExecutor createCodecExecutor() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static int shift(String protocol) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static ICodecExecutor createCodecExecutor(String protocol, boolean onlyEncoders) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static ICodecExecutor createCodecExecutor(int shift, boolean onlyEncoders) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static void updateCodecPipeline(ICodecPipeline pipeline, String protocol) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static void updateCodecPipeline(ICodecPipeline pipeline, int shift) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -26,7 +26,6 @@
 package org.snf4j.tls.engine;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.IllegalParameterAlert;
 import org.snf4j.tls.alert.UnexpectedMessageAlert;
@@ -39,30 +38,13 @@ import org.snf4j.tls.record.RecordType;
 
 public class KeyUpdateConsumer implements IHandshakeConsumer {
 
-	@Override
-	public HandshakeType getType() {
-		return HandshakeType.KEY_UPDATE;
-	}
+    @Override
+    public HandshakeType getType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
-		if (!state.getState().isConnected()) {
-			throw new UnexpectedMessageAlert("Unexpected KeyUpdate");
-		}
-		
-		IKeyUpdate ku = (IKeyUpdate) handshake;
-		
-		state.getListener().onKeyUpdate(state, ku.getRequest());
-		if (!ku.getRequest().isKnown()) {
-			throw new IllegalParameterAlert("Unknown KeyUpdateRequest");
-		}
-		
-		state.getListener().onNewReceivingTraficKey(state, RecordType.NEXT_GEN);
-		if (ku.getRequest() == KeyUpdateRequest.UPDATE_REQUESTED) {
-			KeyUpdate keyUpdate = new KeyUpdate(false);
-			state.getListener().onHandshakeCreate(state, keyUpdate, false);
-			state.produce(new ProducedHandshake(keyUpdate, RecordType.APPLICATION, RecordType.NEXT_GEN));
-		}
-	}
-
+    @Override
+    public void consume(EngineState state, IHandshake handshake, ByteBuffer[] data, boolean isHRR) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

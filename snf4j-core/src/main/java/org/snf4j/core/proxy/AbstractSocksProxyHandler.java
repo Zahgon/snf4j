@@ -30,7 +30,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.snf4j.core.factory.ISessionStructureFactory;
 import org.snf4j.core.handler.SessionEvent;
 import org.snf4j.core.session.ISessionConfig;
@@ -39,157 +38,109 @@ import org.snf4j.core.session.IStreamSession;
 /**
  * Base implementation for handlers processing client connections via SOCKS
  * proxy protocols.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 abstract public class AbstractSocksProxyHandler extends AbstractProxyHandler {
-	
-	private final InetSocketAddress address;
-	
-	private final List<ISocksReply> replies = new ArrayList<ISocksReply>(2);
-	
-	private List<ISocksReplyListener> replyListeners;
-	
-	volatile AbstractSocksState state;
 
-	/**
-	 * Constructs a SOCKS proxy connection handler with the specified destination
-	 * address, the default (10 seconds) connection timeout, configuration and factory.
-	 * <p>
-	 * NOTE: The connection timeout will have no effect if the associated session
-	 * does not support a session timer.
-	 * 
-	 * @param address           the destination address
-	 * @param config            the session configuration object, or {@code null} to
-	 *                          use the default configuration
-	 * @param factory           the factory that will be used to configure the
-	 *                          internal structure of the associated session, or
-	 *                          {@code null} to use the default factory
-	 * @throws IllegalArgumentException if the address is null
-	 */
-	protected AbstractSocksProxyHandler(InetSocketAddress address, ISessionConfig config, ISessionStructureFactory factory) {
-		super(config, factory);
-		checkNull(address, "address");
-		this.address = address;
-	}
-	
-	/**
-	 * Returns the destination address.
-	 * 
-	 * @return the destination address
-	 */
-	public InetSocketAddress getAddress() {
-		return address;
-	}
+    private final InetSocketAddress address;
 
-	/**
-	 * Returns replies sent from the SOCKS server.
-	 * 
-	 * @return the replies sent from the SOCKS server
-	 */
-	public ISocksReply[] getReplies() {
-		ISocksReply[] replyArray;
-		
-		synchronized (replies) {
-			replyArray = replies.toArray(new ISocksReply[replies.size()]);
-		}
-		return replyArray;
-	}
-	
-	/**
-	 * Adds a listener for replies sent from the SOCKS server
-	 * 
-	 * @param listener a listener for replies
-	 */
-	public void addReplyListener(ISocksReplyListener listener) {
-		synchronized (replies) {
-			if (replyListeners == null) {
-				replyListeners = new LinkedList<ISocksReplyListener>();
-			}
-			replyListeners.add(listener);
-		}
-	}
-	
-	int reply(ISocksReply reply) {
-		ISocksReplyListener[] listeners;
-		int replyIndex;
-		
-		synchronized (replies) {
-			replies.add(reply);
-			replyIndex = replies.size();
-			if (replyListeners == null) {
-				return replyIndex;
-			}
-			listeners = replyListeners.toArray(new ISocksReplyListener[replyListeners.size()]);
-		}	
-		for (ISocksReplyListener listener: listeners) {
-			listener.replyReceived(reply, replyIndex);
-		}
-		return replyIndex;
-	}
-	
-	void flipAndWrite(ByteBuffer buf) {
-		IStreamSession session = getSession(); 
-		
-		buf.flip();
-		session.writenf(buf);
-		if (!session.isDataCopyingOptimized()) {
-			session.release(buf);
-		}
-	}
+    private final List<ISocksReply> replies = new ArrayList<ISocksReply>(2);
 
-	@Override
-	public int available(ByteBuffer data, boolean flipped) {
-		return state.available(data, flipped);
-	}
-	
-	@Override
-	public int available(byte[] data, int off, int len) {
-		return state.available(data, off, len);
-	}
-	
-	@Override
-	public void read(ByteBuffer data) {
-		byte[] bytes = new byte[data.remaining()];
-		
-		data.get(bytes);
-		getSession().release(data);
-		read(bytes);
-	}
+    private List<ISocksReplyListener> replyListeners;
 
-	@Override
-	public void read(byte[] data) {
-		AbstractSocksState nextState = state.read(data);
-		
-		if (nextState != state) {
-			if (nextState == null) {
-				state = new SocksDoneState(this);
-				getSession().getPipeline().markDone();
-				getSession().close();
-			}
-			else {
-				state = nextState;
-				state.handleReady();
-			}
-		}
-	}
+    volatile AbstractSocksState state;
 
-	@Override
-	protected void handleReady() throws Exception {
-		state.handleReady();
-	}	
-	
-	@Override
-	public void read(Object msg) {
-	}
+    /**
+     * Constructs a SOCKS proxy connection handler with the specified destination
+     * address, the default (10 seconds) connection timeout, configuration and factory.
+     * <p>
+     * NOTE: The connection timeout will have no effect if the associated session
+     * does not support a session timer.
+     *
+     * @param address           the destination address
+     * @param config            the session configuration object, or {@code null} to
+     *                          use the default configuration
+     * @param factory           the factory that will be used to configure the
+     *                          internal structure of the associated session, or
+     *                          {@code null} to use the default factory
+     * @throws IllegalArgumentException if the address is null
+     */
+    protected AbstractSocksProxyHandler(InetSocketAddress address, ISessionConfig config, ISessionStructureFactory factory) {
+        super(config, factory);
+        checkNull(address, "address");
+        this.address = address;
+    }
 
-	@Override
-	public void event(SessionEvent event) {
-		if (event == SessionEvent.OPENED) {
-			getSession().getPipeline().markUndone(new ProxyConnectionException("Incomplete " + protocol() + " proxy protocol"));
-		}
-		super.event(event);
-	}
+    /**
+     * Returns the destination address.
+     *
+     * @return the destination address
+     */
+    public InetSocketAddress getAddress() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	abstract String protocol();
+    /**
+     * Returns replies sent from the SOCKS server.
+     *
+     * @return the replies sent from the SOCKS server
+     */
+    public ISocksReply[] getReplies() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Adds a listener for replies sent from the SOCKS server
+     *
+     * @param listener a listener for replies
+     */
+    public void addReplyListener(ISocksReplyListener listener) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    int reply(ISocksReply reply) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void flipAndWrite(ByteBuffer buf) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int available(ByteBuffer data, boolean flipped) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int available(byte[] data, int off, int len) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(ByteBuffer data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void handleReady() throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    abstract String protocol();
 }

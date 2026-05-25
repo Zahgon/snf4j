@@ -28,37 +28,35 @@ package org.snf4j.core.proxy;
 /**
  * An {@code enum} that defines types of addresses in the replies from the
  * SOCKS server.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public enum SocksAddressType {
 
-	/** A version-4 IP address */
-	IPV4((byte)1),
-	
-	/** A fully-qualified domain name */
-	DOMAIN((byte)3),
+    /**
+     * A version-4 IP address
+     */
+    IPV4((byte) 1),
+    /**
+     * A fully-qualified domain name
+     */
+    DOMAIN((byte) 3),
+    /**
+     * A version-6 IP address
+     */
+    IPV6((byte) 4);
 
-	/** A version-6 IP address */
-	IPV6((byte)4);
+    private final byte code;
 
-	private final byte code;
-	
-	SocksAddressType(byte code) {
-		this.code = code;
-	}
-	
-	byte code() {
-		return code;
-	}
+    SocksAddressType(byte code) {
+        this.code = code;
+    }
 
-	static SocksAddressType valueOf(byte code) {
-		for (SocksAddressType value: values()) {
-			if (value.code == code) {
-				return value;
-			}
-		}
-		return null;
-	}
-	
+    byte code() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static SocksAddressType valueOf(byte code) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

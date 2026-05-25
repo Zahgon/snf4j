@@ -26,27 +26,24 @@
 package org.snf4j.tls.engine;
 
 import java.security.PrivateKey;
-
 import org.snf4j.tls.extension.NamedGroup;
 
 public class KeySharePrivateKey {
-	
-	private final NamedGroup group;
-	
-	private final PrivateKey key;
 
-	public KeySharePrivateKey(NamedGroup group, PrivateKey key) {
-		this.group = group;
-		this.key = key;
-	}
+    private final NamedGroup group;
 
-	public NamedGroup getGroup() {
-		return group;
-	}
+    private final PrivateKey key;
 
-	public PrivateKey getKey() {
-		return key;
-	}
-	
-	
+    public KeySharePrivateKey(NamedGroup group, PrivateKey key) {
+        this.group = group;
+        this.key = key;
+    }
+
+    public NamedGroup getGroup() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public PrivateKey getKey() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.DecodeErrorAlert;
@@ -38,76 +37,57 @@ import org.snf4j.tls.handshake.HandshakeType;
 
 public class ExtensionDecoder implements IExtensionDecoder {
 
-	public final static IExtensionDecoder DEFAULT;
-	
-	static {
-		ExtensionDecoder decoder = new ExtensionDecoder();
-		
-		decoder.addParser(ServerNameExtension.getParser());
-		decoder.addParser(SupportedVersionsExtension.getParser());
-		decoder.addParser(SupportedGroupsExtension.getParser());
-		decoder.addParser(KeyShareExtension.getParser());
-		decoder.addParser(SignatureAlgorithmsExtension.getParser());
-		decoder.addParser(SignatureAlgorithmsCertExtension.getParser());
-		decoder.addParser(CookieExtension.getParser());
-		decoder.addParser(PreSharedKeyExtension.getParser());
-		decoder.addParser(PskKeyExchangeModesExtension.getParser());
-		decoder.addParser(EarlyDataExtension.getParser());
-		decoder.addParser(ALPNExtension.getParser());
-		DEFAULT = decoder;
-	}
-	
-	private final Map<ExtensionType,IExtensionParser> parsers = new HashMap<ExtensionType,IExtensionParser>();
-	
-	protected ExtensionType getType(int type) {
-		return ExtensionType.of(type);
-	}
-	
-	public void addParser(IExtensionParser parser) {
-		parsers.put(parser.getType(), parser);
-	}
-	
-	public IExtensionParser removeParser(ExtensionType type) {
-		return parsers.remove(type);
-	}
-	
-	public boolean hasParser(ExtensionType type) {
-		return parsers.containsKey(type);
-	}
-	
-	public List<IExtensionParser> getParsers() {
-		return new ArrayList<IExtensionParser>(parsers.values());
-	}
-	
-	public void clearParsers() {
-		parsers.clear();
-	}
-	
-	@Override
-	public IExtension decode(HandshakeType handshakeType, ByteBuffer[] srcs, int remaining) throws Alert {
-		return decode(handshakeType, ByteBufferArray.wrap(srcs), remaining);
-	}
-	
-	@Override
-	public IExtension decode(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
-		if (remaining >= 4) {
-			ExtensionType type = getType(srcs.getUnsignedShort());
-			int len = srcs.getUnsignedShort();
+    public final static IExtensionDecoder DEFAULT;
 
-			remaining -= 4;
-			if (len <= remaining) {
-				IExtensionParser parser = parsers.get(type);
+    static {
+        ExtensionDecoder decoder = new ExtensionDecoder();
+        decoder.addParser(ServerNameExtension.getParser());
+        decoder.addParser(SupportedVersionsExtension.getParser());
+        decoder.addParser(SupportedGroupsExtension.getParser());
+        decoder.addParser(KeyShareExtension.getParser());
+        decoder.addParser(SignatureAlgorithmsExtension.getParser());
+        decoder.addParser(SignatureAlgorithmsCertExtension.getParser());
+        decoder.addParser(CookieExtension.getParser());
+        decoder.addParser(PreSharedKeyExtension.getParser());
+        decoder.addParser(PskKeyExchangeModesExtension.getParser());
+        decoder.addParser(EarlyDataExtension.getParser());
+        decoder.addParser(ALPNExtension.getParser());
+        DEFAULT = decoder;
+    }
 
-				if (parser != null) {
-					return parser.parse(handshakeType, srcs, len);
-				}
-				byte[] data = new byte[len];
-				srcs.get(data);
-				return new UnknownExtension(type, data);
-			}
-			throw new DecodeErrorAlert("Extension '" + type.name() + "' parsing failure: Data underflow");
-		}
-		throw new DecodeErrorAlert("Extension parsing failure: Data underflow");
-	}
+    private final Map<ExtensionType, IExtensionParser> parsers = new HashMap<ExtensionType, IExtensionParser>();
 
+    protected ExtensionType getType(int type) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void addParser(IExtensionParser parser) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public IExtensionParser removeParser(ExtensionType type) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public boolean hasParser(ExtensionType type) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public List<IExtensionParser> getParsers() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void clearParsers() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IExtension decode(HandshakeType handshakeType, ByteBuffer[] srcs, int remaining) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IExtension decode(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

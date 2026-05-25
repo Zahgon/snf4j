@@ -30,56 +30,52 @@ import java.util.Random;
 import java.util.zip.CRC32;
 
 class Packet {
-	
-	static final int CRC_SIZE = 8;
-	
-	static final Random RANDOM = new Random(System.currentTimeMillis());
-	
-	final private long sequence;
-	
-	final private byte[] bytes;
-	
-	Packet(long sequence, int size) {
-		this.sequence = sequence;
-		bytes = new byte[size];
-		RANDOM.nextBytes(bytes);
-		
-		ByteBuffer b = ByteBuffer.wrap(bytes);
-		CRC32 crc = new CRC32();
-		
-		b.clear();
-		b.putInt(bytes.length);
-		b.putLong(sequence);
-		crc.update(bytes, 0, bytes.length - CRC_SIZE);
-		b.position(bytes.length - CRC_SIZE);
-		b.putLong(crc.getValue());
-	}
-	
-	Packet(byte[] bytes) {
-		this.bytes = bytes;
-		
-		ByteBuffer b = ByteBuffer.wrap(bytes);
-		CRC32 crc = new CRC32();
-		long crcValue;
-		
-		int size = b.getInt();
-		if (size != bytes.length) {
-			throw new IllegalArgumentException();
-		}
-		sequence = b.getLong();
-		b.position(bytes.length - CRC_SIZE);
-		crcValue = b.getLong();
-		crc.update(bytes, 0, bytes.length - CRC_SIZE);
-		if (crcValue != crc.getValue()) {
-			throw new IllegalArgumentException();
-		}
-	}
-	
-	long getSequence() {
-		return sequence;
-	}
-	
-	byte[] toBytes() {
-		return bytes;
-	}
+
+    static final int CRC_SIZE = 8;
+
+    static final Random RANDOM = new Random(System.currentTimeMillis());
+
+    final private long sequence;
+
+    final private byte[] bytes;
+
+    Packet(long sequence, int size) {
+        this.sequence = sequence;
+        bytes = new byte[size];
+        RANDOM.nextBytes(bytes);
+        ByteBuffer b = ByteBuffer.wrap(bytes);
+        CRC32 crc = new CRC32();
+        b.clear();
+        b.putInt(bytes.length);
+        b.putLong(sequence);
+        crc.update(bytes, 0, bytes.length - CRC_SIZE);
+        b.position(bytes.length - CRC_SIZE);
+        b.putLong(crc.getValue());
+    }
+
+    Packet(byte[] bytes) {
+        this.bytes = bytes;
+        ByteBuffer b = ByteBuffer.wrap(bytes);
+        CRC32 crc = new CRC32();
+        long crcValue;
+        int size = b.getInt();
+        if (size != bytes.length) {
+            throw new IllegalArgumentException();
+        }
+        sequence = b.getLong();
+        b.position(bytes.length - CRC_SIZE);
+        crcValue = b.getLong();
+        crc.update(bytes, 0, bytes.length - CRC_SIZE);
+        if (crcValue != crc.getValue()) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    long getSequence() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    byte[] toBytes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

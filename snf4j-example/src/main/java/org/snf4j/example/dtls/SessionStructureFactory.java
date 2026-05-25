@@ -32,23 +32,23 @@ import org.snf4j.core.timer.DefaultTimer;
 import org.snf4j.core.timer.ITimer;
 
 public class SessionStructureFactory extends DefaultSessionStructureFactory {
-	
-	private static final ITimer TIMER = new DefaultTimer(true);
-	
-	private static final IByteBufferAllocator ALLOCATOR = new CachingAllocator(false);
-	
-	static final SessionStructureFactory INSTANCE = new SessionStructureFactory();
-	
-	private SessionStructureFactory() {
-	}
-	
-	@Override
-	public ITimer getTimer() {
-		return TIMER;
-	}
 
-	@Override
-	public IByteBufferAllocator getAllocator() {
-		return ALLOCATOR;
-	}	
+    private static final ITimer TIMER = new DefaultTimer(true);
+
+    private static final IByteBufferAllocator ALLOCATOR = new CachingAllocator(false);
+
+    static final SessionStructureFactory INSTANCE = new SessionStructureFactory();
+
+    private SessionStructureFactory() {
+    }
+
+    @Override
+    public ITimer getTimer() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IByteBufferAllocator getAllocator() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

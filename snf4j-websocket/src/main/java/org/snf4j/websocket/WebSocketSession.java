@@ -33,102 +33,90 @@ import org.snf4j.websocket.handshake.IHandshaker;
 
 /**
  * The Web Socket session implementing the WebSocket Protocol described in RFC 6455.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class WebSocketSession extends StreamSession implements IWebSocketSession {
-	
-	private final TaskFuture<Void> readyFuture;
-	
-	/**
-	 * Constructs a named Web Socket session associated with a Web Socket handler.
-	 * 
-	 * @param name       the name for this session, or <code>null</code> if the
-	 *                   handler's name should be used for this session's name
-	 * @param handler    the Web Socket handler that should be associated with this
-	 *                   session
-	 * @param clientMode <code>true</code> if the session should start its
-	 *                   handshaking in "client" mode
-	 */
-	public WebSocketSession(String name, IWebSocketHandler handler, boolean clientMode) {
-		super(name, new WebSocketSessionHandler(handler, clientMode));
-		readyFuture = new TaskFuture<Void>(this);
-	}
-	
-	/**
-	 * Constructs a Web Socket session associated with a Web Socket handler.
-	 * 
-	 * @param handler    the Web Socket handler that should be associated with this
-	 *                   session
-	 * @param clientMode <code>true</code> if the session should start its
-	 *                   handshaking in "client" mode
-	 */
-	public WebSocketSession(IWebSocketHandler handler, boolean clientMode) {
-		super(new WebSocketSessionHandler(handler, clientMode));
-		readyFuture = new TaskFuture<Void>(this);
-	}
-	
-	/**
-	 * Gets the future that can be use to wait for the completion of the Web Socket
-	 * handshake phase.
-	 * 
-	 * @return the future associated with the Web Socket handshake phase of this
-	 *         session
-	 */
-	@Override
-	public IFuture<Void> getReadyFuture() {
-		return readyFuture;
-	}
 
-	@Override
-	public IWebSocketHandler getWebSocketHandler() {
-		return ((WebSocketSessionHandler)getHandler()).getHandler();
-	}
+    private final TaskFuture<Void> readyFuture;
 
-	@Override
-	public IHandshaker getHandshaker() {
-		return ((WebSocketSessionHandler)getHandler()).getHandshaker();
-	}
-	
-	@Override
-	public void close(int status) {
-		executenf(new CloseTask(this, status, null));
-	}
+    /**
+     * Constructs a named Web Socket session associated with a Web Socket handler.
+     *
+     * @param name       the name for this session, or <code>null</code> if the
+     *                   handler's name should be used for this session's name
+     * @param handler    the Web Socket handler that should be associated with this
+     *                   session
+     * @param clientMode <code>true</code> if the session should start its
+     *                   handshaking in "client" mode
+     */
+    public WebSocketSession(String name, IWebSocketHandler handler, boolean clientMode) {
+        super(name, new WebSocketSessionHandler(handler, clientMode));
+        readyFuture = new TaskFuture<Void>(this);
+    }
 
-	@Override
-	public void close(int status, String reason) {
-		executenf(new CloseTask(this, status, reason));
-	}	
-	
-	static class CloseTask implements Runnable {
+    /**
+     * Constructs a Web Socket session associated with a Web Socket handler.
+     *
+     * @param handler    the Web Socket handler that should be associated with this
+     *                   session
+     * @param clientMode <code>true</code> if the session should start its
+     *                   handshaking in "client" mode
+     */
+    public WebSocketSession(IWebSocketHandler handler, boolean clientMode) {
+        super(new WebSocketSessionHandler(handler, clientMode));
+        readyFuture = new TaskFuture<Void>(this);
+    }
 
-		private final StreamSession session;
-		
-		private final int status;
-		
-		private final String reason;
-		
-		CloseTask(StreamSession session, int status, String reason) {
-			this.session = session;
-			this.status = status;
-			this.reason = reason;
-		}
+    /**
+     * Gets the future that can be use to wait for the completion of the Web Socket
+     * handshake phase.
+     *
+     * @return the future associated with the Web Socket handshake phase of this
+     *         session
+     */
+    @Override
+    public IFuture<Void> getReadyFuture() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		@Override
-		public void run() {
-			CloseFrame frame;
-			
-			if (status == -1) {
-				frame = new CloseFrame();
-			}
-			else if (reason == null) {
-				frame = new CloseFrame(status);
-			}
-			else {
-				frame = new CloseFrame(status, reason);
-			}
-			session.writenf(frame);
-			session.close();
-		}
-	}
+    @Override
+    public IWebSocketHandler getWebSocketHandler() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IHandshaker getHandshaker() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void close(int status) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void close(int status, String reason) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static class CloseTask implements Runnable {
+
+        private final StreamSession session;
+
+        private final int status;
+
+        private final String reason;
+
+        CloseTask(StreamSession session, int status, String reason) {
+            this.session = session;
+            this.status = status;
+            this.reason = reason;
+        }
+
+        @Override
+        public void run() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    }
 }

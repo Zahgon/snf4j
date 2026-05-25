@@ -28,20 +28,20 @@ package org.snf4j.core.logger.impl;
 import org.snf4j.core.logger.ILoggerFactory;
 
 public class LoggerFactoryBinder {
-	
-	private final static LoggerFactoryBinder INSTANCE = new LoggerFactoryBinder();
-	
-	public final static LoggerFactoryBinder getInstance() {
-		return INSTANCE;
-	}
-	
-	private final ILoggerFactory factory;
-	
-	private LoggerFactoryBinder() {
-		factory = new Slf4jLoggerFactory();
-	}
-	
-	public ILoggerFactory getFactory() {
-		return factory;
-	}
+
+    private final static LoggerFactoryBinder INSTANCE = new LoggerFactoryBinder();
+
+    public final static LoggerFactoryBinder getInstance() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private final ILoggerFactory factory;
+
+    private LoggerFactoryBinder() {
+        factory = new Slf4jLoggerFactory();
+    }
+
+    public ILoggerFactory getFactory() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -30,44 +30,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 class PayloadAggregator {
-	
-	private final List<byte[]> fragments;
-	
-	private int length;
-	
-	PayloadAggregator(byte[] data) {
-		fragments = new LinkedList<byte[]>();
-		fragments.add(data);
-		length = data.length;
-	}
 
-	void add(byte[] data) {
-		fragments.add(data);
-		length += data.length;
-	}
-	
-	int getLength() {
-		return length;
-	}
-	
-	List<byte[]> getFragments() {
-		return fragments;
-	}
-	
-	byte[] get() {
-		if (fragments.size() == 1) {
-			return fragments.get(0);
-		}
-		byte[] data = new byte[length];
-		int off = 0;
-		for (Iterator<byte[]> i = fragments.iterator(); i.hasNext();) {
-			byte[] b = i.next();
-			
-			System.arraycopy(b, 0, data, off, b.length);
-			off += b.length;
-		}
-		fragments.clear();
-		fragments.add(data);
-		return data;
-	}
+    private final List<byte[]> fragments;
+
+    private int length;
+
+    PayloadAggregator(byte[] data) {
+        fragments = new LinkedList<byte[]>();
+        fragments.add(data);
+        length = data.length;
+    }
+
+    void add(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    int getLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    List<byte[]> getFragments() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    byte[] get() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -29,8 +29,8 @@ import org.snf4j.core.Constants;
 import org.snf4j.core.logger.impl.LoggerFactoryBinder;
 
 /**
- * Utility class used by the API for producing an actual logger based on the 
- * runtime configuration. By default it produces the {@link NopLogger} 
+ * Utility class used by the API for producing an actual logger based on the
+ * runtime configuration. By default it produces the {@link NopLogger}
  * implementation but it can be changed by the user in the following ways:
  * <p>
  * a) Adding the system property <code>org.snf4j.LoggerFactory</code> which
@@ -44,70 +44,42 @@ import org.snf4j.core.logger.impl.LoggerFactoryBinder;
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class LoggerFactory {
-	
-	final static String BINDER_CLASS = "org.snf4j.core.logger.impl.LoggerFactoryBinder";
-	
-	private static volatile ILoggerFactory factory;
-	
-	private LoggerFactory() {
-	}
-	
-	/**
-	 * Returns an instance of the {@link ILogger} interface that is appropriate for
-	 * the specified class.
-	 * 
-	 * @param clazz
-	 *            the class for the logger.
-	 * @return an instance of the logger
-	 */
-	public static ILogger getLogger(Class<?> clazz) {
-		return getFactory().getLogger(clazz.getName());
-	}
-	
-	private static ILoggerFactory getFactory() {
-		if (factory == null) {
-			synchronized (LoggerFactory.class) {
-				if (factory == null) {
-					factory = load();
-				}
-			}
-		}
-		return factory;
-	}
-	
-	static ILoggerFactory load() {
-		String className = System.getProperty(Constants.LOGGER_FACTORY_SYSTEM_PROERTY);
-		ILoggerFactory logger = null;
-		
-		if (className != null) {
-			try {
-				logger = (ILoggerFactory) Class.forName(className).newInstance();
-			} catch (Throwable e) {
-				report("Unable to load external logger factory: ", e);
-			}
-		}
-		
-		if (logger == null) {
-			try {
-				Class.forName(BINDER_CLASS);
-				logger = LoggerFactoryBinder.getInstance().getFactory();
-			} catch (ClassNotFoundException e) {
-				//Ignore
-			} catch (Throwable e) {
-				report("Unable to load logger factory binder: ", e);
-			}
-		}
-		
-		return logger != null ? logger : new NopLoggerFactory();
-	}
 
-	static void report(String msg, Throwable e) {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(Constants.SHORT_NAME);
-		sb.append(": ");
-		sb.append(msg);
-		sb.append(e);
-		System.err.println(sb.toString());
-	}
+    final static String BINDER_CLASS = "org.snf4j.core.logger.impl.LoggerFactoryBinder";
+
+    private static volatile ILoggerFactory factory;
+
+    private LoggerFactory() {
+    }
+
+    /**
+     * Returns an instance of the {@link ILogger} interface that is appropriate for
+     * the specified class.
+     *
+     * @param clazz
+     *            the class for the logger.
+     * @return an instance of the logger
+     */
+    public static ILogger getLogger(Class<?> clazz) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private static ILoggerFactory getFactory() {
+        if (factory == null) {
+            synchronized (LoggerFactory.class) {
+                if (factory == null) {
+                    factory = load();
+                }
+            }
+        }
+        return factory;
+    }
+
+    static ILoggerFactory load() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static void report(String msg, Throwable e) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

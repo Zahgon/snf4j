@@ -29,88 +29,33 @@ import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.net.ssl.X509KeyManager;
-
 import org.snf4j.tls.Args;
 import org.snf4j.tls.IntConstant;
 import org.snf4j.tls.extension.SignatureScheme;
 
 public class X509KeyManagerCertificateSelector implements ICertificateSelector {
 
-	private final X509KeyManager manager;
-	
-	private final String alias;
-		
-	public X509KeyManagerCertificateSelector(X509KeyManager manager, String alias) {
-		Args.checkNull(manager, "manager");
-		this.manager = manager;
-		this.alias = alias;
-	}
+    private final X509KeyManager manager;
 
-	public X509KeyManagerCertificateSelector(X509KeyManager keyManager) {
-		this(keyManager, null);
-	}
-	
-	SelectedCertificates selectCertificates(CertificateCriteria criteria, String alias) throws CertificateSelectorException, Exception {
-		X509Certificate[] certs = manager.getCertificateChain(alias);
-		
-		if (certs == null) {
-			throw new CertificateSelectorException("No certificate chain found for " + alias + " alias");
-		}
+    private final String alias;
 
-		SignatureScheme algorithm = criteria.matchByKey(certs[0]);
+    public X509KeyManagerCertificateSelector(X509KeyManager manager, String alias) {
+        Args.checkNull(manager, "manager");
+        this.manager = manager;
+        this.alias = alias;
+    }
 
-		if (algorithm == null) {
-			throw new CertificateSelectorException("Key algorithm not in both local and offered signature schemes");
-		}
-		
-		if (!criteria.allMatch(certs)) {
-			throw new CertificateSelectorException("Chain has certificate(s) with sign algorithm not in offered signature schemes");
-		}
-		
-		PrivateKey key = manager.getPrivateKey(alias);
-		if (key == null) {
-			throw new CertificateSelectorException("No key found for " + alias + " alias");
-		}
-						
-		return new SelectedCertificates(algorithm, key, certs);
-	}
-	
-	@Override
-	public SelectedCertificates selectCertificates(CertificateCriteria criteria) throws Exception {
-		if (alias != null) {
-			return selectCertificates(criteria, alias);
-		}
-		
-		SignatureScheme[] schemes = criteria.getSchemes();
-		Set<String> processed = new HashSet<String>();
-		
-		for (SignatureScheme scheme: criteria.getLocalSchemes()) {
-			if (IntConstant.find(schemes, scheme) != null) {
-				String keyType = scheme.spec().getSignature().keyAlgorithm();
-				
-				if (!processed.contains(keyType)) {
-					processed.add(keyType);
-					
-					String[] aliases = criteria.isServer() 
-						? manager.getServerAliases(keyType, null)
-						: manager.getClientAliases(keyType, null);
-					
-					if (aliases != null) {
-						for (String alias: aliases) {
-							try {
-								return selectCertificates(criteria, alias);
-							}
-							catch (CertificateSelectorException e) {
-								//Ignore
-							}
-						}
-					}
-				}
-			}
-		}
-		throw new CertificateSelectorException("No certificate chain found");
-	}
+    public X509KeyManagerCertificateSelector(X509KeyManager keyManager) {
+        this(keyManager, null);
+    }
 
+    SelectedCertificates selectCertificates(CertificateCriteria criteria, String alias) throws CertificateSelectorException, Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SelectedCertificates selectCertificates(CertificateCriteria criteria) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

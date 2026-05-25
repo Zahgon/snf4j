@@ -29,72 +29,71 @@ package org.snf4j.websocket.frame;
  * Web Socket continuation frame containing continuation text or binary data.
  * This frame is used for fragmented messages where the contents of a messages
  * is contained in more than one frame.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class ContinuationFrame extends DataFrame {
-	
-	/**
-	 * Constructs a Web Socket continuation frame containing binary data.
-	 * 
-	 * @param finalFragment determines if the created frame is the final fragment in
-	 *                      a message
-	 * @param rsvBits       reserved bits for extensions or future versions
-	 * @param payload       payload data
-	 */
-	public ContinuationFrame(boolean finalFragment, int rsvBits, byte[] payload) {
-		super(Opcode.CONTINUATION, finalFragment, rsvBits, payload);
-	}
 
-	/**
-	 * Constructs a Web Socket continuation frame containing binary data. The frame
-	 * is created as the final fragment in a message and with all reserved bits
-	 * cleared.
-	 * 
-	 * @param payload payload data
-	 */
-	public ContinuationFrame(byte[] payload) {
-		super(Opcode.CONTINUATION, payload);
-	}
+    /**
+     * Constructs a Web Socket continuation frame containing binary data.
+     *
+     * @param finalFragment determines if the created frame is the final fragment in
+     *                      a message
+     * @param rsvBits       reserved bits for extensions or future versions
+     * @param payload       payload data
+     */
+    public ContinuationFrame(boolean finalFragment, int rsvBits, byte[] payload) {
+        super(Opcode.CONTINUATION, finalFragment, rsvBits, payload);
+    }
 
-	/**
-	 * Constructs an empty Web Socket continuation frame. The frame is created as
-	 * the final fragment in a message and with all reserved bits cleared.
-	 */
-	public ContinuationFrame() {
-		this(EMPTY_PAYLOAD);
-	}
-	
-	/**
-	 * Constructs a Web Socket continuation frame containing text data.
-	 * 
-	 * @param finalFragment determines if the created frame is the final fragment in
-	 *                      a message
-	 * @param rsvBits       reserved bits for extensions or future versions
-	 * @param text       	text data
-	 */
-	public ContinuationFrame(boolean finalFragment, int rsvBits, String text) {
-		this(finalFragment, rsvBits, TextFrame.toBytes(text));
-	}
-	
-	/**
-	 * Constructs a Web Socket continuation frame containing text data. The frame is
-	 * created as the final fragment in a message and with all reserved bits
-	 * cleared.
-	 * 
-	 * @param text text data
-	 */
-	public ContinuationFrame(String text) {
-		this(TextFrame.toBytes(text));
-	}
-	
-	/**
-	 * Returns the text data in this frame.
-	 * 
-	 * @return the text data
-	 */
-	public String getText() {
-		return TextFrame.fromBytes(payload);
-	}
-	
+    /**
+     * Constructs a Web Socket continuation frame containing binary data. The frame
+     * is created as the final fragment in a message and with all reserved bits
+     * cleared.
+     *
+     * @param payload payload data
+     */
+    public ContinuationFrame(byte[] payload) {
+        super(Opcode.CONTINUATION, payload);
+    }
+
+    /**
+     * Constructs an empty Web Socket continuation frame. The frame is created as
+     * the final fragment in a message and with all reserved bits cleared.
+     */
+    public ContinuationFrame() {
+        this(EMPTY_PAYLOAD);
+    }
+
+    /**
+     * Constructs a Web Socket continuation frame containing text data.
+     *
+     * @param finalFragment determines if the created frame is the final fragment in
+     *                      a message
+     * @param rsvBits       reserved bits for extensions or future versions
+     * @param text       	text data
+     */
+    public ContinuationFrame(boolean finalFragment, int rsvBits, String text) {
+        this(finalFragment, rsvBits, TextFrame.toBytes(text));
+    }
+
+    /**
+     * Constructs a Web Socket continuation frame containing text data. The frame is
+     * created as the final fragment in a message and with all reserved bits
+     * cleared.
+     *
+     * @param text text data
+     */
+    public ContinuationFrame(String text) {
+        this(TextFrame.toBytes(text));
+    }
+
+    /**
+     * Returns the text data in this frame.
+     *
+     * @return the text data
+     */
+    public String getText() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

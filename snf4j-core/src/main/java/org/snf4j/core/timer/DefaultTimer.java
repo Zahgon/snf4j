@@ -31,119 +31,112 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Default timer implementation that is backed by the {@link Timer}.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class DefaultTimer implements ITimer {
-	
-	private static final AtomicInteger nextId = new AtomicInteger(0);
-	
-	private volatile Timer timer;
-	
-	private final String name;
-	
-	private final boolean isDaemon;
 
-	/**
-	 * Constructs a new default timer. The associated thread does not run as a
-	 * daemon.
-	 */
-	public DefaultTimer() {
-		this(null, false);
-	}
-	
-	/**
-	 * Constructs a new default timer whose associated thread may be specified
-	 * to run as a daemon.
-	 * 
-	 * @param isDaemon
-	 *            {@code true} if the associated thread should run as a daemon.
-	 */
-	public DefaultTimer(boolean isDaemon) {
-		this(null, isDaemon);
-	}
+    private static final AtomicInteger nextId = new AtomicInteger(0);
 
-	/**
-	 * Constructs a new default timer whose associated thread has the specified
-	 * name. The associated thread does not run as a daemon.
-	 * 
-	 * @param name
-	 *            the name of the associated thread
-	 */
-	public DefaultTimer(String name) {
-		this(name, false);
-	}
-	
-	/**
-	 * Constructs a new default timer whose associated thread has the specified
-	 * name, and may be specified to run as a daemon.
-	 * 
-	 * @param name
-	 *            the name of the associated thread
-	 * @param isDaemon
-	 *            {@code true} if the associated thread should run as a daemon.
-	 */
-	public DefaultTimer(String name, boolean isDaemon) {
-		this.name = name == null ? "default-timer-" + nextId.incrementAndGet() : name;
-		this.isDaemon = isDaemon;
-	}
-	
-	/**
-	 * Terminates this timer, discarding any currently scheduled tasks. 
-	 */
-	public void cancel() {
-		if (timer != null) {
-			timer.cancel();
-		}
-	}
-	
-	private Timer getTimer() {
-		if (timer == null) {
-			synchronized (this) {
-				if (timer == null) {
-					timer = new Timer(name, isDaemon);
-				}
-			}
-		}
-		return timer;
-	}
-	
-	@Override
-	public ITimerTask schedule(Runnable task, long delay) {
-		Task t = new Task(task);
-		
-		getTimer().schedule(t, delay);
-		return t;
-	}
-	
-	/**
-	 * {@inheritDoc} The task is repeated by using fixed-delay execution what
-	 * means that each execution is scheduled relative to the actual execution
-	 * time of the previous execution.
-	 */
-	@Override
-	public ITimerTask schedule(Runnable task, long delay, long period) {
-		Task t = new Task(task);
-		
-		getTimer().schedule(t, delay, period);
-		return t;
-	}
-	
-	private static class Task extends TimerTask implements ITimerTask {
-		Runnable task;
-		
-		Task(Runnable task) {
-			this.task = task;
-		}
+    private volatile Timer timer;
 
-		@Override
-		public void run() {
-			task.run();
-		}
+    private final String name;
 
-		@Override
-		public void cancelTask() {
-			cancel();
-		}
-	}
+    private final boolean isDaemon;
+
+    /**
+     * Constructs a new default timer. The associated thread does not run as a
+     * daemon.
+     */
+    public DefaultTimer() {
+        this(null, false);
+    }
+
+    /**
+     * Constructs a new default timer whose associated thread may be specified
+     * to run as a daemon.
+     *
+     * @param isDaemon
+     *            {@code true} if the associated thread should run as a daemon.
+     */
+    public DefaultTimer(boolean isDaemon) {
+        this(null, isDaemon);
+    }
+
+    /**
+     * Constructs a new default timer whose associated thread has the specified
+     * name. The associated thread does not run as a daemon.
+     *
+     * @param name
+     *            the name of the associated thread
+     */
+    public DefaultTimer(String name) {
+        this(name, false);
+    }
+
+    /**
+     * Constructs a new default timer whose associated thread has the specified
+     * name, and may be specified to run as a daemon.
+     *
+     * @param name
+     *            the name of the associated thread
+     * @param isDaemon
+     *            {@code true} if the associated thread should run as a daemon.
+     */
+    public DefaultTimer(String name, boolean isDaemon) {
+        this.name = name == null ? "default-timer-" + nextId.incrementAndGet() : name;
+        this.isDaemon = isDaemon;
+    }
+
+    /**
+     * Terminates this timer, discarding any currently scheduled tasks.
+     */
+    public void cancel() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private Timer getTimer() {
+        if (timer == null) {
+            synchronized (this) {
+                if (timer == null) {
+                    timer = new Timer(name, isDaemon);
+                }
+            }
+        }
+        return timer;
+    }
+
+    @Override
+    public ITimerTask schedule(Runnable task, long delay) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc} The task is repeated by using fixed-delay execution what
+     * means that each execution is scheduled relative to the actual execution
+     * time of the previous execution.
+     */
+    @Override
+    public ITimerTask schedule(Runnable task, long delay, long period) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private static class Task extends TimerTask implements ITimerTask {
+
+        Runnable task;
+
+        Task(Runnable task) {
+            this.task = task;
+        }
+
+        @Override
+        public void run() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        @Override
+        public void cancelTask() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    }
 }

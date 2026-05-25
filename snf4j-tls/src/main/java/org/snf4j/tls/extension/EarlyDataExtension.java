@@ -26,7 +26,6 @@
 package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -34,60 +33,50 @@ import org.snf4j.tls.handshake.HandshakeType;
 
 public class EarlyDataExtension extends KnownExtension implements IEarlyDataExtension {
 
-	private final static ExtensionType TYPE = ExtensionType.EARLY_DATA;
-	
-	private final long maxSize;
-	
-	private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
+    private final static ExtensionType TYPE = ExtensionType.EARLY_DATA;
 
-		@Override
-		public ExtensionType getType() {
-			return TYPE;
-		}
+    private final long maxSize;
 
-		@Override
-		public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
-			if (handshakeType.equals(HandshakeType.NEW_SESSION_TICKET)) {
-				if (remaining == 4) {
-					return new EarlyDataExtension(srcs.getUnsignedInt());
-				}
-			}
-			else if (remaining == 0) {
-				return new EarlyDataExtension();
-			}
-			throw decodeError("Inconsistent length");
-		}
-	};
-	
-	public EarlyDataExtension() {
-		super(TYPE);
-		maxSize = -1;
-	}
+    private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
 
-	public EarlyDataExtension(long maxSize) {
-		super(TYPE);
-		Args.checkRange(maxSize, 0L, 0xffffffffL, "maxSize");
-		this.maxSize = maxSize;
-	}
+        @Override
+        public ExtensionType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	@Override
-	public int getDataLength() {
-		return maxSize == -1 ? 0 : 4;
-	}
+        @Override
+        public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	@Override
-	public long getMaxSize() {
-		return maxSize;
-	}
+    public EarlyDataExtension() {
+        super(TYPE);
+        maxSize = -1;
+    }
 
-	public static IExtensionParser getParser() {
-		return PARSER;
-	}
-	
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		if (maxSize != -1) {
-			buffer.putInt((int) maxSize);
-		}
-	}
+    public EarlyDataExtension(long maxSize) {
+        super(TYPE);
+        Args.checkRange(maxSize, 0L, 0xffffffffL, "maxSize");
+        this.maxSize = maxSize;
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public long getMaxSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IExtensionParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

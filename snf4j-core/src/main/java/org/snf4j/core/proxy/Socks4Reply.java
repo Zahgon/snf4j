@@ -27,46 +27,45 @@ package org.snf4j.core.proxy;
 
 class Socks4Reply implements ISocksReply {
 
-	private final int status;
-	
-	private final String address;
-	
-	private final int port;
-	
-	Socks4Reply(int status, String address, int port) {
-		this.status = status;
-		this.address = address;
-		this.port = port;
-	}
-	
-	@Override
-	public boolean isSuccessful() {
-		return status == Socks4Status.SUCCESS.code();
-	}
+    private final int status;
 
-	@Override
-	public int getStatus() {
-		return status;
-	}
+    private final String address;
 
-	@Override
-	public String getStatusDescription() {
-		return Socks4Status.valueOf(status).description();
-	}
+    private final int port;
 
-	@Override
-	public int getPort() {
-		return port;
-	}
+    Socks4Reply(int status, String address, int port) {
+        this.status = status;
+        this.address = address;
+        this.port = port;
+    }
 
-	@Override
-	public String getAddress() {
-		return address;
-	}
+    @Override
+    public boolean isSuccessful() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public SocksAddressType getAddressType() {
-		return SocksAddressType.IPV4;
-	}
+    @Override
+    public int getStatus() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public String getStatusDescription() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getPort() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String getAddress() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SocksAddressType getAddressType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

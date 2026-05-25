@@ -28,68 +28,50 @@ package org.snf4j.tls.crypto;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.security.auth.DestroyFailedException;
-
 import org.snf4j.tls.Args;
 
 public class AeadEncrypt implements IAeadEncrypt {
-	
-	private final SecretKey key;
-	
-	private final Cipher cipher;
-	
-	private final IAead aead;
-	
-	public AeadEncrypt(SecretKey key, IAead aead) throws NoSuchAlgorithmException, NoSuchPaddingException {
-		Args.checkNull(key, "key");
-		Args.checkNull(aead, "aead");
-		this.key = key;
-		this.aead = aead;
-		cipher = aead.createCipher();
-	}
-	
-	@Override
-	public IAead getAead() {
-		return aead;
-	}
 
-	@Override
-	public byte[] encrypt(byte[] nonce, byte[] additionalData, byte[] plaintext) throws GeneralSecurityException {
-		aead.initEncrypt(cipher, key, nonce);
-		cipher.updateAAD(additionalData);
-		return cipher.doFinal(plaintext);
-	}
-	
-	@Override
-	public void encrypt(byte[] nonce, byte[] additionalData, ByteBuffer plaintext, ByteBuffer ciphertext) throws GeneralSecurityException {
-		aead.initEncrypt(cipher, key, nonce);
-		cipher.updateAAD(additionalData);
-		cipher.doFinal(plaintext,ciphertext);
-	}
+    private final SecretKey key;
 
-	@Override
-	public void encrypt(byte[] nonce, byte[] additionalData, ByteBuffer[] plaintext, ByteBuffer ciphertext)	throws GeneralSecurityException {
-		aead.initEncrypt(cipher, key, nonce);
-		cipher.updateAAD(additionalData);
-		
-		int i=0; 
-		for (; i<plaintext.length-1; ++i) {
-			cipher.update(plaintext[i], ciphertext);
-		}
-		cipher.doFinal(plaintext[i], ciphertext);
-	}
+    private final Cipher cipher;
 
-	@Override
-	public void erase() {
-		try {
-			key.destroy();
-		} catch (DestroyFailedException e) {
-			//Ignore
-		}
-	}
-	
+    private final IAead aead;
+
+    public AeadEncrypt(SecretKey key, IAead aead) throws NoSuchAlgorithmException, NoSuchPaddingException {
+        Args.checkNull(key, "key");
+        Args.checkNull(aead, "aead");
+        this.key = key;
+        this.aead = aead;
+        cipher = aead.createCipher();
+    }
+
+    @Override
+    public IAead getAead() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] encrypt(byte[] nonce, byte[] additionalData, byte[] plaintext) throws GeneralSecurityException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void encrypt(byte[] nonce, byte[] additionalData, ByteBuffer plaintext, ByteBuffer ciphertext) throws GeneralSecurityException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void encrypt(byte[] nonce, byte[] additionalData, ByteBuffer[] plaintext, ByteBuffer ciphertext) throws GeneralSecurityException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void erase() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -26,25 +26,19 @@
 package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.alert.Alert;
 import org.snf4j.tls.alert.DecodeErrorAlert;
 import org.snf4j.tls.extension.IExtensionDecoder;
 
 public abstract class AbstractHandshakeParser implements IHandshakeParser {
-	
-	
-	protected DecodeErrorAlert decodeError(String message) {
-		return new DecodeErrorAlert("Handshake message '" 
-				+ getType().name() 
-				+ "' parsing failure: " 
-				+ message);
-	}
-	
-	@Override
-	public IHandshake parse(ByteBuffer[] srcs, int remaining, IExtensionDecoder decoder) throws Alert  {
-		return parse(ByteBufferArray.wrap(srcs), remaining, decoder);
-	}
 
+    protected DecodeErrorAlert decodeError(String message) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IHandshake parse(ByteBuffer[] srcs, int remaining, IExtensionDecoder decoder) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

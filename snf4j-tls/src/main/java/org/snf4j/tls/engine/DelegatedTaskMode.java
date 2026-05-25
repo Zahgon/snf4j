@@ -26,24 +26,23 @@
 package org.snf4j.tls.engine;
 
 public enum DelegatedTaskMode {
-	NONE(false, false),
-	CERTIFICATES(false, true),
-	ALL(true, true);
-	
-	private final boolean all;
-	
-	private final boolean certificates;
-	
-	DelegatedTaskMode(boolean all, boolean certificates) {
-		this.all = all;
-		this.certificates = certificates;
-	}
-	
-	boolean all() {
-		return all;
-	}
-	
-	boolean certificates() {
-		return certificates;
-	}
+
+    NONE(false, false), CERTIFICATES(false, true), ALL(true, true);
+
+    private final boolean all;
+
+    private final boolean certificates;
+
+    DelegatedTaskMode(boolean all, boolean certificates) {
+        this.all = all;
+        this.certificates = certificates;
+    }
+
+    boolean all() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    boolean certificates() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

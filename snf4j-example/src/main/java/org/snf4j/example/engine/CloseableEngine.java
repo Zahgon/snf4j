@@ -26,49 +26,29 @@
 package org.snf4j.example.engine;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.engine.IEngineResult;
 import org.snf4j.core.handler.SessionIncident;
 import org.snf4j.core.handler.SessionIncidentException;
 
 public class CloseableEngine extends BasicEngine {
 
-	private boolean closeReceived;
-	
-	public CloseableEngine(int offset) {
-		super(offset);
-	}
-	
-	@Override
-	public void closeInbound() throws SessionIncidentException {
-		super.closeInbound();
-		if (!closeReceived) {
-			throw new SessionIncidentException("Closed procedure not followed by peer" , 
-					SessionIncident.CLOSED_WITHOUT_CLOSE_MESSAGE);
-		}
-	}
-	
-	
-	protected boolean isClosingUnwrap(byte[] data) {
-		boolean isClosing = Packet.isClose(data);
-		
-		if (isClosing) {
-			closeReceived = true;
-		}
-		
-		return isClosing;
-	}
-	
-	@Override
-	protected IEngineResult closeWrap(ByteBuffer dst) {
-		int prevRemaining = dst.remaining();
-		
-		if (Packet.calculateMaxData(prevRemaining) < Packet.getCloseData().length) {
-			return Result.BUFFER_OVERFLOW_NEED_WRAP;
-		}
-		
-		dst.put(Packet.encode(offset, Packet.getCloseData()));
-		return Result.closed(prevRemaining - dst.remaining());
-	}
-	
+    private boolean closeReceived;
+
+    public CloseableEngine(int offset) {
+        super(offset);
+    }
+
+    @Override
+    public void closeInbound() throws SessionIncidentException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    protected boolean isClosingUnwrap(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected IEngineResult closeWrap(ByteBuffer dst) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

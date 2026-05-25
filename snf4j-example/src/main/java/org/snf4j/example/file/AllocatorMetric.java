@@ -26,21 +26,18 @@
 package org.snf4j.example.file;
 
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.snf4j.core.allocator.DefaultAllocatorMetric;
 
 public class AllocatorMetric extends DefaultAllocatorMetric {
 
-	private final AtomicLong allocatedSize = new AtomicLong();
-	
-	@Override
-	public void allocated(int capacity) {
-		allocatedSize.addAndGet(capacity);
-		super.allocated(capacity);
-	}
+    private final AtomicLong allocatedSize = new AtomicLong();
 
-	public long getAllocatedSize() {
-		return allocatedSize.get();
-	}
-	
+    @Override
+    public void allocated(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public long getAllocatedSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

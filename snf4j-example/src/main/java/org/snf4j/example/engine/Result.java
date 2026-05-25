@@ -31,38 +31,37 @@ import org.snf4j.core.engine.Status;
 
 public class Result {
 
-	static final EngineResult BUFFER_OVERFLOW = new EngineResult(Status.BUFFER_OVERFLOW, HandshakeStatus.NOT_HANDSHAKING, 0, 0);   
-	
-	static final EngineResult BUFFER_OVERFLOW_NEED_WRAP = new EngineResult(Status.BUFFER_OVERFLOW, HandshakeStatus.NEED_WRAP, 0, 0);   
+    static final EngineResult BUFFER_OVERFLOW = new EngineResult(Status.BUFFER_OVERFLOW, HandshakeStatus.NOT_HANDSHAKING, 0, 0);
 
-	static final EngineResult BUFFER_UNDERFLOW = new EngineResult(Status.BUFFER_UNDERFLOW, HandshakeStatus.NOT_HANDSHAKING, 0, 0);   
+    static final EngineResult BUFFER_OVERFLOW_NEED_WRAP = new EngineResult(Status.BUFFER_OVERFLOW, HandshakeStatus.NEED_WRAP, 0, 0);
 
-	static final EngineResult BUFFER_UNDERFLOW_NEED_UNWRAP = new EngineResult(Status.BUFFER_UNDERFLOW, HandshakeStatus.NEED_UNWRAP, 0, 0);   
+    static final EngineResult BUFFER_UNDERFLOW = new EngineResult(Status.BUFFER_UNDERFLOW, HandshakeStatus.NOT_HANDSHAKING, 0, 0);
 
-	static final EngineResult FINISHED = new EngineResult(Status.OK, HandshakeStatus.FINISHED, 0, 0);   
+    static final EngineResult BUFFER_UNDERFLOW_NEED_UNWRAP = new EngineResult(Status.BUFFER_UNDERFLOW, HandshakeStatus.NEED_UNWRAP, 0, 0);
 
-	static final EngineResult CLOSED = new EngineResult(Status.CLOSED, HandshakeStatus.NOT_HANDSHAKING, 0, 0);   
+    static final EngineResult FINISHED = new EngineResult(Status.OK, HandshakeStatus.FINISHED, 0, 0);
 
-	static final EngineResult CLOSED_NEED_WRAP = new EngineResult(Status.CLOSED, HandshakeStatus.NEED_WRAP, 0, 0);   
+    static final EngineResult CLOSED = new EngineResult(Status.CLOSED, HandshakeStatus.NOT_HANDSHAKING, 0, 0);
 
-	
-	static EngineResult closedNeedWrap(int bytesConsumed) {
-		return new EngineResult(Status.CLOSED, HandshakeStatus.NEED_WRAP, bytesConsumed, 0);
-	}
+    static final EngineResult CLOSED_NEED_WRAP = new EngineResult(Status.CLOSED, HandshakeStatus.NEED_WRAP, 0, 0);
 
-	static EngineResult closed(int bytesProduced) {
-		return new EngineResult(Status.CLOSED, HandshakeStatus.NOT_HANDSHAKING, 0, bytesProduced);
-	}
+    static EngineResult closedNeedWrap(int bytesConsumed) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	static EngineResult needUnwrap(int bytesProduced) {
-		return new EngineResult(Status.OK, HandshakeStatus.NEED_UNWRAP, 0, bytesProduced);
-	}
+    static EngineResult closed(int bytesProduced) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	static EngineResult needWrap(int bytesConsumed) {
-		return new EngineResult(Status.OK, HandshakeStatus.NEED_WRAP, bytesConsumed, 0);
-	}
+    static EngineResult needUnwrap(int bytesProduced) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	static EngineResult finished(int bytesConsumed, int bytesProduced) {
-		return new EngineResult(Status.OK, HandshakeStatus.FINISHED, bytesConsumed, bytesProduced);
-	}
+    static EngineResult needWrap(int bytesConsumed) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static EngineResult finished(int bytesConsumed, int bytesProduced) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

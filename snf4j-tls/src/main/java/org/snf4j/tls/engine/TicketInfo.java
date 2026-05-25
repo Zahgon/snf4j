@@ -29,28 +29,27 @@ import org.snf4j.tls.Args;
 
 public class TicketInfo {
 
-	public final static TicketInfo NO_MAX_EARLY_DATA_SIZE = new TicketInfo();
+    public final static TicketInfo NO_MAX_EARLY_DATA_SIZE = new TicketInfo();
 
-	private final long maxEarlyDataSize;
+    private final long maxEarlyDataSize;
 
-	public TicketInfo() {
-		this.maxEarlyDataSize = -1;
-	}
+    public TicketInfo() {
+        this.maxEarlyDataSize = -1;
+    }
 
-	public TicketInfo(long maxEarlyDataSize) {
-		Args.checkRange(maxEarlyDataSize, 0L, 0xffffffffL, "maxEarlyDataSize");
-		this.maxEarlyDataSize = maxEarlyDataSize;
-	}
+    public TicketInfo(long maxEarlyDataSize) {
+        Args.checkRange(maxEarlyDataSize, 0L, 0xffffffffL, "maxEarlyDataSize");
+        this.maxEarlyDataSize = maxEarlyDataSize;
+    }
 
-	/**
-	 * Gets the maximum size of the early data that can be sent when using a ticket
-	 * created from this ticket info. For creating tickets not supporting the early
-	 * data this method should return {@code -1}.
-	 * 
-	 * @return the maximum early data size or {@code -1}
-	 */
-	public long getMaxEarlyDataSize() {
-		return maxEarlyDataSize;
-	}
-
+    /**
+     * Gets the maximum size of the early data that can be sent when using a ticket
+     * created from this ticket info. For creating tickets not supporting the early
+     * data this method should return {@code -1}.
+     *
+     * @return the maximum early data size or {@code -1}
+     */
+    public long getMaxEarlyDataSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

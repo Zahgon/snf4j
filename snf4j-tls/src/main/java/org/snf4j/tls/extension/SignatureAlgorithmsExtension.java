@@ -26,7 +26,6 @@
 package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -34,81 +33,61 @@ import org.snf4j.tls.handshake.HandshakeType;
 
 public class SignatureAlgorithmsExtension extends KnownExtension implements ISignatureAlgorithmsExtension {
 
-	private final static ExtensionType TYPE = ExtensionType.SIGNATURE_ALGORITHMS;
+    private final static ExtensionType TYPE = ExtensionType.SIGNATURE_ALGORITHMS;
 
-	private final SignatureScheme[] schemes;
-	
-	private final static AbstractExtensionParser PARSER = new Parser(TYPE);
-	
-	static class Parser extends AbstractExtensionParser {
-		
-		private final ExtensionType type;
-		
-		Parser(ExtensionType type) {
-			this.type = type;
-		}
-		
-		@Override
-		public ExtensionType getType() {
-			return type;
-		}
+    private final SignatureScheme[] schemes;
 
-		protected IExtension create(SignatureScheme[] schemes) {
-			return new SignatureAlgorithmsExtension(schemes);
-		}
-		
-		@Override
-		public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
-			if (remaining >= 4) {
-				int len = srcs.getUnsignedShort();
-				
-				if ((len & 1) != 0 || len == 0) {
-					throw decodeError("Incorrect length");
-				}
-				remaining -= 2;
-				if (len == remaining) {
-					SignatureScheme[] schemes = new SignatureScheme[len/2];
-					
-					for (int i=0; i<schemes.length; ++i) {
-						schemes[i] = SignatureScheme.of(srcs.getUnsignedShort());
-					}
-					return create(schemes);
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}
-		
-	}
-	
-	SignatureAlgorithmsExtension(ExtensionType type, SignatureScheme... schemes) {
-		super(type);
-		Args.checkMin(schemes, 1, "schemes");
-		this.schemes = schemes;
-	}
+    private final static AbstractExtensionParser PARSER = new Parser(TYPE);
 
-	public SignatureAlgorithmsExtension(SignatureScheme... schemes) {
-		this(TYPE, schemes);
-	}
+    static class Parser extends AbstractExtensionParser {
 
-	public static IExtensionParser getParser() {
-		return PARSER;
-	}
+        private final ExtensionType type;
 
-	@Override
-	public SignatureScheme[] getSchemes() {
-		return schemes;
-	}
-	
-	@Override
-	public int getDataLength() {
-		return 2 + schemes.length*2;
-	}
+        Parser(ExtensionType type) {
+            this.type = type;
+        }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.putShort((short) (schemes.length*2));
-		for (SignatureScheme scheme: schemes) {
-			buffer.putShort((short)scheme.value());
-		}
-	}
+        @Override
+        public ExtensionType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        protected IExtension create(SignatureScheme[] schemes) {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        @Override
+        public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    }
+
+    SignatureAlgorithmsExtension(ExtensionType type, SignatureScheme... schemes) {
+        super(type);
+        Args.checkMin(schemes, 1, "schemes");
+        this.schemes = schemes;
+    }
+
+    public SignatureAlgorithmsExtension(SignatureScheme... schemes) {
+        this(TYPE, schemes);
+    }
+
+    public static IExtensionParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SignatureScheme[] getSchemes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -27,7 +27,6 @@ package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -39,148 +38,63 @@ import org.snf4j.tls.extension.IExtensionDecoder;
 
 public class ClientHello extends AbstractHello implements IClientHello {
 
-	private final static HandshakeType TYPE = HandshakeType.CLIENT_HELLO;
+    private final static HandshakeType TYPE = HandshakeType.CLIENT_HELLO;
 
-	private final CipherSuite[] cipherSuites;
-	
-	private final byte[] legacyCompressionMethods;
+    private final CipherSuite[] cipherSuites;
 
-	private final List<IExtension> extensions;
-	
-	private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
+    private final byte[] legacyCompressionMethods;
 
-		@Override
-		public HandshakeType getType() {
-			return TYPE;
-		}
+    private final List<IExtension> extensions;
 
-		@Override
-		public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
-			if (remaining > COMMON_PART_MIN_LENGTH) {
-				int legacyVersion = srcs.getUnsignedShort();
-				byte[] random = new byte[RANDOM_LENGTH]; 
-				int len;
-				
-				srcs.get(random);
-				len = srcs.getUnsigned();
-				remaining -= COMMON_PART_MIN_LENGTH;
-				if (len <= SESSION_ID_MAX_LENGTH) {
-					if (remaining >= len) {
-						byte[] legacySessionId = new byte[len];
+    private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
 
-						if (len > 0) {
-							srcs.get(legacySessionId);
-							remaining -= len;
-						}
-						if (remaining >= 4) {
-							len = srcs.getUnsignedShort();
-							remaining -= 2;
-							if ((len & 1) == 0) {
-								if (remaining >= len) {
-									remaining -= len;
-									len /= 2;
-									CipherSuite[] cipherSuites = new CipherSuite[len];
-									int i = 0;
-									
-									while (len > 0) {
-										cipherSuites[i++] = CipherSuite.of(srcs.getUnsignedShort());
-										--len;
-									}
-									if (remaining >= 2) {
-										len = srcs.getUnsigned();
-										--remaining;
-										if (remaining >= len) {
-											byte[] legacyCompressionMethods = new byte[len];
+        @Override
+        public HandshakeType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-											srcs.get(legacyCompressionMethods);
-											remaining -= len;
-											if (remaining >= 2) {
-												ExtensionsParser parser = new ExtensionsParser(0, 0xffff, decoder);
+        @Override
+        public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-												parser.parse(TYPE, srcs, remaining);
-												if (parser.isComplete() && remaining == parser.getConsumedBytes()) {
-													return new ClientHello(
-															legacyVersion,
-															random,
-															legacySessionId,
-															cipherSuites,
-															legacyCompressionMethods,
-															parser.getExtensions()
-															);
-												}
-											}
-										}
-									}
-								}
-							}
-							else {
-								throw decodeError("Cipher suites invalid length");
-							}
-						}
-					}
-				}
-				else {
-					throw decodeError("Legacy session id is too big");
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}
-	};
-	
-	public ClientHello(int legacyVersion, byte[] random, byte[] legacySessionId, CipherSuite[] cipherSuites, byte[] legacyCompressionMethods, List<IExtension> extensions) {
-		super(TYPE, legacyVersion, random, legacySessionId);
-		Args.checkNull(cipherSuites, "cipherSuites");
-		Args.checkNull(extensions, "extensions");
-		Args.checkMax(legacyCompressionMethods, 255, "legacyCompressionMethods");
-		this.cipherSuites = cipherSuites;
-		this.legacyCompressionMethods = legacyCompressionMethods;
-		this.extensions = extensions;
-	}
-	
-	@Override
-	public CipherSuite[] getCipherSuites() {
-		return cipherSuites;
-	}
+    public ClientHello(int legacyVersion, byte[] random, byte[] legacySessionId, CipherSuite[] cipherSuites, byte[] legacyCompressionMethods, List<IExtension> extensions) {
+        super(TYPE, legacyVersion, random, legacySessionId);
+        Args.checkNull(cipherSuites, "cipherSuites");
+        Args.checkNull(extensions, "extensions");
+        Args.checkMax(legacyCompressionMethods, 255, "legacyCompressionMethods");
+        this.cipherSuites = cipherSuites;
+        this.legacyCompressionMethods = legacyCompressionMethods;
+        this.extensions = extensions;
+    }
 
-	@Override
-	public byte[] getLegacyCompressionMethods() {
-		return legacyCompressionMethods;
-	}
+    @Override
+    public CipherSuite[] getCipherSuites() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public List<IExtension> getExtensions() {
-		return extensions;
-	}
+    @Override
+    public byte[] getLegacyCompressionMethods() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public static IHandshakeParser getParser() {
-		return PARSER;
-	}
-	
-	@Override
-	public int getDataLength() {
-		return super.getDataLength() 
-				+ 2 
-				+ cipherSuites.length * 2 
-				+ 1 
-				+ legacyCompressionMethods.length
-				+ 2
-				+ ExtensionsUtil.calculateLength(extensions);
-	}
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		super.getData(buffer);
-		int size = cipherSuites.length;
-		buffer.putShort((short) (size*2));
-		for (CipherSuite cs: cipherSuites) {
-			buffer.putShort((short) cs.value());
-		}
-		buffer.put((byte) legacyCompressionMethods.length);
-		buffer.put(legacyCompressionMethods);
-		buffer.putShort((short) ExtensionsUtil.calculateLength(extensions));
-		for (IExtension e: extensions) {
-			e.getBytes(buffer);
-		}
-	}
-	
+    public static IHandshakeParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

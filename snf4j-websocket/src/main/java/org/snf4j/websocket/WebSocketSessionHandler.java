@@ -47,162 +47,89 @@ import org.snf4j.websocket.handshake.InvalidHandshakeException;
 
 class WebSocketSessionHandler extends AbstractStreamHandler {
 
-	private final static ILogger LOGGER = LoggerFactory.getLogger(WebSocketSessionHandler.class);
-	
-	private final static IExceptionLogger ELOGGER = ExceptionLogger.getInstance();
-	
-	private final IHandshaker handshaker;
-	
-	private final IWebSocketHandler handler;
-	
-	private final boolean handleCloseFrame;
-	
-	WebSocketSessionHandler(IWebSocketHandler handler, boolean clientMode) {
-		this.handler = handler;
-		handshaker = new Handshaker(handler.getConfig(), clientMode);
-		handleCloseFrame = handler.getConfig().handleCloseFrame();
-	}
-	
-	@Override
-	public void setSession(ISession session) {
-		super.setSession(session);
-		handler.setSession(session);
-		handshaker.setSession(session);
-	}
-	
-	public IHandshaker getHandshaker() {
-		return handshaker;
-	}
-	
-	void fireException(Throwable t) {
-		try {
-			getReadyFuture().abort(t);
-			handler.exception(t);
-		}
-		catch (Throwable e) {
-			ELOGGER.error(LOGGER, "Exception handling failed for {}: {}", getSession(), e);
-		}
-		getSession().quickClose();
-	}
-	
-	TaskFuture<Void> getReadyFuture() {
-		return (TaskFuture<Void>) getSession().getReadyFuture();
-	}
-	
-	void handleCloseFrame(CloseFrame frame) {
-		IStreamSession session = getSession();
-		
-		session.writenf(frame);
-		session.close();
-	}
-	
-	@Override
-	public void read(Object msg) {
-		if (handshaker.isFinished()) {
-			if (handleCloseFrame && msg instanceof CloseFrame) {
-				handleCloseFrame((CloseFrame) msg);
-				return;
-			}
-			handler.read(msg);
-		}
-		else {
-			HandshakeFrame frame = handshaker.handshake((HandshakeFrame) msg);
-			TaskFuture<Void> readyFuture = getReadyFuture();
-			IStreamSession session = getSession();
-			
-			if (frame != null) {
-				session.writenf(frame);
-			}
-			if (readyFuture.isDone()) {
-				return;
-			}
-			if (handshaker.isFinished()) {
-				ICodecPipeline pipeline = session.getCodecPipeline();
-				IWebSocketSessionConfig config = handler.getConfig();
-				boolean hasExtensions = handshaker.hasExtensions();
-				
-				config.switchDecoders(pipeline, hasExtensions);
-				if (hasExtensions) {
-					handshaker.updateExtensionDecoders(pipeline);
-				}
-				if (handshaker.isClientMode()) {
-					config.switchEncoders(pipeline, hasExtensions);
-					if (hasExtensions) {
-						handshaker.updateExtensionEncoders(pipeline);
-					}
-				}
-				readyFuture.success();
-				handler.event(SessionEvent.READY);
-			}
-			if (handshaker.isClosing()) {
-				throw new InvalidHandshakeException(handshaker.getClosingReason(), null, true);
-			}
-		}
-	}
+    private final static ILogger LOGGER = LoggerFactory.getLogger(WebSocketSessionHandler.class);
 
-	@Override
-	public void event(SessionEvent event) {
-		switch (event) {
-		case READY:
-			HandshakeFrame frame = handshaker.handshake();
+    private final static IExceptionLogger ELOGGER = ExceptionLogger.getInstance();
 
-			if (frame != null) {
-				getSession().writenf(frame);
-			}
-			break;
-		
-		case ENDING:
-			getReadyFuture().abort(null);
-			
-		default:
-			handler.event(event);
-		}
-	}
-	
-	@Override
-	public void event(DataEvent event, long length) {
-		handler.event(event, length);
-	}
-	
-	@Override
-	public void exception(Throwable t) {
-		getReadyFuture().abort(t);
-		handler.exception(t);
-	}
-	
-	@Override
-	public boolean incident(SessionIncident incident, Throwable t) {
-		if (incident == SessionIncident.ENCODING_PIPELINE_FAILURE) {
-			if (t instanceof InvalidHandshakeException) {
-				fireException(t);
-				return true;
-			}
-		}
-		return handler.incident(incident, t);
-	}
-	
-	@Override
-	public void timer(Object event) {	
-		handler.timer(event);
-	}
-	
-	@Override
-	public void timer(Runnable task) {
-		handler.timer(task);
-	}
+    private final IHandshaker handshaker;
 
-	@Override
-	public ISessionConfig getConfig() {
-		return handler.getConfig();
-	}
+    private final IWebSocketHandler handler;
 
-	@Override
-	public ISessionStructureFactory getFactory() {
-		return handler.getFactory();
-	}
-	
-	public IWebSocketHandler getHandler() {
-		return handler;
-	}
-	
+    private final boolean handleCloseFrame;
+
+    WebSocketSessionHandler(IWebSocketHandler handler, boolean clientMode) {
+        this.handler = handler;
+        handshaker = new Handshaker(handler.getConfig(), clientMode);
+        handleCloseFrame = handler.getConfig().handleCloseFrame();
+    }
+
+    @Override
+    public void setSession(ISession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public IHandshaker getHandshaker() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void fireException(Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    TaskFuture<Void> getReadyFuture() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void handleCloseFrame(CloseFrame frame) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void read(Object msg) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void event(DataEvent event, long length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void exception(Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean incident(SessionIncident incident, Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void timer(Object event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void timer(Runnable task) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionStructureFactory getFactory() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public IWebSocketHandler getHandler() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -29,108 +29,48 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 import java.util.Random;
-
 import org.snf4j.core.codec.IEncoder;
 import org.snf4j.core.session.ISession;
 
 /**
  * Encodes a Web Socket frame into bytes in the protocol version 13 format.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public class FrameEncoder implements IEncoder<Frame,ByteBuffer> {
+public class FrameEncoder implements IEncoder<Frame, ByteBuffer> {
 
-	private final static Random RANDOM = new Random();
-	
-	private final boolean clientMode;
-	
-	private boolean closed;
+    private final static Random RANDOM = new Random();
 
-	/**
-	 * Constructs a Web Socket encoder.
-	 * 
-	 * @param clientMode determines the mode (client/server) in which the encoder
-	 *                   should work
-	 */
-	public FrameEncoder(boolean clientMode) {
-		this.clientMode = clientMode;
-	}
-	
-	@Override
-	public Class<Frame> getInboundType() {
-		return Frame.class;
-	}
+    private final boolean clientMode;
 
-	@Override
-	public Class<ByteBuffer> getOutboundType() {
-		return ByteBuffer.class;
-	}
+    private boolean closed;
 
-	@Override
-	public void encode(ISession session, Frame frame, List<ByteBuffer> out) throws Exception {
-		if (closed) {
-			return;
-		}
-		else if (frame.getOpcode() == Opcode.CLOSE) {
-			closed = true;
-		}
-		
-		ByteBuffer buffer = session.allocate(length(frame));
-		
-		buffer.order(ByteOrder.BIG_ENDIAN);
-		byte b = (byte) ((frame.getRsvBits() << 4) & 0x70);
-		
-		if (frame.isFinalFragment()) {
-			b |= 0x80;
-		}
-		b |= frame.getOpcode().value();
-		buffer.put(b);
-		
-		byte[] payload = frame.getPayload();
-		int len = payload.length;
-		
-		b = (byte) (clientMode ? 0x80 : 0);
-		if (len > 0xffff) {
-			b |= 127;
-			buffer.put(b);
-			buffer.putLong(len);
-		}
-		else if (len > 125) {
-			b |= 126;
-			buffer.put(b);
-			buffer.putShort((short) len);
-		}
-		else {
-			b |= len;
-			buffer.put(b);
-		}
-		if (clientMode) {
-			byte[] mask = new byte[4];
-			byte[] masked = new byte[len];
-			
-			RANDOM.nextBytes(mask);
-			for (int i=0; i<len; ++i) {
-				masked[i] = (byte) (payload[i] ^ mask[i % 4]);
-			}
-			buffer.put(mask);
-			payload = masked;
-		}
-		buffer.put(payload).flip();
-		out.add(buffer);
-	}
+    /**
+     * Constructs a Web Socket encoder.
+     *
+     * @param clientMode determines the mode (client/server) in which the encoder
+     *                   should work
+     */
+    public FrameEncoder(boolean clientMode) {
+        this.clientMode = clientMode;
+    }
 
-	protected int length(Frame frame) {
-		int len = frame.getPayloadLength();
-		
-		if (len > 0xffff) {
-			len += 8;
-		}
-		else if (len > 125) {
-			len += 2;
-		}
-		if (clientMode) {
-			len += 4;
-		}
-		return len + 2;
-	}
+    @Override
+    public Class<Frame> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Class<ByteBuffer> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void encode(ISession session, Frame frame, List<ByteBuffer> out) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    protected int length(Frame frame) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

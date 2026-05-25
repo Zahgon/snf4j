@@ -27,16 +27,16 @@ package org.snf4j.websocket.handshake;
 
 class InvalidHandshakeRequestException extends InvalidHandshakeException {
 
-	private static final long serialVersionUID = 399209430037289373L;
+    private static final long serialVersionUID = 399209430037289373L;
 
-	private final HttpStatus status;
-	
-	InvalidHandshakeRequestException(String message, HttpStatus status) {
-		super(message);
-		this.status = status;
-	}
-	
-	HttpStatus getStatus() {
-		return status;
-	}
+    private final HttpStatus status;
+
+    InvalidHandshakeRequestException(String message, HttpStatus status) {
+        super(message);
+        this.status = status;
+    }
+
+    HttpStatus getStatus() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

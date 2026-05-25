@@ -29,32 +29,32 @@ import java.nio.channels.SelectableChannel;
 
 abstract class ServerChannelContext<T> extends ChannelContext<T> {
 
-	ServerChannelContext(T context) {
-		super(context);
-	}
+    ServerChannelContext(T context) {
+        super(context);
+    }
 
-	@Override
-	final boolean isServer() {
-		return true;
-	}
-	
-	@Override
-	final boolean isSession() {
-		return false;
-	}
-	
-	@Override
-	final InternalSession getSession() {
-		return null;
-	}
-	
-	@Override
-	final void shutdown(SelectableChannel channel) {
-	}
-	
-	@Override
-	final boolean exceptionOnDecodingFailure() {
-		return true;
-	}
-	
+    @Override
+    final boolean isServer() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final boolean isSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final InternalSession getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final void shutdown(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final boolean exceptionOnDecodingFailure() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

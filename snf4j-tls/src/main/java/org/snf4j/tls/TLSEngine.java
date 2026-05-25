@@ -35,10 +35,8 @@ import static org.snf4j.core.engine.Status.BUFFER_OVERFLOW;
 import static org.snf4j.core.engine.Status.BUFFER_UNDERFLOW;
 import static org.snf4j.core.engine.Status.CLOSED;
 import static org.snf4j.core.engine.Status.OK;
-
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.core.engine.EngineResult;
 import org.snf4j.core.engine.HandshakeStatus;
@@ -70,929 +68,543 @@ import org.snf4j.tls.record.Encryptor;
 import org.snf4j.tls.record.Record;
 
 public class TLSEngine implements IEngine {
-	
-	private final IHandshakeEngine handshaker;
 
-	private final EngineStateListener listener;
-	
-	private final IEngineHandler handler;
+    private final IHandshakeEngine handshaker;
 
-	private final HandshakeAggregator aggregator; 
-	
-	private final HandshakeFragmenter fragmenter;
-	
-	private final int maxAppBufferSizeRatio;
+    private final EngineStateListener listener;
 
-	private final int maxNetBufferSizeRatio;
-	
-	private HandshakeStatus status = NOT_HANDSHAKING;
-	
-	private boolean outboundDone;
-	
-	private boolean inboundDone;
-	
-	private Alert alert;
-		
-	public TLSEngine(boolean clientMode, IEngineParameters parameters, IEngineHandler handler) {
-		this(clientMode, parameters, handler, 100, 100);
-	}
+    private final IEngineHandler handler;
 
-	public TLSEngine(boolean clientMode, IEngineParameters parameters, IEngineHandler handler, int maxAppBufferSizeRatio, int maxNetBufferSizeRatio) {
-		listener = new EngineStateListener();
-		this.handler = handler;
-		handshaker = new HandshakeEngine(
-				clientMode, 
-				parameters, 
-				this.handler,
-				listener);
-		aggregator = new HandshakeAggregator(handshaker);
-		fragmenter = new HandshakeFragmenter(handshaker, listener, listener);
-		this.maxAppBufferSizeRatio = Math.max(100, maxAppBufferSizeRatio);
-		this.maxNetBufferSizeRatio = Math.max(100, maxNetBufferSizeRatio);
-	}
-	
-	@Override
-	public void init() {
-	}
+    private final HandshakeAggregator aggregator;
 
-	@Override
-	public void cleanup() {
-		handshaker.cleanup();
-	}
+    private final HandshakeFragmenter fragmenter;
 
-	private void beginStatus() {
-		if (status == NOT_HANDSHAKING) {
-			status = handshaker.getState().isClientMode() 
-					? NEED_WRAP 
-					: NEED_UNWRAP;
-		}		
-	}
-	
-	@Override
-	public void beginHandshake() throws TLSException {
-		if (!handshaker.getState().isStarted()  && alert == null) {
-			beginStatus();
-		}
-	}
+    private final int maxAppBufferSizeRatio;
 
-	private void beginHandshake0() throws Exception {
-		if (!handshaker.getState().isStarted() && alert == null) {
-			beginStatus();
-			handshaker.start();
-		}
-	}
-	
-	@Override
-	public boolean isOutboundDone() {
-		return outboundDone;
-	}
+    private final int maxNetBufferSizeRatio;
 
-	@Override
-	public boolean isInboundDone() {
-		return inboundDone;
-	}
+    private HandshakeStatus status = NOT_HANDSHAKING;
 
-	@Override
-	public void closeOutbound() {
-		if (alert == null) {
-			alert = new CloseNotifyAlert("Closed");
-			status = NEED_WRAP;
-		}
-	}
+    private boolean outboundDone;
 
-	private void alert(Alert alert) {
-		this.alert = alert;
-		inboundDone = true;
-	}
-	
-	private Exception alert(Exception e) {
-		if (e instanceof Alert) {
-			alert = (Alert) e;
-		}
-		else {
-			alert = new InternalErrorAlert("General failure", e);
-			e = alert;
-		}
-		inboundDone = true;
-		return e;
-	}
-	
-	@Override
-	public void closeInbound() throws SessionIncidentException {
-		if (alert == null) {
-			alert(new InternalErrorAlert("Closed without close notify"));
-			status = NEED_WRAP;
-			throw new SessionIncidentException(SessionIncident.SSL_CLOSED_WITHOUT_CLOSE_NOTIFY);
-		}
-	}
+    private boolean inboundDone;
 
-	@Override
-	public int getMinApplicationBufferSize() {
-		return handshaker.getState().getMaxFragmentLength()
-				+ 1;
-	}
+    private Alert alert;
 
-	@Override
-	public int getMinNetworkBufferSize() {
-		return Record.HEADER_LENGTH 
-				+ handshaker.getState().getMaxFragmentLength() 
-				+ 1 
-				+ 255;
-	}
+    public TLSEngine(boolean clientMode, IEngineParameters parameters, IEngineHandler handler) {
+        this(clientMode, parameters, handler, 100, 100);
+    }
 
-	@Override
-	public int getMaxApplicationBufferSize() {
-		return getMinApplicationBufferSize() * maxAppBufferSizeRatio / 100;
-	}
+    public TLSEngine(boolean clientMode, IEngineParameters parameters, IEngineHandler handler, int maxAppBufferSizeRatio, int maxNetBufferSizeRatio) {
+        listener = new EngineStateListener();
+        this.handler = handler;
+        handshaker = new HandshakeEngine(clientMode, parameters, this.handler, listener);
+        aggregator = new HandshakeAggregator(handshaker);
+        fragmenter = new HandshakeFragmenter(handshaker, listener, listener);
+        this.maxAppBufferSizeRatio = Math.max(100, maxAppBufferSizeRatio);
+        this.maxNetBufferSizeRatio = Math.max(100, maxNetBufferSizeRatio);
+    }
 
-	@Override
-	public int getMaxNetworkBufferSize() {
-		return getMinNetworkBufferSize() * maxNetBufferSizeRatio / 100;
-	}
+    @Override
+    public void init() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public HandshakeStatus getHandshakeStatus() {
-		if (status != NOT_HANDSHAKING) {
-			if (handshaker.hasTask() || handshaker.hasRunningTask(true)) {
-				return NEED_TASK;
-			}
-			if (status == NEED_UNWRAP && handshaker.hasRunningTask(false)) {
-				return NEED_UNWRAP_AGAIN;
-			}
-		}
-		return status;
-	}
+    @Override
+    public void cleanup() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Object getSession() {
-		return handshaker.getState().getSession();
-	}
+    private void beginStatus() {
+        if (status == NOT_HANDSHAKING) {
+            status = handshaker.getState().isClientMode() ? NEED_WRAP : NEED_UNWRAP;
+        }
+    }
 
-	@Override
-	public Runnable getDelegatedTask() {
-		return handshaker.getTask();
-	}
+    @Override
+    public void beginHandshake() throws TLSException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private int[] consumedAndPadding(int srcRemaining, int dstRemaining, Encryptor encryptor) {
-		int maxFragmentLen = handshaker.getState().getMaxFragmentLength();
-		int expansion = Record.HEADER_LENGTH + 1 + encryptor.getExpansion();
-		int consumed = Math.min(srcRemaining, dstRemaining - expansion);
-		int padding;
-		
-		if (consumed >= maxFragmentLen) {
-			consumed = maxFragmentLen;
-			padding = 0;
-		}
-		else if (consumed < 0 || consumed < srcRemaining) {
-			return null;
-		}
-		else {
-			padding = handshaker.getHandler().calculatePadding(ContentType.APPLICATION_DATA, consumed);
-			if (padding > 0 ) {
-				padding = Math.min(padding, maxFragmentLen-consumed);
-				if (dstRemaining < consumed + expansion + padding) {
-					return null;
-				}
-			}
-		}
-		return new int[] {consumed, padding};
-	}
+    private void beginHandshake0() throws Exception {
+        if (!handshaker.getState().isStarted() && alert == null) {
+            beginStatus();
+            handshaker.start();
+        }
+    }
 
-	IEngineResult checkKeyLimit(Cryptor cryptor, IEngineResult currentResult) throws Alert {
-		if (!cryptor.isMarkedForUpdate() 
-				&& (cryptor.isKeyLimitReached() || cryptor.getSequence() > 0xffffffffL)) {
-			if (!handshaker.hasProducingTask()) {
-				handshaker.updateKeys();
-				cryptor.markForUpdate();
-				status = NEED_WRAP;
-				return new EngineResult(
-						OK,
-						getHandshakeStatus(),
-						currentResult.bytesConsumed(),
-						currentResult.bytesProduced());
-			}
-		}
-		return currentResult;
-	}
-	
-	private IEngineResult wrapAppData(ByteBuffer[] srcs, ByteBuffer dst) throws Exception {
-		if (srcs.length == 1) {
-			return wrapAppData(srcs[0], dst);
-		}
-		
-		Encryptor encryptor = listener.getEncryptor();
-		ByteBufferArray srcArray = ByteBufferArray.wrap(srcs);
-		
-		int[] consPad = consumedAndPadding((int) srcArray.remaining(), dst.remaining(), encryptor);
-		
-		if (consPad == null) {
-			return new EngineResult(
-					BUFFER_OVERFLOW, 
-					status, 
-					0, 
-					0);
-		}
-		
-		byte[] tail = new byte[1 + consPad[1]];
-		ByteBufferArray dup = srcArray.duplicate();
-		int consumed = consPad[0];
-		int produced;
-		
-		tail[0] = (byte) ContentType.APPLICATION_DATA.value();
+    @Override
+    public boolean isOutboundDone() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		ByteBuffer[] dupSrcs = dup.array();
-		
-		int remaining = consumed;
-		ByteBuffer src;
-		for (int i=0; i<srcs.length; ++i) {
-			src = srcs[i];
-			if (src.remaining() < remaining) {
-				remaining -= src.remaining();
-			}
-			else {
-				src.limit(src.position()+remaining);
-				dupSrcs = Arrays.copyOf(dupSrcs, i + 2);
-				break;
-			}
-		}
-		dupSrcs[dupSrcs.length-1] = ByteBuffer.wrap(tail);
-		
-		produced = Record.protect(
-				dupSrcs, 
-				consumed + tail.length,
-				encryptor,
-				dst);
-		
-		for (int i=0; i<dupSrcs.length-1; ++i) {
-			srcs[i].position(dupSrcs[i].position());
-		}
-		return checkKeyLimit(encryptor, 
-				new EngineResult(
-						OK, 
-						status, 
-						consumed, 
-						produced));
-	}
+    @Override
+    public boolean isInboundDone() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private IEngineResult wrapAppData(ByteBuffer src, ByteBuffer dst) throws Exception {
-		Encryptor encryptor = listener.getEncryptor();
-		int[] consPad = consumedAndPadding(src.remaining(), dst.remaining(), encryptor);
-		
-		if (consPad == null) {
-			return new EngineResult(
-					BUFFER_OVERFLOW, 
-					status, 
-					0, 
-					0);
-		}
-		
-		byte[] tail = new byte[1 + consPad[1]];
-		ByteBuffer dup = src.duplicate();
-		int produced;
-		int consumed = consPad[0];
-		
-		tail[0] = (byte) ContentType.APPLICATION_DATA.value();
-		dup.limit(dup.position() + consumed);
-		produced = Record.protect(
-				new ByteBuffer[] {dup, ByteBuffer.wrap(tail)}, 
-				consumed + tail.length,
-				encryptor,
-				dst);
-		src.position(dup.position());
-		return checkKeyLimit(encryptor, 
-				new EngineResult(
-						OK, 
-						status, 
-						consumed, 
-						produced));
-	}
+    @Override
+    public void closeOutbound() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private IEngineResult wrapAlert(ByteBuffer dst, HandshakeStatus status) throws Exception {
-		if (fragmenter.isPending()) {
-			fragmenter.clear();
+    private void alert(Alert alert) {
+        this.alert = alert;
+        inboundDone = true;
+    }
 
-			int produced = fragmenter.wrap(dst);
-			if (produced < 0) {
-				return new EngineResult(
-						BUFFER_OVERFLOW, 
-						status, 
-						0, 
-						0);
-			}
-			else if (produced > 0) {
-				if (fragmenter.isPending()) {
-					return new EngineResult(
-							OK, 
-							status, 
-							0, 
-							produced);
-				}
-			}
-		}
-		
-		Encryptor encryptor = listener.getEncryptor();
-		int produced;
-		
-		if (encryptor == null) {
-			if (Record.checkForAlert(dst)) {
-				produced = Record.alert(alert, dst);
-			}
-			else {
-				return new EngineResult(
-						BUFFER_OVERFLOW, 
-						status, 
-						0, 
-						0);
-			}
-		}
-		else {
-			int padding = handshaker.getHandler().calculatePadding(
-					ContentType.ALERT, 
-					Record.ALERT_CONTENT_LENGTH);
+    private Exception alert(Exception e) {
+        if (e instanceof Alert) {
+            alert = (Alert) e;
+        } else {
+            alert = new InternalErrorAlert("General failure", e);
+            e = alert;
+        }
+        inboundDone = true;
+        return e;
+    }
 
-			if (padding > 0) {
-				padding = Math.min(padding, handshaker.getState().getMaxFragmentLength()-Record.ALERT_CONTENT_LENGTH);
-			}
-			if (Record.checkForAlert(dst, padding, encryptor)) {
-				produced = Record.alert(alert, padding, encryptor, dst);
-			}
-			else {
-				return new EngineResult(
-						BUFFER_OVERFLOW, 
-						status, 
-						0, 
-						0);
-			}
-		}
-		
-		outboundDone = true;
-		
-		if (inboundDone) {
-			this.status = NOT_HANDSHAKING;
-		}
-		else {
-			this.status = NEED_UNWRAP;
-		}
-		return new EngineResult(
-				CLOSED, 
-				getHandshakeStatus(), 
-				0, 
-				produced);
-	}
-	
-	private IEngineResult wrap(ByteBuffer src, ByteBuffer[] srcs, ByteBuffer dst) throws TLSException {
-		int produced;
-		
-		dst.mark();
-		try {
-			beginHandshake0();
+    @Override
+    public void closeInbound() throws SessionIncidentException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			HandshakeStatus status = getHandshakeStatus();
-			
-			if (outboundDone) {
-				return new EngineResult(
-						CLOSED, 
-						status, 
-						0, 
-						0);
-			}
-	
-			switch(status) {
-			case NEED_WRAP:
-				if (alert != null) {
-					return wrapAlert(dst, status);
-				}
-				if (handshaker.updateTasks()) {
-					return new EngineResult(
-							OK, 
-							status, 
-							0, 
-							0);
-				}
-				break;
+    @Override
+    public int getMinApplicationBufferSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			case NOT_HANDSHAKING:
-				if (srcs != null) {
-					return wrapAppData(srcs, dst);
-				}
-				return wrapAppData(src, dst);
+    @Override
+    public int getMinNetworkBufferSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			default:
-				return new EngineResult(
-						OK, 
-						status, 
-						0, 
-						0);
-			}
+    @Override
+    public int getMaxApplicationBufferSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			produced = fragmenter.wrap(dst);
-			if (produced < 0) {
-				return new EngineResult(
-						BUFFER_OVERFLOW, 
-						status, 
-						0, 
-						0);
-			}
-			else if (produced > 0) {
-				if (fragmenter.needWrap()) {
-					return new EngineResult(
-							OK, 
-							status, 
-							0, 
-							produced);
-				}
-			}
-		}
-		catch (Exception e) {
-			dst.reset();
-			if (alert == null) {
-				e = alert(e);
-				this.status = NEED_WRAP;
-			}
-			else {
-				e = new InternalErrorAlert("General failure", e);
-				outboundDone = true;
-				this.status = NOT_HANDSHAKING;
-			}
-			throw new TLSException(e);
-		}
-		
-		if (handshaker.getState().isConnected()) {
-			this.status = NOT_HANDSHAKING;
-			return new EngineResult(
-					OK, 
-					FINISHED, 
-					0, 
-					produced);
-		}
-		this.status = NEED_UNWRAP;
-		return new EngineResult(
-				OK, 
-				getHandshakeStatus(), 
-				0, 
-				produced);
-	}
-	
-	@Override
-	public IEngineResult wrap(ByteBuffer[] srcs, ByteBuffer dst) throws TLSException {
-		return wrap(null, srcs, dst);
-	}
+    @Override
+    public int getMaxNetworkBufferSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public IEngineResult wrap(ByteBuffer src, ByteBuffer dst) throws TLSException {
-		return wrap(src, null, dst);
-	}
+    @Override
+    public HandshakeStatus getHandshakeStatus() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	private IEngineResult rejectAppData(ByteBuffer src, int length, int expansionLength) throws Alert {
-		IEarlyDataContext ctx = handshaker.getState().getEarlyDataContext();
-		
-		if (expansionLength == -1) {
-			expansionLength = ctx.getCipherSuite().spec().getAead().getTagLength();
-		}
-		ctx.incProcessedBytes(length - expansionLength);
-		if (!ctx.isSizeLimitExceeded()) {
-			int consumed = Record.HEADER_LENGTH + length;
+    @Override
+    public Object getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			src.position(src.position() + consumed);
-			return new EngineResult(
-					OK, 
-					getHandshakeStatus(), 
-					consumed, 
-					0);		
-		}
-		throw new UnexpectedMessageAlert("Rejected early data is too big");
-	}
-	
-	private IEngineResult unwrapAppData(ByteBuffer src, int length, boolean rejectEarlyData) throws Alert {
-		Decryptor decryptor = listener.getDecryptor();
-		byte[] plaintext;
-		int remaining;
-		
-		if (decryptor == null) {
-			if (rejectEarlyData) {
-				return rejectAppData(src, length, -1);
-			}
-			else {
-				throw new UnexpectedMessageAlert("Received unexpected protected record");
-			}
-		}
-		plaintext = new byte[length - decryptor.getExpansion()];
-		
-		try {
-			remaining = Record.unprotect(
-					src, 
-					length, 
-					decryptor, 
-					ByteBuffer.wrap(plaintext)) - 1;
-		}
-		catch (Alert e) {
-			if (rejectEarlyData) {
-				return rejectAppData(src, length, decryptor.getExpansion());
-			}
-			throw e;
-		}
-		
-		if (rejectEarlyData) {
-			handshaker.getState().getEarlyDataContext().complete();
-		}
-		
-		if (remaining > handshaker.getState().getMaxFragmentLength()) {
-			throw new RecordOverflowAlert("Encrypted record is too big");
-		}
-		
-		int type = 0;
-		
-		for (;remaining >= 0; --remaining) {
-			if (plaintext[remaining] != 0) {
-				type = plaintext[remaining];
-				break;
-			}
-		}
+    @Override
+    public Runnable getDelegatedTask() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		if (type == 0) {
-			throw new UnexpectedMessageAlert("No non-zero octet in cleartext");
-		}
-		
-		if (type == ContentType.HANDSHAKE.value()) {
-			return unwrapHandshake(
-					ByteBuffer.wrap(plaintext, 0, remaining), 
-					0, 
-					remaining, 
-					length + Record.HEADER_LENGTH);
-		}
-		if (type == ContentType.ALERT.value()) {
-			return unwrapAlert(
-					ByteBuffer.wrap(plaintext, 0, remaining), 
-					0, 
-					remaining, 
-					length + Record.HEADER_LENGTH);
-		}
-		throw new UnexpectedMessageAlert("Received unexpected record content type (" + type + ")");
-	}
+    private int[] consumedAndPadding(int srcRemaining, int dstRemaining, Encryptor encryptor) {
+        int maxFragmentLen = handshaker.getState().getMaxFragmentLength();
+        int expansion = Record.HEADER_LENGTH + 1 + encryptor.getExpansion();
+        int consumed = Math.min(srcRemaining, dstRemaining - expansion);
+        int padding;
+        if (consumed >= maxFragmentLen) {
+            consumed = maxFragmentLen;
+            padding = 0;
+        } else if (consumed < 0 || consumed < srcRemaining) {
+            return null;
+        } else {
+            padding = handshaker.getHandler().calculatePadding(ContentType.APPLICATION_DATA, consumed);
+            if (padding > 0) {
+                padding = Math.min(padding, maxFragmentLen - consumed);
+                if (dstRemaining < consumed + expansion + padding) {
+                    return null;
+                }
+            }
+        }
+        return new int[] { consumed, padding };
+    }
 
-	private IEngineResult unwrapAppData(ByteBuffer src, ByteBuffer dst, boolean earlyData) throws Alert {
-		int remaining = src.remaining();
-		
-		if (remaining >= Record.HEADER_LENGTH) {
-			int type = src.get(src.position());
-			int length = src.getShort(src.position() + 3);
-			
-			if (type != ContentType.APPLICATION_DATA.value()) {
-				if (earlyData && type == ContentType.CHANGE_CIPHER_SPEC.value()) {
-					return unwrapChangeCipherSpec(
-							src,
-							Record.HEADER_LENGTH, 
-							length,
-							Record.HEADER_LENGTH + length);
-				}
-				throw new UnexpectedMessageAlert("Unexpected encrypted record content type (" + type + ")");
-			}
-			
-		
-			if (length > handshaker.getState().getMaxFragmentLength() + 256) {
-				throw new RecordOverflowAlert("Encrypted record is too big");
-			}
-			
-			if (Record.HEADER_LENGTH + length <= remaining) {
-				Decryptor decryptor = listener.getDecryptor();
-				
-				if (dst.remaining() < length - decryptor.getExpansion()) {
-					return new EngineResult(
-							BUFFER_OVERFLOW, 
-							getHandshakeStatus(), 
-							0, 
-							0);					
-				}
-				
-				int produced = Record.unprotect(
-						src, 
-						length, 
-						decryptor, 
-						dst) - 1;
-				
-				if (produced > handshaker.getState().getMaxFragmentLength()) {
-					throw new RecordOverflowAlert("Encrypted record is too big");
-				}
+    IEngineResult checkKeyLimit(Cryptor cryptor, IEngineResult currentResult) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-				int padding = 0;
-				
-				type = 0;
-				if (dst.hasArray()) {
-					byte[] array = dst.array();
-					int i = dst.arrayOffset() + dst.position() - 1;
-					int j = i - produced;
-					
-					for (; i >= j; --i) {
-						byte b = array[i];
-						
-						if (b != 0) {
-							type = b;
-							break;
-						}
-						++padding;
-					}					
-				}
-				else {
-					int i = dst.position() - 1;
-					int j = i - produced;
-					
-					for (; i >= j; --i) {
-						byte b = dst.get(i);
-						
-						if (b != 0) {
-							type = b;
-							break;
-						}
-						++padding;
-					}
-				}
-				
-				if (type == 0) {
-					throw new UnexpectedMessageAlert("No non-zero octet in cleartext");
-				}
-				
-				dst.position(dst.position() - padding - 1);
-				produced -= padding;
-				
-				if (type == ContentType.APPLICATION_DATA.value()) {
-					if (earlyData) {
-						IEarlyDataContext ctx = handshaker.getState().getEarlyDataContext();
-						
-						ctx.incProcessedBytes(produced);
-						if (ctx.isSizeLimitExceeded()) {
-							throw new UnexpectedMessageAlert("Early data is too big");
-						}
-					}
-					return checkKeyLimit(decryptor, new EngineResult(
-							OK,
-							getHandshakeStatus(),
-							length + Record.HEADER_LENGTH,
-							produced));
-				}
-				if (type == ContentType.HANDSHAKE.value()) {
-					dst.position(dst.position()-produced);
-					byte[] data = new byte[produced];
-					ByteBuffer dup = dst.duplicate();
-					
-					dup.get(data);
-					return checkKeyLimit(decryptor, unwrapHandshake(
-							ByteBuffer.wrap(data),
-							0,
-							produced,
-							length + Record.HEADER_LENGTH));
-				}
-				if (type == ContentType.ALERT.value()) {
-					dst.position(dst.position()-produced);
-					byte[] data = new byte[produced];
-					ByteBuffer dup = dst.duplicate();
-					
-					dup.get(data);
-					return unwrapAlert(
-							ByteBuffer.wrap(data), 
-							0, 
-							produced, 
-							length + Record.HEADER_LENGTH);
-				}
-				throw new UnexpectedMessageAlert("Received unexpected record content type (" + type + ")");
-				
-			}
-		}
-		return new EngineResult(
-				BUFFER_UNDERFLOW, 
-				getHandshakeStatus(), 
-				0, 
-				0);		
-	}
-	
-	IEngineResult unwrapHandshake(ByteBuffer src, int off, int length, int consumed) throws Alert {
-		boolean connected = handshaker.getState().isConnected();
-		
-		src.position(src.position() + off);
-		if (aggregator.unwrap(src, length)) {
-			if (!connected && handshaker.getState().isConnected()) {
-				if (aggregator.isEmpty()) {
-					this.status = NOT_HANDSHAKING;
-					return new EngineResult(
-							OK, 
-							FINISHED, 
-							consumed, 
-							0);
-				}
-				else {
-					throw new UnexpectedMessageAlert("Received unexpected data after finished handshake");
-				}
-			}
-		}
-		else {
-			this.status = NEED_WRAP;
-		}
-		
-		return new EngineResult(
-				OK,
-				this.getHandshakeStatus(),
-				consumed,
-				0);
-	}
+    private IEngineResult wrapAppData(ByteBuffer[] srcs, ByteBuffer dst) throws Exception {
+        if (srcs.length == 1) {
+            return wrapAppData(srcs[0], dst);
+        }
+        Encryptor encryptor = listener.getEncryptor();
+        ByteBufferArray srcArray = ByteBufferArray.wrap(srcs);
+        int[] consPad = consumedAndPadding((int) srcArray.remaining(), dst.remaining(), encryptor);
+        if (consPad == null) {
+            return new EngineResult(BUFFER_OVERFLOW, status, 0, 0);
+        }
+        byte[] tail = new byte[1 + consPad[1]];
+        ByteBufferArray dup = srcArray.duplicate();
+        int consumed = consPad[0];
+        int produced;
+        tail[0] = (byte) ContentType.APPLICATION_DATA.value();
+        ByteBuffer[] dupSrcs = dup.array();
+        int remaining = consumed;
+        ByteBuffer src;
+        for (int i = 0; i < srcs.length; ++i) {
+            src = srcs[i];
+            if (src.remaining() < remaining) {
+                remaining -= src.remaining();
+            } else {
+                src.limit(src.position() + remaining);
+                dupSrcs = Arrays.copyOf(dupSrcs, i + 2);
+                break;
+            }
+        }
+        dupSrcs[dupSrcs.length - 1] = ByteBuffer.wrap(tail);
+        produced = Record.protect(dupSrcs, consumed + tail.length, encryptor, dst);
+        for (int i = 0; i < dupSrcs.length - 1; ++i) {
+            srcs[i].position(dupSrcs[i].position());
+        }
+        return checkKeyLimit(encryptor, new EngineResult(OK, status, consumed, produced));
+    }
 
-	private IEngineResult unwrapAlert(ByteBuffer src, int off, int length, int consumed) throws Alert {
-		if (length != 2) {
-			throw new DecodeErrorAlert("Invalid length of alert content");
-		}
-		src.position(src.position() + off);
-		AlertLevel level = AlertLevel.of(src.get());
-		AlertDescription desc = AlertDescription.of(src.get());
-		if (desc.equals(AlertDescription.CLOSE_NOTIFY)) {
-			alert(new CloseNotifyAlert("Closing by peer"));
-			if (outboundDone) {
-				status = NOT_HANDSHAKING;
-			}
-			else {
-				status = NEED_WRAP;
-			}
-			return new EngineResult(
-					CLOSED, 
-					getHandshakeStatus(), 
-					consumed, 
-					0);
-		}
-		else if (desc.equals(AlertDescription.USER_CANCELED)) {
-			return new EngineResult(
-					OK, 
-					getHandshakeStatus(), 
-					consumed, 
-					0);
-		}
-		alert(Alert.of(level, desc));
-		outboundDone = true;
-		status = NOT_HANDSHAKING;
-		throw alert;
-	}
+    private IEngineResult wrapAppData(ByteBuffer src, ByteBuffer dst) throws Exception {
+        Encryptor encryptor = listener.getEncryptor();
+        int[] consPad = consumedAndPadding(src.remaining(), dst.remaining(), encryptor);
+        if (consPad == null) {
+            return new EngineResult(BUFFER_OVERFLOW, status, 0, 0);
+        }
+        byte[] tail = new byte[1 + consPad[1]];
+        ByteBuffer dup = src.duplicate();
+        int produced;
+        int consumed = consPad[0];
+        tail[0] = (byte) ContentType.APPLICATION_DATA.value();
+        dup.limit(dup.position() + consumed);
+        produced = Record.protect(new ByteBuffer[] { dup, ByteBuffer.wrap(tail) }, consumed + tail.length, encryptor, dst);
+        src.position(dup.position());
+        return checkKeyLimit(encryptor, new EngineResult(OK, status, consumed, produced));
+    }
 
-	private IEngineResult unwrapChangeCipherSpec(ByteBuffer src, int off, int length, int consumed) throws Alert {
-		if (length == 1) {
-			src.position(src.position() + off);
-			if (src.get() == 1) {
-				return new EngineResult(
-						OK, 
-						getHandshakeStatus(), 
-						consumed, 
-						0);
-			}
-		}
-		throw new UnexpectedMessageAlert("Invalid change_cipher_spec message");
-	}
-	
-	private IEngineResult unwrap(ByteBuffer src, boolean rejectEarlyData) throws Alert {
-		int remaining = src.remaining();
-		
-		if (remaining >= Record.HEADER_LENGTH) {
-			int len = src.getShort(src.position() + 3);
-			
-			if (len <= remaining) {
-				int type = ContentType.of(src.get(src.position())).value();
-				
-				if (type == ContentType.APPLICATION_DATA.value()) {
-					if (len > handshaker.getState().getMaxFragmentLength() + 256) {
-						throw new RecordOverflowAlert("Encrypted record is too big");
-					}
-					if (remaining >= Record.HEADER_LENGTH + len) {
-						return unwrapAppData(src, len, rejectEarlyData);
-					}
-				}
-				else {
-					if (len > handshaker.getState().getMaxFragmentLength()) {
-						throw new RecordOverflowAlert("Record fragment is too big");
-					}
-					if (remaining >= Record.HEADER_LENGTH + len) {
-						if (type == ContentType.HANDSHAKE.value()) {
-							return unwrapHandshake(
-									src, 
-									Record.HEADER_LENGTH, 
-									len, 
-									Record.HEADER_LENGTH + len);
-						}
-						if (type == ContentType.ALERT.value()) {
-							return unwrapAlert(
-									src, 
-									Record.HEADER_LENGTH, 
-									len, 
-									Record.HEADER_LENGTH + len);
-						}
-						if (type == ContentType.CHANGE_CIPHER_SPEC.value()) {
-							return unwrapChangeCipherSpec(
-									src,
-									Record.HEADER_LENGTH,
-									len,
-									Record.HEADER_LENGTH + len);
-						}
-						throw new UnexpectedMessageAlert("Received unexpected record content type (" + type + ")");
-					}
-				}
-			}
-		}
-		return new EngineResult(
-				BUFFER_UNDERFLOW, 
-				getHandshakeStatus(), 
-				0, 
-				0);
-	}	
-	
-	@Override
-	public IEngineResult unwrap(ByteBuffer src, ByteBuffer dst) throws TLSException {
-		dst.mark();
-		try {
-			beginHandshake0();
+    private IEngineResult wrapAlert(ByteBuffer dst, HandshakeStatus status) throws Exception {
+        if (fragmenter.isPending()) {
+            fragmenter.clear();
+            int produced = fragmenter.wrap(dst);
+            if (produced < 0) {
+                return new EngineResult(BUFFER_OVERFLOW, status, 0, 0);
+            } else if (produced > 0) {
+                if (fragmenter.isPending()) {
+                    return new EngineResult(OK, status, 0, produced);
+                }
+            }
+        }
+        Encryptor encryptor = listener.getEncryptor();
+        int produced;
+        if (encryptor == null) {
+            if (Record.checkForAlert(dst)) {
+                produced = Record.alert(alert, dst);
+            } else {
+                return new EngineResult(BUFFER_OVERFLOW, status, 0, 0);
+            }
+        } else {
+            int padding = handshaker.getHandler().calculatePadding(ContentType.ALERT, Record.ALERT_CONTENT_LENGTH);
+            if (padding > 0) {
+                padding = Math.min(padding, handshaker.getState().getMaxFragmentLength() - Record.ALERT_CONTENT_LENGTH);
+            }
+            if (Record.checkForAlert(dst, padding, encryptor)) {
+                produced = Record.alert(alert, padding, encryptor, dst);
+            } else {
+                return new EngineResult(BUFFER_OVERFLOW, status, 0, 0);
+            }
+        }
+        outboundDone = true;
+        if (inboundDone) {
+            this.status = NOT_HANDSHAKING;
+        } else {
+            this.status = NEED_UNWRAP;
+        }
+        return new EngineResult(CLOSED, getHandshakeStatus(), 0, produced);
+    }
 
-			HandshakeStatus status = getHandshakeStatus();
+    private IEngineResult wrap(ByteBuffer src, ByteBuffer[] srcs, ByteBuffer dst) throws TLSException {
+        int produced;
+        dst.mark();
+        try {
+            beginHandshake0();
+            HandshakeStatus status = getHandshakeStatus();
+            if (outboundDone) {
+                return new EngineResult(CLOSED, status, 0, 0);
+            }
+            switch(status) {
+                case NEED_WRAP:
+                    if (alert != null) {
+                        return wrapAlert(dst, status);
+                    }
+                    if (handshaker.updateTasks()) {
+                        return new EngineResult(OK, status, 0, 0);
+                    }
+                    break;
+                case NOT_HANDSHAKING:
+                    if (srcs != null) {
+                        return wrapAppData(srcs, dst);
+                    }
+                    return wrapAppData(src, dst);
+                default:
+                    return new EngineResult(OK, status, 0, 0);
+            }
+            produced = fragmenter.wrap(dst);
+            if (produced < 0) {
+                return new EngineResult(BUFFER_OVERFLOW, status, 0, 0);
+            } else if (produced > 0) {
+                if (fragmenter.needWrap()) {
+                    return new EngineResult(OK, status, 0, produced);
+                }
+            }
+        } catch (Exception e) {
+            dst.reset();
+            if (alert == null) {
+                e = alert(e);
+                this.status = NEED_WRAP;
+            } else {
+                e = new InternalErrorAlert("General failure", e);
+                outboundDone = true;
+                this.status = NOT_HANDSHAKING;
+            }
+            throw new TLSException(e);
+        }
+        if (handshaker.getState().isConnected()) {
+            this.status = NOT_HANDSHAKING;
+            return new EngineResult(OK, FINISHED, 0, produced);
+        }
+        this.status = NEED_UNWRAP;
+        return new EngineResult(OK, getHandshakeStatus(), 0, produced);
+    }
 
-			if (inboundDone) {
-				return new EngineResult(
-						CLOSED, 
-						status, 
-						0, 
-						0);
-			}
+    @Override
+    public IEngineResult wrap(ByteBuffer[] srcs, ByteBuffer dst) throws TLSException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			switch(status) {
-			case NEED_WRAP:
-			case NEED_TASK:
-				return new EngineResult(
-						OK, 
-						status, 
-						0, 
-						0);
+    @Override
+    public IEngineResult wrap(ByteBuffer src, ByteBuffer dst) throws TLSException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-			case NOT_HANDSHAKING:
-				return unwrapAppData(src, dst, false);
+    private IEngineResult rejectAppData(ByteBuffer src, int length, int expansionLength) throws Alert {
+        IEarlyDataContext ctx = handshaker.getState().getEarlyDataContext();
+        if (expansionLength == -1) {
+            expansionLength = ctx.getCipherSuite().spec().getAead().getTagLength();
+        }
+        ctx.incProcessedBytes(length - expansionLength);
+        if (!ctx.isSizeLimitExceeded()) {
+            int consumed = Record.HEADER_LENGTH + length;
+            src.position(src.position() + consumed);
+            return new EngineResult(OK, getHandshakeStatus(), consumed, 0);
+        }
+        throw new UnexpectedMessageAlert("Rejected early data is too big");
+    }
 
-			default:
-				if (handshaker.updateTasks()) {
-					return new EngineResult(
-							OK, 
-							status, 
-							0, 
-							0);
-				}
-			}
-			
-			if (aggregator.hasRemaining()) {
-				if (aggregator.unwrapRemaining()) {
-					if (handshaker.getState().isConnected()) {
-						if (aggregator.isEmpty()) {
-							this.status = NOT_HANDSHAKING;
-							return new EngineResult(
-									OK, 
-									FINISHED, 
-									0, 
-									0);
-						}
-						else {
-							throw new UnexpectedMessageAlert("Received unexpected data after finished handshake");
-						}
-					}
-				}
-				else {
-					this.status = NEED_WRAP;
-				}
+    private IEngineResult unwrapAppData(ByteBuffer src, int length, boolean rejectEarlyData) throws Alert {
+        Decryptor decryptor = listener.getDecryptor();
+        byte[] plaintext;
+        int remaining;
+        if (decryptor == null) {
+            if (rejectEarlyData) {
+                return rejectAppData(src, length, -1);
+            } else {
+                throw new UnexpectedMessageAlert("Received unexpected protected record");
+            }
+        }
+        plaintext = new byte[length - decryptor.getExpansion()];
+        try {
+            remaining = Record.unprotect(src, length, decryptor, ByteBuffer.wrap(plaintext)) - 1;
+        } catch (Alert e) {
+            if (rejectEarlyData) {
+                return rejectAppData(src, length, decryptor.getExpansion());
+            }
+            throw e;
+        }
+        if (rejectEarlyData) {
+            handshaker.getState().getEarlyDataContext().complete();
+        }
+        if (remaining > handshaker.getState().getMaxFragmentLength()) {
+            throw new RecordOverflowAlert("Encrypted record is too big");
+        }
+        int type = 0;
+        for (; remaining >= 0; --remaining) {
+            if (plaintext[remaining] != 0) {
+                type = plaintext[remaining];
+                break;
+            }
+        }
+        if (type == 0) {
+            throw new UnexpectedMessageAlert("No non-zero octet in cleartext");
+        }
+        if (type == ContentType.HANDSHAKE.value()) {
+            return unwrapHandshake(ByteBuffer.wrap(plaintext, 0, remaining), 0, remaining, length + Record.HEADER_LENGTH);
+        }
+        if (type == ContentType.ALERT.value()) {
+            return unwrapAlert(ByteBuffer.wrap(plaintext, 0, remaining), 0, remaining, length + Record.HEADER_LENGTH);
+        }
+        throw new UnexpectedMessageAlert("Received unexpected record content type (" + type + ")");
+    }
 
-				status = getHandshakeStatus();
+    private IEngineResult unwrapAppData(ByteBuffer src, ByteBuffer dst, boolean earlyData) throws Alert {
+        int remaining = src.remaining();
+        if (remaining >= Record.HEADER_LENGTH) {
+            int type = src.get(src.position());
+            int length = src.getShort(src.position() + 3);
+            if (type != ContentType.APPLICATION_DATA.value()) {
+                if (earlyData && type == ContentType.CHANGE_CIPHER_SPEC.value()) {
+                    return unwrapChangeCipherSpec(src, Record.HEADER_LENGTH, length, Record.HEADER_LENGTH + length);
+                }
+                throw new UnexpectedMessageAlert("Unexpected encrypted record content type (" + type + ")");
+            }
+            if (length > handshaker.getState().getMaxFragmentLength() + 256) {
+                throw new RecordOverflowAlert("Encrypted record is too big");
+            }
+            if (Record.HEADER_LENGTH + length <= remaining) {
+                Decryptor decryptor = listener.getDecryptor();
+                if (dst.remaining() < length - decryptor.getExpansion()) {
+                    return new EngineResult(BUFFER_OVERFLOW, getHandshakeStatus(), 0, 0);
+                }
+                int produced = Record.unprotect(src, length, decryptor, dst) - 1;
+                if (produced > handshaker.getState().getMaxFragmentLength()) {
+                    throw new RecordOverflowAlert("Encrypted record is too big");
+                }
+                int padding = 0;
+                type = 0;
+                if (dst.hasArray()) {
+                    byte[] array = dst.array();
+                    int i = dst.arrayOffset() + dst.position() - 1;
+                    int j = i - produced;
+                    for (; i >= j; --i) {
+                        byte b = array[i];
+                        if (b != 0) {
+                            type = b;
+                            break;
+                        }
+                        ++padding;
+                    }
+                } else {
+                    int i = dst.position() - 1;
+                    int j = i - produced;
+                    for (; i >= j; --i) {
+                        byte b = dst.get(i);
+                        if (b != 0) {
+                            type = b;
+                            break;
+                        }
+                        ++padding;
+                    }
+                }
+                if (type == 0) {
+                    throw new UnexpectedMessageAlert("No non-zero octet in cleartext");
+                }
+                dst.position(dst.position() - padding - 1);
+                produced -= padding;
+                if (type == ContentType.APPLICATION_DATA.value()) {
+                    if (earlyData) {
+                        IEarlyDataContext ctx = handshaker.getState().getEarlyDataContext();
+                        ctx.incProcessedBytes(produced);
+                        if (ctx.isSizeLimitExceeded()) {
+                            throw new UnexpectedMessageAlert("Early data is too big");
+                        }
+                    }
+                    return checkKeyLimit(decryptor, new EngineResult(OK, getHandshakeStatus(), length + Record.HEADER_LENGTH, produced));
+                }
+                if (type == ContentType.HANDSHAKE.value()) {
+                    dst.position(dst.position() - produced);
+                    byte[] data = new byte[produced];
+                    ByteBuffer dup = dst.duplicate();
+                    dup.get(data);
+                    return checkKeyLimit(decryptor, unwrapHandshake(ByteBuffer.wrap(data), 0, produced, length + Record.HEADER_LENGTH));
+                }
+                if (type == ContentType.ALERT.value()) {
+                    dst.position(dst.position() - produced);
+                    byte[] data = new byte[produced];
+                    ByteBuffer dup = dst.duplicate();
+                    dup.get(data);
+                    return unwrapAlert(ByteBuffer.wrap(data), 0, produced, length + Record.HEADER_LENGTH);
+                }
+                throw new UnexpectedMessageAlert("Received unexpected record content type (" + type + ")");
+            }
+        }
+        return new EngineResult(BUFFER_UNDERFLOW, getHandshakeStatus(), 0, 0);
+    }
 
-				switch(status) {
-				case NEED_WRAP:
-				case NEED_TASK:
-					return new EngineResult(
-							OK, 
-							status, 
-							0, 
-							0);
+    IEngineResult unwrapHandshake(ByteBuffer src, int off, int length, int consumed) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-				default:
-				}
-			}
-			
-			if (!handshaker.getState().isClientMode()) {
-				IEarlyDataContext ctx = handshaker.getState().getEarlyDataContext();
-				
-				if (ctx.getState() == EarlyDataState.PROCESSING) {
-					return unwrapAppData(src, dst, true);
-				}
-				if (ctx.getState() == EarlyDataState.REJECTING) {
-					return unwrap(src, true);
-				}
-			}
-			if (handshaker.getState().isConnected()) {
-				return unwrapAppData(src, dst, false);
-			}
-			return unwrap(src, false);
-		}
-		catch (Exception e) {
-			dst.reset();
-			if (alert == null) {
-				e = alert(e);
-				this.status = NEED_WRAP;
-			}
-			throw new TLSException(e);
-		}
-	}
-	
+    private IEngineResult unwrapAlert(ByteBuffer src, int off, int length, int consumed) throws Alert {
+        if (length != 2) {
+            throw new DecodeErrorAlert("Invalid length of alert content");
+        }
+        src.position(src.position() + off);
+        AlertLevel level = AlertLevel.of(src.get());
+        AlertDescription desc = AlertDescription.of(src.get());
+        if (desc.equals(AlertDescription.CLOSE_NOTIFY)) {
+            alert(new CloseNotifyAlert("Closing by peer"));
+            if (outboundDone) {
+                status = NOT_HANDSHAKING;
+            } else {
+                status = NEED_WRAP;
+            }
+            return new EngineResult(CLOSED, getHandshakeStatus(), consumed, 0);
+        } else if (desc.equals(AlertDescription.USER_CANCELED)) {
+            return new EngineResult(OK, getHandshakeStatus(), consumed, 0);
+        }
+        alert(Alert.of(level, desc));
+        outboundDone = true;
+        status = NOT_HANDSHAKING;
+        throw alert;
+    }
+
+    private IEngineResult unwrapChangeCipherSpec(ByteBuffer src, int off, int length, int consumed) throws Alert {
+        if (length == 1) {
+            src.position(src.position() + off);
+            if (src.get() == 1) {
+                return new EngineResult(OK, getHandshakeStatus(), consumed, 0);
+            }
+        }
+        throw new UnexpectedMessageAlert("Invalid change_cipher_spec message");
+    }
+
+    private IEngineResult unwrap(ByteBuffer src, boolean rejectEarlyData) throws Alert {
+        int remaining = src.remaining();
+        if (remaining >= Record.HEADER_LENGTH) {
+            int len = src.getShort(src.position() + 3);
+            if (len <= remaining) {
+                int type = ContentType.of(src.get(src.position())).value();
+                if (type == ContentType.APPLICATION_DATA.value()) {
+                    if (len > handshaker.getState().getMaxFragmentLength() + 256) {
+                        throw new RecordOverflowAlert("Encrypted record is too big");
+                    }
+                    if (remaining >= Record.HEADER_LENGTH + len) {
+                        return unwrapAppData(src, len, rejectEarlyData);
+                    }
+                } else {
+                    if (len > handshaker.getState().getMaxFragmentLength()) {
+                        throw new RecordOverflowAlert("Record fragment is too big");
+                    }
+                    if (remaining >= Record.HEADER_LENGTH + len) {
+                        if (type == ContentType.HANDSHAKE.value()) {
+                            return unwrapHandshake(src, Record.HEADER_LENGTH, len, Record.HEADER_LENGTH + len);
+                        }
+                        if (type == ContentType.ALERT.value()) {
+                            return unwrapAlert(src, Record.HEADER_LENGTH, len, Record.HEADER_LENGTH + len);
+                        }
+                        if (type == ContentType.CHANGE_CIPHER_SPEC.value()) {
+                            return unwrapChangeCipherSpec(src, Record.HEADER_LENGTH, len, Record.HEADER_LENGTH + len);
+                        }
+                        throw new UnexpectedMessageAlert("Received unexpected record content type (" + type + ")");
+                    }
+                }
+            }
+        }
+        return new EngineResult(BUFFER_UNDERFLOW, getHandshakeStatus(), 0, 0);
+    }
+
+    @Override
+    public IEngineResult unwrap(ByteBuffer src, ByteBuffer dst) throws TLSException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

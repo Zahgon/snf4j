@@ -28,16 +28,8 @@ package org.snf4j.example.engine;
 import org.snf4j.core.engine.IEngine;
 
 public class EngineFactory {
-	public static IEngine create(int engine, int offset, boolean clientMode) {
-		switch (engine) {
-		case 1:
-			return new CloseableEngine(offset);
-			
-		case 2:
-			return new HandshakingEngine(offset, clientMode);
-			
-		default:
-			return new BasicEngine(offset);
-		}
-	}
+
+    public static IEngine create(int engine, int offset, boolean clientMode) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

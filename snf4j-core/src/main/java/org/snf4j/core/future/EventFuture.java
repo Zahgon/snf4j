@@ -30,35 +30,27 @@ import org.snf4j.core.session.ISession;
 
 class EventFuture<V> extends AbstractBlockingFuture<V> {
 
-	private final SessionEvent event;
-	
-	EventFuture(ISession session, SessionEvent event) {
-		super(session);
-		this.event = event;
-	}
-	
-	@Override
-	protected String toStringDetails() {
-		return "event=" + event.name();
-	}
-	
-	void cancel() {
-		if (setState(FutureState.CANCELLED)) {
-			notifyWaiters();
-		}
-	}
-	
-	void success() {
-		if (setState(FutureState.SUCCESSFUL)) {
-			notifyWaiters();
-		}
-	}
-	
-	void failure(Throwable cause) {
-		if (setState(FutureState.FAILED)) {
-			this.cause = cause;
-			notifyWaiters();
-		}
-	}
+    private final SessionEvent event;
 
+    EventFuture(ISession session, SessionEvent event) {
+        super(session);
+        this.event = event;
+    }
+
+    @Override
+    protected String toStringDetails() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void cancel() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void success() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void failure(Throwable cause) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

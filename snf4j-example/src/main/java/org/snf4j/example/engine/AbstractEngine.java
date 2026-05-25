@@ -26,7 +26,6 @@
 package org.snf4j.example.engine;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.engine.HandshakeStatus;
 import org.snf4j.core.engine.IEngine;
 import org.snf4j.core.engine.IEngineResult;
@@ -34,94 +33,93 @@ import org.snf4j.core.handler.SessionIncidentException;
 
 public abstract class AbstractEngine implements IEngine {
 
-	protected enum CloseType { NONE, PENDING, DONE };
-	
-	protected CloseType outboundDone = CloseType.NONE;
+    protected enum CloseType {
 
-	protected CloseType inboundDone = CloseType.NONE;
+        NONE, PENDING, DONE
+    }
 
-	protected HandshakeStatus handshakeStatus = HandshakeStatus.NOT_HANDSHAKING;
-	
-	@Override
-	public void init() {
-	}
-	
-	@Override
-	public void cleanup() {
-	}
-	
-	@Override
-	public void beginHandshake() throws Exception {
-	}
-	
-	@Override
-	public Object getSession() {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public boolean isOutboundDone() {
-		return outboundDone != CloseType.NONE;
-	}
+    protected CloseType outboundDone = CloseType.NONE;
 
-	@Override
-	public boolean isInboundDone() {
-		return inboundDone != CloseType.NONE;
-	}
+    protected CloseType inboundDone = CloseType.NONE;
 
-	@Override
-	public void closeOutbound() {
-		outboundDone = CloseType.PENDING;
-	}
+    protected HandshakeStatus handshakeStatus = HandshakeStatus.NOT_HANDSHAKING;
 
-	@Override
-	public void closeInbound() throws SessionIncidentException {
-		inboundDone = CloseType.PENDING;
-	}
-	
-	@Override
-	public int getMinApplicationBufferSize() {
-		return Packet.MAX_DATA;
-	}
+    @Override
+    public void init() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int getMinNetworkBufferSize() {
-		return Packet.MAX_SIZE;
-	}
+    @Override
+    public void cleanup() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int getMaxApplicationBufferSize() {
-		return getMinApplicationBufferSize();
-	}
+    @Override
+    public void beginHandshake() throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public int getMaxNetworkBufferSize() {
-		return getMinNetworkBufferSize();
-	}
-	
-	@Override
-	public HandshakeStatus getHandshakeStatus() {
-		return handshakeStatus;
-	}
+    @Override
+    public Object getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Runnable getDelegatedTask() {
-		return null;
-	}
-	
-	@Override
-	public IEngineResult wrap(ByteBuffer src, ByteBuffer dst) throws Exception {
-		return wrap(new ByteBuffer[] {src}, dst);
-	}
-	
-	protected IEngineResult updateHandshakeStatus(IEngineResult result) {
-		if (result.getHandshakeStatus() != HandshakeStatus.FINISHED) {
-			handshakeStatus = result.getHandshakeStatus();
-		}
-		else {
-			handshakeStatus = HandshakeStatus.NOT_HANDSHAKING;
-		}
-		return result;
-	}
-	
+    @Override
+    public boolean isOutboundDone() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isInboundDone() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void closeOutbound() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void closeInbound() throws SessionIncidentException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getMinApplicationBufferSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getMinNetworkBufferSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getMaxApplicationBufferSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getMaxNetworkBufferSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public HandshakeStatus getHandshakeStatus() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public Runnable getDelegatedTask() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IEngineResult wrap(ByteBuffer src, ByteBuffer dst) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    protected IEngineResult updateHandshakeStatus(IEngineResult result) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

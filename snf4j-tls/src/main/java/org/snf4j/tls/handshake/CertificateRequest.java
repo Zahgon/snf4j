@@ -27,7 +27,6 @@ package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -38,87 +37,63 @@ import org.snf4j.tls.extension.IExtensionDecoder;
 
 public class CertificateRequest extends KnownHandshake implements ICertificateRequest {
 
-	private final static HandshakeType TYPE = HandshakeType.CERTIFICATE_REQUEST;
+    private final static HandshakeType TYPE = HandshakeType.CERTIFICATE_REQUEST;
 
-	private final static byte[] EMPTY = new byte[0];
-	
-	private final byte[] context;
-	
-	private final List<IExtension> extensions;
-	
-	private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
+    private final static byte[] EMPTY = new byte[0];
 
-		@Override
-		public HandshakeType getType() {
-			return TYPE;
-		}
+    private final byte[] context;
 
-		@Override
-		public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
-			if (remaining >= 1) {
-				int len = srcs.getUnsigned();
-				
-				--remaining;
-				if (remaining >= len + 2) {
-					byte[] context = new byte[len];
-					
-					srcs.get(context);
-					remaining -= len;
+    private final List<IExtension> extensions;
 
-					ExtensionsParser parser = new ExtensionsParser(0, 0xffff, decoder);
+    private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
 
-					parser.parse(TYPE, srcs, remaining);
-					if (parser.isComplete() && remaining == parser.getConsumedBytes()) {
-						return new CertificateRequest(context, parser.getExtensions());
-					}
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}
-	};
-	
-	public CertificateRequest(List<IExtension> extensions) {
-		super(TYPE);
-		Args.checkNull(extensions, "extensions");
-		context = EMPTY;
-		this.extensions = extensions;
-	}
+        @Override
+        public HandshakeType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	public CertificateRequest(byte[] context, List<IExtension> extensions) {
-		super(TYPE);
-		Args.checkMax(context, 255, "context");
-		Args.checkNull(extensions, "extensions");
-		this.context = context;
-		this.extensions = extensions;
-	}
+        @Override
+        public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	@Override
-	public int getDataLength() {
-		return 1 + context.length + 2 + ExtensionsUtil.calculateLength(extensions);
-	}
+    public CertificateRequest(List<IExtension> extensions) {
+        super(TYPE);
+        Args.checkNull(extensions, "extensions");
+        context = EMPTY;
+        this.extensions = extensions;
+    }
 
-	@Override
-	public List<IExtension> getExtensions() {
-		return extensions;
-	}
+    public CertificateRequest(byte[] context, List<IExtension> extensions) {
+        super(TYPE);
+        Args.checkMax(context, 255, "context");
+        Args.checkNull(extensions, "extensions");
+        this.context = context;
+        this.extensions = extensions;
+    }
 
-	@Override
-	public byte[] getContext() {
-		return context;
-	}
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public static IHandshakeParser getParser() {
-		return PARSER;
-	}
-	
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.put((byte) context.length);
-		buffer.put(context);
-		buffer.putShort((short) ExtensionsUtil.calculateLength(extensions));
-		for (IExtension e: extensions) {
-			e.getBytes(buffer);
-		}
-	}
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public byte[] getContext() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IHandshakeParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

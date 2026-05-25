@@ -32,129 +32,80 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SessionCache<K> {
-	
-	private final Map<K, CacheEntry<K>> cache;
-	
-	private final ReferenceQueue<ISession> queue;
 
-	private int limit;
-	
-	private long lifetime;
-	
-	public SessionCache(int limit, long lifetime) {
-		this.limit = limit;
-		this.lifetime = lifetime;
-		queue = new ReferenceQueue<ISession>();
-		cache = new LinkedHashMap<K, CacheEntry<K>>();
-	}
+    private final Map<K, CacheEntry<K>> cache;
 
-	public int size() {
-		return size(System.currentTimeMillis());
-	}
+    private final ReferenceQueue<ISession> queue;
 
-	public int size(long currentTime) {
-		refreshExpired(currentTime);
-		return cache.size();
-	}
-	
-	public void clear() {
-		for (CacheEntry<K> entry: cache.values()) {
-			entry.invalidate();
-		}
-		while(queue.poll() != null);
-		cache.clear();
-	}
+    private int limit;
 
-	public void put(K key, ISession session) {
-		put(key, session, System.currentTimeMillis());
-	}
-	
-	public void put(K key, ISession session, long currentTime) {
-		refresh();
-		
-		long expirationTime = (lifetime == 0) ? 0 : currentTime + lifetime;
-		
-		CacheEntry<K> newEntry = new SoftCacheEntry<K>(key, session, expirationTime, queue);
-		CacheEntry<K> oldEntry = cache.put(key, newEntry);
-		
-		if (oldEntry != null) {
-			oldEntry.invalidate();
-		}
-		else if (limit > 0 && cache.size() > limit) {
-			refreshExpired(currentTime);
-			if (cache.size() > limit) {
-				Iterator<CacheEntry<K>> i = cache.values().iterator();
-				CacheEntry<K> entry = i.next();
-				
-				i.remove();
-				entry.invalidate();
-			}
-		}
-	}
+    private long lifetime;
 
-	public ISession get(K key) {
-		return get(key, System.currentTimeMillis());
-	}
-	
-	public ISession get(K key, long currentTime) {
-		refresh();
-		
-		CacheEntry<K> entry = cache.get(key);
-		
-		if (entry != null) {
-			if (lifetime == 0) {
-				currentTime = 0;
-			}
-			if (entry.isValid(currentTime)) {
-				return entry.getSession();
-			}
-			cache.remove(key);
-			entry.invalidate();
-		}
-		return null;
-	}
-	
-	public void remove(K key) {
-		refresh();
-		
-		CacheEntry<K> entry = cache.remove(key);
-		
-		if (entry != null) {
-			entry.invalidate();
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void refresh() {
-		CacheEntry<K> entry;
-		
-		while ((entry = (CacheEntry<K>) queue.poll()) != null) {
-			K key = entry.getKey();
-			
-			if (key == null) {
-				continue;
-			}
-			cache.remove(key, entry);
-		}
-	}
-	
-	private void refreshExpired(long currentTime) {
-		refresh();
-		
-		if (lifetime == 0) {
-			return;
-		}
-		
-		for (Iterator<CacheEntry<K>> i = cache.values().iterator(); i.hasNext();) {
-			CacheEntry<K> entry = i.next();
-			
-			if (!entry.isValid(currentTime)) {
-				i.remove();
-			}
-		}
-	}
-	
-	static interface CacheEntry<K> {
+    public SessionCache(int limit, long lifetime) {
+        this.limit = limit;
+        this.lifetime = lifetime;
+        queue = new ReferenceQueue<ISession>();
+        cache = new LinkedHashMap<K, CacheEntry<K>>();
+    }
+
+    public int size() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public int size(long currentTime) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void clear() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void put(K key, ISession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void put(K key, ISession session, long currentTime) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public ISession get(K key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public ISession get(K key, long currentTime) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public void remove(K key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("unchecked")
+    private void refresh() {
+        CacheEntry<K> entry;
+        while ((entry = (CacheEntry<K>) queue.poll()) != null) {
+            K key = entry.getKey();
+            if (key == null) {
+                continue;
+            }
+            cache.remove(key, entry);
+        }
+    }
+
+    private void refreshExpired(long currentTime) {
+        refresh();
+        if (lifetime == 0) {
+            return;
+        }
+        for (Iterator<CacheEntry<K>> i = cache.values().iterator(); i.hasNext(); ) {
+            CacheEntry<K> entry = i.next();
+            if (!entry.isValid(currentTime)) {
+                i.remove();
+            }
+        }
+    }
+
+    static interface CacheEntry<K> {
 
         boolean isValid(long currentTime);
 
@@ -164,43 +115,37 @@ public class SessionCache<K> {
 
         ISession getSession();
     }
-	
-	static class SoftCacheEntry<K> extends SoftReference<ISession> implements CacheEntry<K> {
 
-		private K key;
-		
-		private long expirationTime;
-		
-		public SoftCacheEntry(K key, ISession session, long expirationTime, ReferenceQueue<ISession> queue) {
-			super(session, queue);
-			this.key = key;
-			this.expirationTime = expirationTime;
-		}
+    static class SoftCacheEntry<K> extends SoftReference<ISession> implements CacheEntry<K> {
 
-		@Override
-		public boolean isValid(long currentTime) {
-            boolean valid = (currentTime <= expirationTime) && (get() != null);
-            if (!valid) {
-                invalidate();
-            }
-            return valid;
- 		}
+        private K key;
 
-		@Override
-		public void invalidate() {
-			clear();
-			key = null;
-			expirationTime = -1;
-		}
+        private long expirationTime;
 
-		@Override
-		public K getKey() {
-			return key;
-		}
+        public SoftCacheEntry(K key, ISession session, long expirationTime, ReferenceQueue<ISession> queue) {
+            super(session, queue);
+            this.key = key;
+            this.expirationTime = expirationTime;
+        }
 
-		@Override
-		public ISession getSession() {
-			return get();
-		}	
-	}
+        @Override
+        public boolean isValid(long currentTime) {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        @Override
+        public void invalidate() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        @Override
+        public K getKey() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+
+        @Override
+        public ISession getSession() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    }
 }

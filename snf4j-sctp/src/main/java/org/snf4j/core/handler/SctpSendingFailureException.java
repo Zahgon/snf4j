@@ -26,7 +26,6 @@
 package org.snf4j.core.handler;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.ImmutableSctpMessageInfo;
 
 /**
@@ -34,47 +33,47 @@ import org.snf4j.core.ImmutableSctpMessageInfo;
  * method along with the
  * {@link org.snf4j.core.handler.SessionIncident#SCTP_SENDING_FAILURE
  * SCTP_SENDING_FAILURE} incident.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public class SctpSendingFailureException extends Exception {
-	
-	private static final long serialVersionUID = -8776550059570729769L;
 
-	private final ImmutableSctpMessageInfo msgInfo;
-	
-	private final ByteBuffer buffer;
-	
-	/**
-	 * Constructs an exception with the message that was to be sent along with the
-	 * immutable ancillary data about the message and the cause of the failure.
-	 * 
-	 * @param buffer  the message that was to be sent
-	 * @param msgInfo the immutable ancillary data about the message that was to be
-	 *                sent
-	 * @param cause   the cause of the failure
-	 */
-	public SctpSendingFailureException(ByteBuffer buffer, ImmutableSctpMessageInfo msgInfo, Throwable cause) {
-		super(cause);
-		this.msgInfo = msgInfo;
-		this.buffer = buffer;
-	}
-	
-	/**
-	 * Returns the immutable ancillary data about the message that was to be sent
-	 * 
-	 * @return the immutable ancillary data about the message
-	 */
-	public ImmutableSctpMessageInfo getMessageInfo() {
-		return msgInfo;
-	}
-	
-	/**
-	 * Returns the message that was to be sent.
-	 * 
-	 * @return the message
-	 */
-	public ByteBuffer getBuffer() {
-		return buffer;
-	}
+    private static final long serialVersionUID = -8776550059570729769L;
+
+    private final ImmutableSctpMessageInfo msgInfo;
+
+    private final ByteBuffer buffer;
+
+    /**
+     * Constructs an exception with the message that was to be sent along with the
+     * immutable ancillary data about the message and the cause of the failure.
+     *
+     * @param buffer  the message that was to be sent
+     * @param msgInfo the immutable ancillary data about the message that was to be
+     *                sent
+     * @param cause   the cause of the failure
+     */
+    public SctpSendingFailureException(ByteBuffer buffer, ImmutableSctpMessageInfo msgInfo, Throwable cause) {
+        super(cause);
+        this.msgInfo = msgInfo;
+        this.buffer = buffer;
+    }
+
+    /**
+     * Returns the immutable ancillary data about the message that was to be sent
+     *
+     * @return the immutable ancillary data about the message
+     */
+    public ImmutableSctpMessageInfo getMessageInfo() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Returns the message that was to be sent.
+     *
+     * @return the message
+     */
+    public ByteBuffer getBuffer() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

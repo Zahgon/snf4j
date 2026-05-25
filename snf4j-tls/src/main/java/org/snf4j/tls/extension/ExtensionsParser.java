@@ -31,16 +31,15 @@ import org.snf4j.tls.handshake.HandshakeType;
 
 public class ExtensionsParser extends AbstractExtensionsParser {
 
-	private final IExtensionDecoder decoder;
-	
-	public ExtensionsParser(int minLength, int maxLength, IExtensionDecoder decoder) {
-		super(minLength, maxLength);
-		this.decoder = decoder;
-	}
+    private final IExtensionDecoder decoder;
 
-	@Override
-	protected IExtension parseExtension(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
-		return decoder.decode(handshakeType, srcs, remaining);
-	}
+    public ExtensionsParser(int minLength, int maxLength, IExtensionDecoder decoder) {
+        super(minLength, maxLength);
+        this.decoder = decoder;
+    }
 
+    @Override
+    protected IExtension parseExtension(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

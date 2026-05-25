@@ -27,7 +27,6 @@ package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -38,57 +37,45 @@ import org.snf4j.tls.extension.IExtensionDecoder;
 
 public class EncryptedExtensions extends KnownHandshake implements IEncryptedExtensions {
 
-	private final static HandshakeType TYPE = HandshakeType.ENCRYPTED_EXTENSIONS;
-	
-	private final List<IExtension> extensions;
-	
-	private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
+    private final static HandshakeType TYPE = HandshakeType.ENCRYPTED_EXTENSIONS;
 
-		@Override
-		public HandshakeType getType() {
-			return TYPE;
-		}
+    private final List<IExtension> extensions;
 
-		@Override
-		public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
-			if (remaining >= 2) {
-				ExtensionsParser parser = new ExtensionsParser(0, 0xffff, decoder);
+    private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
 
-				parser.parse(TYPE, srcs, remaining);
-				if (parser.isComplete() && remaining == parser.getConsumedBytes()) {
-					return new EncryptedExtensions(parser.getExtensions());
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}
-	};
-	
-	public EncryptedExtensions(List<IExtension> extensions) {
-		super(TYPE);
-		Args.checkNull(extensions, "extensions");
-		this.extensions = extensions;
-	}
+        @Override
+        public HandshakeType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	@Override
-	public int getDataLength() {
-		return 2 + ExtensionsUtil.calculateLength(extensions);
-	}
+        @Override
+        public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	@Override
-	public List<IExtension> getExtensions() {
-		return extensions;
-	}
-	
-	public static IHandshakeParser getParser() {
-		return PARSER;
-	}
+    public EncryptedExtensions(List<IExtension> extensions) {
+        super(TYPE);
+        Args.checkNull(extensions, "extensions");
+        this.extensions = extensions;
+    }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.putShort((short) ExtensionsUtil.calculateLength(extensions));
-		for (IExtension e: extensions) {
-			e.getBytes(buffer);
-		}
-	}
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IHandshakeParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

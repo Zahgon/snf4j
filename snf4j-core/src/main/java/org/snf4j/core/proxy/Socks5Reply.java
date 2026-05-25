@@ -26,50 +26,49 @@
 package org.snf4j.core.proxy;
 
 class Socks5Reply implements ISocksReply {
-	
-	private final int status;
-	
-	private final String address;
-	
-	private final SocksAddressType addressType;
-	
-	private final int port;
-	
-	Socks5Reply(int status, SocksAddressType addressType, String address, int port) {
-		this.status = status;
-		this.addressType = addressType;
-		this.address = address;
-		this.port = port;
-	}
-	
-	@Override
-	public boolean isSuccessful() {
-		return status == Socks5Status.SUCCESS.code();
-	}
 
-	@Override
-	public int getStatus() {
-		return status;
-	}
+    private final int status;
 
-	@Override
-	public String getStatusDescription() {
-		return Socks5Status.valueOf(status).description();
-	}
+    private final String address;
 
-	@Override
-	public int getPort() {
-		return port;
-	}
+    private final SocksAddressType addressType;
 
-	@Override
-	public String getAddress() {
-		return address;
-	}
+    private final int port;
 
-	@Override
-	public SocksAddressType getAddressType() {
-		return addressType;
-	}
+    Socks5Reply(int status, SocksAddressType addressType, String address, int port) {
+        this.status = status;
+        this.addressType = addressType;
+        this.address = address;
+        this.port = port;
+    }
 
+    @Override
+    public boolean isSuccessful() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getStatus() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String getStatusDescription() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getPort() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String getAddress() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SocksAddressType getAddressType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

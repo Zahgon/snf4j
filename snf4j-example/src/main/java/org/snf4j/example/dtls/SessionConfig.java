@@ -28,103 +28,45 @@ package org.snf4j.example.dtls;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.security.KeyStore;
-
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.TrustManagerFactory;
-
 import org.snf4j.core.codec.DefaultCodecExecutor;
 import org.snf4j.core.codec.ICodecExecutor;
 import org.snf4j.core.session.DefaultSessionConfig;
 import org.snf4j.core.session.SSLEngineCreateException;
 
 public class SessionConfig extends DefaultSessionConfig {
-	
-	final static int MAX_PACKET_SIZE = 1024;
 
-	final static int MAX_APPLICATION_DATA_SIZE = 512;
+    final static int MAX_PACKET_SIZE = 1024;
 
-	static volatile SSLContext sslContext = null; 
+    final static int MAX_APPLICATION_DATA_SIZE = 512;
 
-	SessionConfig() {
-		setMinInBufferCapacity(MAX_PACKET_SIZE);
-		setMinOutBufferCapacity(MAX_PACKET_SIZE);
-		setIgnorePossiblyIncompleteDatagrams(false);
-	}
+    static volatile SSLContext sslContext = null;
 
-	void load(KeyStore ks, String fileName, char[] password) throws Exception {
-		InputStream in = getClass().getResourceAsStream(fileName);
-		
-		try {
-			ks.load(in, password);
-		}
-		finally {
-			in.close();
-		}
-	}
+    SessionConfig() {
+        setMinInBufferCapacity(MAX_PACKET_SIZE);
+        setMinOutBufferCapacity(MAX_PACKET_SIZE);
+        setIgnorePossiblyIncompleteDatagrams(false);
+    }
 
-	SSLContext getSSLContext() throws SSLEngineCreateException {
-		if (sslContext == null) {
-			try {
-				synchronized (SessionConfig.class) {
-					if (sslContext == null) {
-						KeyStore ks = KeyStore.getInstance("JKS");
-						KeyStore ts = KeyStore.getInstance("JKS");
-						char[] password = "password".toCharArray();
+    void load(KeyStore ks, String fileName, char[] password) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-						load(ks, "/keystore.jks", password);
-						load(ts, "/keystore.jks", password);
+    SSLContext getSSLContext() throws SSLEngineCreateException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-						KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-						kmf.init(ks, password);
-						TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-						tmf.init(ts);
+    @Override
+    public SSLEngine createSSLEngine(boolean clientMode) throws SSLEngineCreateException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-						SSLContext ctx = SSLContext.getInstance("DTLS");
-						ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-						sslContext = ctx;
-					}
-				}
-			}
-			catch (Exception e) {
-				throw new SSLEngineCreateException(e);
-			}
-		}
-		return sslContext;
-	}
-	
-	@Override
-	public SSLEngine createSSLEngine(boolean clientMode) throws SSLEngineCreateException {
-		SSLEngine engine = getSSLContext().createSSLEngine();
-		
-		engine.setUseClientMode(clientMode);
-		if (!clientMode) {
-			engine.setNeedClientAuth(true);
-		}
-		
-		SSLParameters params = engine.getSSLParameters();
-			
-		try {
-			Method method = SSLParameters.class.getMethod("setMaximumPacketSize", int.class);
-			method.invoke(params, MAX_PACKET_SIZE);
-			engine.setSSLParameters(params);
-		}
-		catch (Exception e) {
-			throw new SSLEngineCreateException(e);
-		}
-		return engine;
-	}
-	
-	@Override
-	public ICodecExecutor createCodecExecutor() {
-		DefaultCodecExecutor executor = new DefaultCodecExecutor();
-		
-		executor.getPipeline().add("DECODER", new PacketDecoder());
-		executor.getPipeline().add("ENCODER", new PacketEncoder());
-		return executor;
-	}
-
-	
+    @Override
+    public ICodecExecutor createCodecExecutor() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

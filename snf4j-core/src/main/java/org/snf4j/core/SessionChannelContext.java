@@ -29,36 +29,35 @@ import java.nio.channels.SelectableChannel;
 
 abstract class SessionChannelContext<T extends InternalSession> extends ChannelContext<T> {
 
-	SessionChannelContext(T session) {
-		super(session);
-	}
-	
-	@Override
-	abstract ChannelContext<T> wrap(InternalSession session);
+    SessionChannelContext(T session) {
+        super(session);
+    }
 
-	@Override
-	final boolean isServer() {
-		return false;
-	}
-	
-	@Override
-	final boolean isSession() {
-		return true;
-	}
-	
-	@Override
-	final T getSession() {
-		return context;
-	}
+    @Override
+    abstract ChannelContext<T> wrap(InternalSession session);
 
-	@Override
-	final SelectableChannel accept(SelectableChannel channel) throws Exception {
-		throw new UnsupportedOperationException("accept is not supported");
-	}
-	
-	@Override
-	final InternalSession create(SelectableChannel channel) throws Exception {
-		throw new UnsupportedOperationException("create is not supported");
-	}
-	
+    @Override
+    final boolean isServer() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final boolean isSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final T getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final SelectableChannel accept(SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final InternalSession create(SelectableChannel channel) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

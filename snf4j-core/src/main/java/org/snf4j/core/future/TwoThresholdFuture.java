@@ -27,30 +27,29 @@ package org.snf4j.core.future;
 
 class TwoThresholdFuture<V> extends ThresholdFuture<V> implements ITwoThresholdFuture<V> {
 
-	private volatile long secondThreshold = ITwoThresholdFuture.UNKNOWN_THRESHOLD;
-	
-	TwoThresholdFuture(DataFuture<V> future, long threshold) {
-		super(future, threshold);
-	}
-	
-	@Override
-	protected String toStringDetails() {
-		return "firstThreshold=" + threshold + ",secondThreshold=" + secondThreshold;
-	}
-	
-	@Override
-	public final void setSecondThreshold(long secondThreshold) {
-		this.secondThreshold = secondThreshold;
-	}
-	
-	@Override
-	public final long getFirstThreshold() {
-		return threshold;
-	}
-	
-	@Override
-	public boolean isSuccessful() {
-		return (secondThreshold == ITwoThresholdFuture.UNKNOWN_THRESHOLD) ? false : future.size() >= secondThreshold;
-	}
-	
+    private volatile long secondThreshold = ITwoThresholdFuture.UNKNOWN_THRESHOLD;
+
+    TwoThresholdFuture(DataFuture<V> future, long threshold) {
+        super(future, threshold);
+    }
+
+    @Override
+    protected String toStringDetails() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final void setSecondThreshold(long secondThreshold) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final long getFirstThreshold() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isSuccessful() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

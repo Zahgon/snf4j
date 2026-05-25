@@ -29,70 +29,62 @@ import org.snf4j.core.handler.SessionEvent;
 import org.snf4j.core.session.ISession;
 
 /**
- * An event driven compound encoder that processes input data through a chain of 
+ * An event driven compound encoder that processes input data through a chain of
  * the specified encoders.
- * 
+ *
  * @param <I>
  *            the type of the accepted inbound objects
  * @param <O>
  *            the type of the produced outbound objects
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-abstract public class EventDrivenCompoundEncoder<I,O> extends CompoundEncoder<I,O> implements IEventDrivenCodec {
-	
-	private final IEventDrivenCodec[] codecs;
-	
-	private final int codecsCount;
-	
-	/**
-	 * Constructs an event driven compound encoder with a chain of the specified 
-	 * encoders.
-	 * <p>
-	 * The encoder chain is organized in the following way:
-	 * <pre>
-	 * {data} -&gt; encoder1 -&gt; encoder2 -&gt; ... -&gt; encoderN -&gt; {out}
-	 * </pre>
-	 * 
-	 * @param encoders
-	 *            the chain of encoders
-	 * @throws IllegalArgumentException
-	 *             if the specified encoders have incompatible inbound or
-	 *             outbound types
-	 * @throws IllegalStateException if the param O is {@code Void}
-	 */
-	public EventDrivenCompoundEncoder(IEncoder<?,?>... encoders) {
-		super(encoders);
-		codecs = new IEventDrivenCodec[encoders.length];
-		
-		int count = 0;
-		for (IEncoder<?, ?> codec: encoders) {
-			
-			if (codec instanceof IEventDrivenCodec) {
-				codecs[count++] = (IEventDrivenCodec)codec;
-			}
-		}
-		codecsCount = count;
-	}
+abstract public class EventDrivenCompoundEncoder<I, O> extends CompoundEncoder<I, O> implements IEventDrivenCodec {
 
-	@Override
-	public void added(ISession session, ICodecPipeline pipeline) {
-		for (int i=0; i<codecsCount; ++i) {
-			codecs[i].added(session, pipeline);
-		}
-	}
-	
-	@Override
-	public void event(ISession session, SessionEvent event) {
-		for (int i=0; i<codecsCount; ++i) {
-			codecs[i].event(session, event);
-		}
-	}
-	
-	@Override
-	public void removed(ISession session, ICodecPipeline pipeline) {
-		for (int i=0; i<codecsCount; ++i) {
-			codecs[i].removed(session, pipeline);
-		}
-	}
+    private final IEventDrivenCodec[] codecs;
+
+    private final int codecsCount;
+
+    /**
+     * Constructs an event driven compound encoder with a chain of the specified
+     * encoders.
+     * <p>
+     * The encoder chain is organized in the following way:
+     * <pre>
+     * {data} -&gt; encoder1 -&gt; encoder2 -&gt; ... -&gt; encoderN -&gt; {out}
+     * </pre>
+     *
+     * @param encoders
+     *            the chain of encoders
+     * @throws IllegalArgumentException
+     *             if the specified encoders have incompatible inbound or
+     *             outbound types
+     * @throws IllegalStateException if the param O is {@code Void}
+     */
+    public EventDrivenCompoundEncoder(IEncoder<?, ?>... encoders) {
+        super(encoders);
+        codecs = new IEventDrivenCodec[encoders.length];
+        int count = 0;
+        for (IEncoder<?, ?> codec : encoders) {
+            if (codec instanceof IEventDrivenCodec) {
+                codecs[count++] = (IEventDrivenCodec) codec;
+            }
+        }
+        codecsCount = count;
+    }
+
+    @Override
+    public void added(ISession session, ICodecPipeline pipeline) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void event(ISession session, SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void removed(ISession session, ICodecPipeline pipeline) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

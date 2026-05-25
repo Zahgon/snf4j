@@ -26,7 +26,6 @@
 package org.snf4j.core.handler;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.core.factory.DefaultSessionStructureFactory;
 import org.snf4j.core.factory.ISessionStructureFactory;
 import org.snf4j.core.session.DefaultSessionConfig;
@@ -35,127 +34,132 @@ import org.snf4j.core.session.ISessionConfig;
 
 /**
  * Base implementation of the {@link IHandler} interface.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public abstract class AbstractHandler implements IHandler {
 
-	private ISession session;
-	
-	private final String name;
-	
-	private final ISessionConfig config;
-	
-	/**
-	 * Default constructor creating an unnamed handler.
-	 */
-	protected AbstractHandler() {
-		this(new DefaultSessionConfig());
-	}
-	
-	/**
-	 * Default constructor creating an unnamed handler with given session
-	 * configuration object.
-	 * 
-	 * @param config the session configuration object, or {@code null} to
-	 *               use the default configuration
-	 */
-	protected AbstractHandler(ISessionConfig config) {
-		this.config = config != null ? config : new DefaultSessionConfig();
-		this.name = null;
-	}
-	
-	/**
-	 * Constructor creating a named handler.
-	 * 
-	 * @param name
-	 *            the name for this handler
-	 */
-	protected AbstractHandler(String name) {
-		this(name, new DefaultSessionConfig());
-	}
-	
-	/**
-	 * Constructor creating a named handler with given session configuration object.
-	 * 
-	 * @param name   the name for this handler
-	 * @param config the session configuration object, or {@code null} to
-	 *               use the default configuration
-	 */
-	protected AbstractHandler(String name, ISessionConfig config) {
-		this.name = name;
-		this.config = config != null ? config : new DefaultSessionConfig();
-	}
-	
-	@Override
-	public void setSession(ISession session) {
-		this.session = session;
-	}
-	
-	@Override
-	public ISession getSession() {
-		return session;
-	}
-	
-	@Override
-	public String getName() {
-		return name;
-	}
-	
-	@Override
-	public void event(SessionEvent event) {
-	}
-	
-	@Override
-	public void event(DataEvent event, long length) {
-	}
+    private ISession session;
 
-	@Override
-	public void exception(Throwable t) {
-	}
+    private final String name;
 
-	@Override
-	public boolean incident(SessionIncident incident, Throwable t) {
-		return false;
-	}
-	
-	@Override
-	public void timer(Object event) {	
-	}
-	
-	@Override
-	public void timer(Runnable task) {
-	}
-	
-	@Override
-	public ISessionStructureFactory getFactory() {
-		return DefaultSessionStructureFactory.DEFAULT;
-	}
+    private final ISessionConfig config;
 
-	@Override
-	public ISessionConfig getConfig() {
-		return config;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * By default it simply passes the {@code data} value to the
-	 * {@link IHandler#read(Object)} method.
-	 */
-	@Override
-	public void read(byte[] data) {
-		read((Object)data);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * By default it simply passes the {@code data} value to the
-	 * {@link IHandler#read(Object)} method.
-	 */
-	@Override
-	public void read(ByteBuffer data) {
-		read((Object)data);
-	}
+    /**
+     * Default constructor creating an unnamed handler.
+     */
+    protected AbstractHandler() {
+        this(new DefaultSessionConfig());
+    }
+
+    /**
+     * Default constructor creating an unnamed handler with given session
+     * configuration object.
+     *
+     * @param config the session configuration object, or {@code null} to
+     *               use the default configuration
+     */
+    protected AbstractHandler(ISessionConfig config) {
+        this.config = config != null ? config : new DefaultSessionConfig();
+        this.name = null;
+    }
+
+    /**
+     * Constructor creating a named handler.
+     *
+     * @param name
+     *            the name for this handler
+     */
+    protected AbstractHandler(String name) {
+        this(name, new DefaultSessionConfig());
+    }
+
+    /**
+     * Constructor creating a named handler with given session configuration object.
+     *
+     * @param name   the name for this handler
+     * @param config the session configuration object, or {@code null} to
+     *               use the default configuration
+     */
+    protected AbstractHandler(String name, ISessionConfig config) {
+        this.name = name;
+        this.config = config != null ? config : new DefaultSessionConfig();
+    }
+
+    @Override
+    public void setSession(ISession session) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISession getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public String getName() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void event(DataEvent event, long length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void exception(Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean incident(SessionIncident incident, Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void timer(Object event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void timer(Runnable task) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionStructureFactory getFactory() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * By default it simply passes the {@code data} value to the
+     * {@link IHandler#read(Object)} method.
+     */
+    @Override
+    public void read(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * By default it simply passes the {@code data} value to the
+     * {@link IHandler#read(Object)} method.
+     */
+    @Override
+    public void read(ByteBuffer data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -27,16 +27,16 @@ package org.snf4j.core;
 
 class PipelineDecodeException extends RuntimeException {
 
-	private static final long serialVersionUID = -4227265035286131876L;
+    private static final long serialVersionUID = -4227265035286131876L;
 
-	private final InternalSession session;
-	
-	PipelineDecodeException(InternalSession session, Throwable cause) {
-		super(cause);
-		this.session = session;
-	}
-	
-	final InternalSession getSession() {
-		return session;
-	}
+    private final InternalSession session;
+
+    PipelineDecodeException(InternalSession session, Throwable cause) {
+        super(cause);
+        this.session = session;
+    }
+
+    final InternalSession getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -27,41 +27,48 @@ package org.snf4j.core.allocator;
 
 class NopAllocatorMetric implements IDefaultAllocatorMetricCollector {
 
-	final static NopAllocatorMetric DEFAULT = new NopAllocatorMetric();
-	
-	private NopAllocatorMetric() {
-	}
-	
-	@Override
-	final public void allocating(int capacity) {
-	}
+    final static NopAllocatorMetric DEFAULT = new NopAllocatorMetric();
 
-	@Override
-	final public void allocated(int capacity) {
-	}
+    private NopAllocatorMetric() {
+    }
 
-	@Override
-	final public void releasing(int capacity) {
-	}
-	
-	@Override
-	final public void released(int capacity) {
-	}
-	
-	@Override
-	final public void ensureSome() {
-	}
+    @Override
+    final public void allocating(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	final public void ensure() {
-	}
+    @Override
+    final public void allocated(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	final public void reduce() {
-	}
+    @Override
+    final public void releasing(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	final public void extend() {
-	}
+    @Override
+    final public void released(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    final public void ensureSome() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final public void ensure() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final public void reduce() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final public void extend() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

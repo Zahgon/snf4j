@@ -26,63 +26,57 @@
 package org.snf4j.tls.session;
 
 import java.security.cert.Certificate;
-
 import org.snf4j.tls.cipher.CipherSuite;
 
 public class SessionInfo {
-	
-	private String peerHost;
-	
-	private int peerPort = -1;
-	
-	private CipherSuite cipher;
 
-	private Certificate[] peerCerts;
+    private String peerHost;
 
-	private Certificate[] localCerts;
-	
-	public String peerHost() {
-		return peerHost;
-	}
+    private int peerPort = -1;
 
-	public SessionInfo peerHost(String peerHost) {
-		this.peerHost = peerHost;
-		return this;
-	}
+    private CipherSuite cipher;
 
-	public int peerPort() {
-		return peerPort;
-	}
+    private Certificate[] peerCerts;
 
-	public SessionInfo peerPort(int peerPort) {
-		this.peerPort = peerPort;
-		return this;
-	}
+    private Certificate[] localCerts;
 
-	public CipherSuite cipher() {
-		return cipher;
-	}
+    public String peerHost() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public SessionInfo cipher(CipherSuite cipher) {
-		this.cipher = cipher;
-		return this;
-	}
+    public SessionInfo peerHost(String peerHost) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public Certificate[] peerCerts() {
-		return peerCerts;
-	}
-	
-	public SessionInfo peerCerts(Certificate[] certs) {
-		peerCerts = certs;
-		return this;
-	}
+    public int peerPort() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public Certificate[] localCerts() {
-		return localCerts;
-	}
-	
-	public SessionInfo localCerts(Certificate[] certs) {
-		localCerts = certs;
-		return this;
-	}
+    public SessionInfo peerPort(int peerPort) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public CipherSuite cipher() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SessionInfo cipher(CipherSuite cipher) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public Certificate[] peerCerts() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SessionInfo peerCerts(Certificate[] certs) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public Certificate[] localCerts() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SessionInfo localCerts(Certificate[] certs) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

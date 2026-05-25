@@ -27,7 +27,6 @@ package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -36,75 +35,60 @@ import org.snf4j.tls.extension.IExtensionDecoder;
 import org.snf4j.tls.extension.SignatureScheme;
 
 public class CertificateVerify extends KnownHandshake implements ICertificateVerify {
-	
-	private final static HandshakeType TYPE = HandshakeType.CERTIFICATE_VERIFY;
 
-	private final SignatureScheme algorithm;
-	
-	private final byte[] signature;
-	
-	private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
+    private final static HandshakeType TYPE = HandshakeType.CERTIFICATE_VERIFY;
 
-		@Override
-		public HandshakeType getType() {
-			return TYPE;
-		}
+    private final SignatureScheme algorithm;
 
-		@Override
-		public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
-			if (remaining >= 4) {
-				SignatureScheme algorithm = SignatureScheme.of(srcs.getUnsignedShort());
-				int len = srcs.getUnsignedShort();
-				
-				remaining -= 4;
-				if (len == remaining) {
-					byte[] signature = new byte[len];
-				
-					srcs.get(signature);
-					return new CertificateVerify(algorithm, signature);
-				}
-			}
-			throw decodeError("Inconsistent length");
-		}
-	};
-	
-	public CertificateVerify(SignatureScheme algorithm, byte[] signature) {
-		super(TYPE);
-		Args.checkNull(algorithm, "algorithm");
-		Args.checkNull(signature, "signature");
-		this.algorithm = algorithm;
-		this.signature = signature;
-	}
+    private final byte[] signature;
 
-	@Override
-	public int getDataLength() {
-		return 2 + 2 + signature.length;
-	}
+    private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
 
-	@Override
-	public List<IExtension> getExtensions() {
-		return null;
-	}
+        @Override
+        public HandshakeType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	public static IHandshakeParser getParser() {
-		return PARSER;
-	}
-	
-	@Override
-	public SignatureScheme getAlgorithm() {
-		return algorithm;
-	}
+        @Override
+        public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	@Override
-	public byte[] getSignature() {
-		return signature;
-	}
+    public CertificateVerify(SignatureScheme algorithm, byte[] signature) {
+        super(TYPE);
+        Args.checkNull(algorithm, "algorithm");
+        Args.checkNull(signature, "signature");
+        this.algorithm = algorithm;
+        this.signature = signature;
+    }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.putShort((short) algorithm.value());
-		buffer.putShort((short) signature.length);
-		buffer.put(signature);
-	}
-	
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IHandshakeParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SignatureScheme getAlgorithm() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public byte[] getSignature() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

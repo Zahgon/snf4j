@@ -32,7 +32,6 @@ import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.snf4j.core.SessionPipeline.Item;
 import org.snf4j.core.allocator.IByteBufferAllocator;
 import org.snf4j.core.codec.ICodecExecutor;
@@ -57,881 +56,518 @@ import org.snf4j.core.session.UnsupportedSessionTimer;
 import org.snf4j.core.timer.ITimer;
 
 abstract class InternalSession extends AbstractSession implements ISession {
-	
-	final ILogger logger;
 
-	final IExceptionLogger elogger = ExceptionLogger.getInstance();
+    final ILogger logger;
 
-	private final static AtomicLong nextId = new AtomicLong(0);
-		
-	volatile ClosingState closing = ClosingState.NONE;
-	
-	final AtomicBoolean closeCalled = new AtomicBoolean(false);
-	
-	private volatile long readBytes;
-	
-	private volatile long writtenBytes;
+    final IExceptionLogger elogger = ExceptionLogger.getInstance();
 
-	private long lastThroughputCalculationTime;
+    private final static AtomicLong nextId = new AtomicLong(0);
 
-	private long lastReadBytes;
+    volatile ClosingState closing = ClosingState.NONE;
 
-	private long lastWrittenBytes;
+    final AtomicBoolean closeCalled = new AtomicBoolean(false);
 
-	private volatile double readBytesThroughput;
-	
-	private volatile double writtenBytesThroughput;
+    private volatile long readBytes;
 
-	private final long creationTime;
-	
-	private volatile long lastReadTime;
-	
-	private volatile long lastWriteTime;
-	
-	private volatile long lastIoTime;
-	
-	private volatile boolean readSuspended;
-	
-	private volatile boolean writeSuspended;
-	
-	final IHandler handler;
+    private volatile long writtenBytes;
 
-	final ISessionConfig config;
+    private long lastThroughputCalculationTime;
 
-	final IByteBufferAllocator allocator;
-	
-	volatile SelectionKey key;
-	
-	volatile SelectableChannel channel;
-	
-	volatile InternalSelectorLoop loop;
-	
-	volatile boolean isEOS;
+    private long lastReadBytes;
 
-	/** Used to synchronize write operations and changing key's selection interests */
-	final Object writeLock = new Object();
-	
-	/** Used to track already fired events. */
-	int eventBits;
-	
-	final SessionFuturesController futuresController = new SessionFuturesController(this);
-	
-	final CodecExecutorAdapter codec;
+    private long lastWrittenBytes;
 
-	final boolean optimizeCopying;
-	
-	final boolean optimizeBuffers;
-	
-	private final ISessionTimer timer; 
+    private volatile double readBytesThroughput;
 
-	final int maxWriteSpinCount;
-	
-	volatile SessionPipeline<?> pipeline;
-	
-	Item<?> pipelineItem;
-	
-	boolean isSwitching;
-	
-	protected InternalSession(String name, IHandler handler, CodecExecutorAdapter codec, ILogger logger) {
-		super("Session-", 
-				nextId.incrementAndGet(), 
-				name != null ? name : (handler != null ? handler.getName() : null),
-				handler != null ? handler.getFactory().getAttributes() : null);
-	
-		if (handler == null) throw new IllegalArgumentException("handler is null");
-		
-		this.logger = logger;
-		this.handler = handler;
-		this.handler.setSession(this);
-		if (handler instanceof IAllocatingHandler) {
-			allocator = ((IAllocatingHandler)handler).getAllocator();
-		}
-		else {
-			allocator = handler.getFactory().getAllocator();
-		}
-		config = handler.getConfig();
-		optimizeCopying = config.optimizeDataCopying();
-		optimizeBuffers = optimizeCopying && allocator.isReleasable();
-		maxWriteSpinCount = config.getMaxWriteSpinCount();
-		if (maxWriteSpinCount <= 0) {
-			throw new IllegalArgumentException("maxWriteSpinCount is " + maxWriteSpinCount + " (expected 1+)");
-		}
-		
-		creationTime = System.currentTimeMillis();
-		lastReadTime = lastWriteTime = lastIoTime = lastThroughputCalculationTime = creationTime; 
-		
-		if (codec == null) {
-			ICodecExecutor executor = config.createCodecExecutor();
-			this.codec = executor != null ? new CodecExecutorAdapter(executor, this) : null;
-		}
-		else {
-			this.codec = codec;
-		}
-		
-		ITimer timer = handler.getFactory().getTimer();
-		if (timer == null) {
-			this.timer = UnsupportedSessionTimer.INSTANCE;
-		}
-		else {
-			this.timer = new InternalSessionTimer(InternalSession.this, timer);
-		}
-	}
-	
-	protected InternalSession(String name, IHandler handler, ILogger logger) {
-		this(name, handler, null, logger);
-	}
-	
-	abstract IEncodeTaskWriter getEncodeTaskWriter(); 
-	
-	abstract SessionPipeline<?> createPipeline();
-		
-	SessionPipeline<?> getPipeline0() {
-		if (pipeline == null) {
-			synchronized (this) {
-				if (pipeline == null) {
-					pipeline = createPipeline();
-				}
-			}
-		}
-		return pipeline;
-	}
-	
-	void setPipeline(SessionPipeline<?> pipeline) {
-		synchronized (this) {
-			this.pipeline = pipeline;
-		}
-	}
-	
-	InternalSession getFirstInPipeline() {
-		synchronized (this) {
-			if (pipeline != null) {
-				return pipeline.first();
-			}
-		}
-		return null;
-	}
-	
-	void abortFutures(Throwable cause) {
-		futuresController.abort(cause);
-	}
-	
-	@Override
-	public IFuture<Void> getCreateFuture() {
-		return futuresController.getCreateFuture();
-	}
+    private volatile double writtenBytesThroughput;
 
-	@Override
-	public IFuture<Void> getOpenFuture() {
-		return futuresController.getOpenFuture();
-	}
+    private final long creationTime;
 
-	@Override
-	public IFuture<Void> getReadyFuture() {
-		return futuresController.getReadyFuture();
-	}
+    private volatile long lastReadTime;
 
-	@Override
-	public IFuture<Void> getCloseFuture() {
-		return futuresController.getCloseFuture();
-	}
+    private volatile long lastWriteTime;
 
-	@Override
-	public IFuture<Void> getEndFuture() {
-		return futuresController.getEndFuture();
-	}
-	
-	/**
-	 * Detects if the key was replaced. It can happen after rebuilding of the selector.
-	 * 
-	 * @throws IllegalSessionStateException
-	 *             if replacement occurred and new key is invalid
-	 */
-	final SelectionKey detectRebuild(SelectionKey key) {
-		if (key != this.key) {
-			key = this.key;
-			if (!key.isValid()) {
-				throw new IllegalSessionStateException(SessionState.CLOSING);
-			}
-		}
-		return key;
-	}
+    private volatile long lastIoTime;
 
-	/**
-	 * Throws unchecked exception if the key is not valid
-	 *  
-	 * @throws IllegalSessionStateException
-	 *             if key is not valid
-	 */
-	static SelectionKey checkKey(SelectionKey key) {
-		if (key == null) {
-			throw new IllegalSessionStateException(SessionState.OPENING);
-		}
-		if (!key.isValid()) {
-			throw new IllegalSessionStateException(SessionState.CLOSING);
-		}
-		return key;
-	}
-	
-	final void lazyWakeup() {
-		if (loop != null) {
-			loop.lazyWakeup();
-		}
-		else if (key != null) {
-			key.selector().wakeup();
-		}
-	}
-	
-	@Override
-	public ISessionConfig getConfig() {
-		return config;
-	}
-	
-	@Override
-	public ICodecPipeline getCodecPipeline() {
-		return codec != null ? codec.getExecutor().getPipeline() : null;
-	}
-	
-	@Override
-	public SessionState getState() {
-		SelectionKey key = this.key;
+    private volatile boolean readSuspended;
 
-		if (key == null) {
-			return SessionState.OPENING;
-		}
-		return key.isValid() ? SessionState.OPEN : SessionState.CLOSING;
-	}
+    private volatile boolean writeSuspended;
 
-	@Override
-	public boolean isOpen() {
-		return getState() == SessionState.OPEN;
-	}
+    final IHandler handler;
 
-	boolean isCreated() {
-		return channel != null;
-	}
+    final ISessionConfig config;
 
-	void setChannel(SelectableChannel channel) {
-		this.channel = channel;
-	}
-	
-	void setSelectionKey(SelectionKey key) {
-		this.key = key;
-	}
-	
-	void setLoop(InternalSelectorLoop loop) {
-		this.loop = loop;
-		futuresController.setExecutor(loop);
-	}
-	
-	final Object getWriteLock() {
-		return writeLock;
-	}
-	
-	void incReadBytes(long bytes, long currentTime) {
-		readBytes += bytes;
-		lastReadTime = lastIoTime = currentTime;
-	}
+    final IByteBufferAllocator allocator;
 
-	void incWrittenBytes(long bytes, long currentTime) {
-		writtenBytes += bytes;
-		lastWriteTime = lastIoTime = currentTime;
-	}
+    volatile SelectionKey key;
 
-	/**
-	 * Clears key's write interest if write is not suspended. It should be
-	 * executed inside block synchronized on a write lock.
-	 */
-	void clearWriteInterestOps(SelectionKey key) {
-		if (!writeSuspended) {
-			int ops = key.interestOps();
+    volatile SelectableChannel channel;
 
-			if ((ops & SelectionKey.OP_WRITE) != 0) {
-				key.interestOps(ops & (~SelectionKey.OP_WRITE));
-			}
-		}
-	}
+    volatile InternalSelectorLoop loop;
 
-	/**
-	 * Sets key's write interest if write is not suspended. It should be
-	 * executed inside block synchronized on a write lock.
-	 *
-	 * @throw CancelledKeyException if the key has been canceled
-	 */
-	void setWriteInterestOps(SelectionKey key) {
-		if (!writeSuspended) {
-			int ops = key.interestOps();
+    volatile boolean isEOS;
 
-			if ((ops & SelectionKey.OP_WRITE) == 0) {
-				key.interestOps(ops | SelectionKey.OP_WRITE);
-			}
-		}
-	}
+    /**
+     * Used to synchronize write operations and changing key's selection interests
+     */
+    final Object writeLock = new Object();
 
-	/**
-	 * Suspends read, write or both if session is not in closing state. It
-	 * should be executed inside block synchronized on a write lock.
-	 * 
-	 * @param ops
-	 *            SelectionKey.OP_RAED, SelectionKey.OP_WRITE or both
-	 * @throws CancelledKeyException
-	 *             if the selection key associated with this session has been
-	 *             cancelled
-	 */
-	boolean suspend(int ops) {
-		if (closing == ClosingState.NONE) {
-			int tmpOps = 0;
-			
-			if ((ops & SelectionKey.OP_READ) != 0) {
-				if (!readSuspended) {
-					tmpOps |= SelectionKey.OP_READ;
-					readSuspended = true;
-				}
-			}
-			if ((ops & SelectionKey.OP_WRITE) != 0) {
-				if (!writeSuspended) {
-					tmpOps |= SelectionKey.OP_WRITE;
-					writeSuspended = true;
-				}
-			}
+    /**
+     * Used to track already fired events.
+     */
+    int eventBits;
 
-			if (tmpOps != 0) {
-				key.interestOps(key.interestOps() & (~tmpOps));
-				return true;
-			}
-		}
-		return false;
-	}
+    final SessionFuturesController futuresController = new SessionFuturesController(this);
 
-	void close(boolean isEos) {
-		close(isEos, true);
-	}
-	
-	void close(boolean isEos, boolean sending) {
-		SelectionKey key = this.key;
-		
-		if (key != null && key.isValid()) {
-			try {
-				synchronized (writeLock) {
-					key = detectRebuild(key);
-					if (closing == ClosingState.NONE) {
-						int ops = key.interestOps();
-						
-						this.isEOS = isEos;
-						if (sending && (ops & SelectionKey.OP_WRITE) != 0) {
-							//To enable gentle close OP_READ must be set 
-							if (isEos) {
-								key.interestOps(ops & ~SelectionKey.OP_READ);
-							} 
-							else if ((ops & SelectionKey.OP_READ) == 0) {
-								key.interestOps(ops | SelectionKey.OP_READ);
-								lazyWakeup();
-							}
-							closing = ClosingState.SENDING;
-						}
-						else {
-							if (!sending) {
-								key.interestOps(ops & ~SelectionKey.OP_WRITE);
-							}
-							if (isEos) {
-								//Executed in the selector loop thread, so we can skip sending events now
-								closing = ClosingState.FINISHED;
-								close(key.channel());
-							}
-							else {
-								//To enable gentle close OP_READ must be set 
-								if ((ops & SelectionKey.OP_READ) == 0) {
-									key.interestOps(ops | SelectionKey.OP_READ);
-									lazyWakeup();
-								}
-								closing = ClosingState.FINISHING;
-								shutdown(key);
-							}
-						}
-					}
-					else if (isEos) {
-						closing = ClosingState.FINISHED;
-						close(key.channel());
-					}
+    final CodecExecutorAdapter codec;
 
-					if (!key.isValid()) {
-						loop.finishInvalidatedKey(key);
-					}
-				}
-			} catch (Exception e) {
-			}
-		}
-		else {
-			quickClose0();
-		}
-	}
-	
-	private void quickClose0() {
-		SelectionKey key = this.key;
-		closeCalled.set(true);
-		
-		if (key != null && key.isValid()) {
-			try {
-				synchronized (writeLock) {
-					key = detectRebuild(key);
-					closing = ClosingState.FINISHED;
-					close(key.channel());
-				}
-			}
-			catch (Exception e) {
-			}
-		}
-		else if (channel != null) {
-			try {
-				close(channel);
-			} catch (IOException e) {
-			}
-		}
+    final boolean optimizeCopying;
 
-		if (key != null) {
-			loop.finishInvalidatedKey(key);
-		}
-	}
+    final boolean optimizeBuffers;
 
-	@Override
-	public void quickClose() {
-		quickClose0();
-	}
+    private final ISessionTimer timer;
 
-	@Override
-	public void dirtyClose() {
-		quickClose0();
-	}
-	
-	/**
-	 * Handles closing operation being in progress. It should be executed only
-	 * when the output buffers have no more data after compacting. It should be executed inside 
-	 * the same synchronized block as the compacting method
-	 * @see compactOutBuffers
-	 */
-	void handleClosingInProgress() {
-		if (closing == ClosingState.SENDING) {
-			try {
-				if (isEOS) {
-					closing = ClosingState.FINISHED;
-					close(key.channel());
-				}
-				else {
-					closing = ClosingState.FINISHING;
-					shutdown(key);
-				}
-			} catch (Exception e) {
-			}
-		}
-	}	
+    final int maxWriteSpinCount;
 
-	/**
-	 * Resumes read, write or both if session is not in closing state. It should
-	 * be executed inside block synchronized on a write lock.
-	 * 
-	 * @param ops
-	 *            SelectionKey.OP_RAED, SelectionKey.OP_WRITE or both
-	 * @throws CancelledKeyException
-	 *             if the selection key associated with this session has been
-	 *             cancelled
-	 */
-	boolean resume(int ops) {
-		if (closing == ClosingState.NONE) {
-			int tmpOps = 0;
-			
-			if ((ops & SelectionKey.OP_READ) != 0) {
-				if (readSuspended) {
-					tmpOps |= SelectionKey.OP_READ;
-					readSuspended = false;
-				}
-			}
-			if ((ops & SelectionKey.OP_WRITE) != 0) {
-				if (writeSuspended) {
-					tmpOps |= SelectionKey.OP_WRITE;
-					writeSuspended = false;
-				}
-			}
-			
-			if (tmpOps != 0) {
-				key.interestOps(key.interestOps() | tmpOps);
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public void suspendRead() {
-		SelectionKey key = checkKey(this.key);
-		boolean wakeup;
+    volatile SessionPipeline<?> pipeline;
 
-		synchronized (writeLock) {
-			detectRebuild(key);
-			wakeup = suspend(SelectionKey.OP_READ);
-		}
-		if (wakeup) {
-			lazyWakeup();
-		}
-	}
+    Item<?> pipelineItem;
 
-	@Override
-	public void suspendWrite() {
-		SelectionKey key = checkKey(this.key);
-		boolean wakeup;
+    boolean isSwitching;
 
-		synchronized (writeLock) {
-			detectRebuild(key);
-			wakeup = suspend(SelectionKey.OP_WRITE);
-		}
-		if (wakeup) {
-			lazyWakeup();
-		}
-	}
+    protected InternalSession(String name, IHandler handler, CodecExecutorAdapter codec, ILogger logger) {
+        super("Session-", nextId.incrementAndGet(), name != null ? name : (handler != null ? handler.getName() : null), handler != null ? handler.getFactory().getAttributes() : null);
+        if (handler == null)
+            throw new IllegalArgumentException("handler is null");
+        this.logger = logger;
+        this.handler = handler;
+        this.handler.setSession(this);
+        if (handler instanceof IAllocatingHandler) {
+            allocator = ((IAllocatingHandler) handler).getAllocator();
+        } else {
+            allocator = handler.getFactory().getAllocator();
+        }
+        config = handler.getConfig();
+        optimizeCopying = config.optimizeDataCopying();
+        optimizeBuffers = optimizeCopying && allocator.isReleasable();
+        maxWriteSpinCount = config.getMaxWriteSpinCount();
+        if (maxWriteSpinCount <= 0) {
+            throw new IllegalArgumentException("maxWriteSpinCount is " + maxWriteSpinCount + " (expected 1+)");
+        }
+        creationTime = System.currentTimeMillis();
+        lastReadTime = lastWriteTime = lastIoTime = lastThroughputCalculationTime = creationTime;
+        if (codec == null) {
+            ICodecExecutor executor = config.createCodecExecutor();
+            this.codec = executor != null ? new CodecExecutorAdapter(executor, this) : null;
+        } else {
+            this.codec = codec;
+        }
+        ITimer timer = handler.getFactory().getTimer();
+        if (timer == null) {
+            this.timer = UnsupportedSessionTimer.INSTANCE;
+        } else {
+            this.timer = new InternalSessionTimer(InternalSession.this, timer);
+        }
+    }
 
-	@Override
-	public void resumeRead() {
-		SelectionKey key = checkKey(this.key);
-		boolean wakeup;
+    protected InternalSession(String name, IHandler handler, ILogger logger) {
+        this(name, handler, null, logger);
+    }
 
-		synchronized (writeLock) {
-			detectRebuild(key);
-			wakeup = resume(SelectionKey.OP_READ);
-		}
-		if (wakeup) {
-			lazyWakeup();
-		}
-	}
+    abstract IEncodeTaskWriter getEncodeTaskWriter();
 
-	@Override
-	public void resumeWrite() {
-		SelectionKey key = checkKey(this.key);
-		boolean wakeup;
+    abstract SessionPipeline<?> createPipeline();
 
-		synchronized (writeLock) {
-			detectRebuild(key);
-			wakeup = resume(SelectionKey.OP_WRITE);
-		}
-		if (wakeup) {
-			lazyWakeup();
-		}
-	}
-	
-	@Override
-	public boolean isReadSuspended() {
-		return readSuspended;
-	}
-	
-	@Override
-	public boolean isWriteSuspended() {
-		return writeSuspended;
-	}
-	
-	@Override
-	public final long getReadBytes() {
-		return readBytes;
-	}
+    SessionPipeline<?> getPipeline0() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public final long getWrittenBytes() {
-		return writtenBytes;
-	}
+    void setPipeline(SessionPipeline<?> pipeline) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	void calculateThroughput(long currentTime, boolean force) {
-		long minInterval = config.getThroughputCalculationInterval();
-		long interval;
-		
-		if (minInterval > 0 && (interval = currentTime - lastThroughputCalculationTime) >= minInterval) {
-			readBytesThroughput = (readBytes - lastReadBytes) * 1000.0 / interval;
-			writtenBytesThroughput = (writtenBytes - lastWrittenBytes) * 1000.0 / interval;
-			
-			lastReadBytes = readBytes;
-			lastWrittenBytes = writtenBytes;
-			lastThroughputCalculationTime = currentTime;
-		}
-	}
+    InternalSession getFirstInPipeline() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public final double getReadBytesThroughput() {
-		return readBytesThroughput;
-	}
-	
-	@Override
-	public final double getWrittenBytesThroughput() {
-		return writtenBytesThroughput;
-	}
-	
-	@Override
-	public final long getCreationTime() {
-		return creationTime;
-	}
-	
-	@Override
-	public final long getLastIoTime() {
-		return lastIoTime;
-	}
-	
-	@Override
-	public final long getLastReadTime() {
-		return lastReadTime;
-	}
-	
-	@Override
-	public final long getLastWriteTime() {
-		return lastWriteTime;
-	}
-	
-	@Override
-	public ISessionTimer getTimer() {
-		return timer;
-	}
-	
-	@Override
-	public boolean isDataCopyingOptimized() {
-		return optimizeCopying;
-	}
-	
-	@Override
-	public ByteBuffer allocate(int capacity) {
-		return allocator.allocate(capacity);
-	}
-	
-	@Override
-	public void release(ByteBuffer buffer) {
-		if (allocator.isReleasable()) {
-			allocator.release(buffer);
-		}
-	}
-	
-	@Override
-	public IFuture<Void> execute(Runnable task) {
-		if (task == null) {
-			throw new IllegalArgumentException("task is null");
-		}
-		if (loop == null) {
-			throw new IllegalStateException("session not associated with selector loop");
-		}
-		if (loop.inLoop()) {
-			task.run();
-			return futuresController.getSuccessfulFuture();
-		}
-		return loop.execute(task);
-	}
-	
-	@Override
-	public void executenf(Runnable task) {
-		if (task == null) {
-			throw new IllegalArgumentException("task is null");
-		}
-		if (loop == null) {
-			throw new IllegalStateException("session not associated with selector loop");
-		}
-		if (loop.inLoop()) {
-			task.run();
-		}
-		else {
-			loop.executenf(task);
-		}
-	}
-	
-	final boolean wasException() {
-		return (eventBits & EventType.EXCEPTION_CAUGHT.bitMask()) != 0;
-	}
-	
-	final boolean isValid(EventType eventType) {
-		if (eventType.isValid(eventBits)) {
-			eventBits |= eventType.bitMask();
-			return true;
-		}
-		else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Skipping event {} for {}", eventType, this);
-			}
-			return false;
-		}
-	}
-	
-	void event(DataEvent event, long length) {
-		if (isValid(event.type())) {
-			futuresController.event(event, length);
-			try {
-				handler.event(event, length);
-			}
-			catch (Throwable e) {
-				fireException(SessionIncident.DATA_EVENT_FAILURE, event, e);
-			}
-		}
-	}
-	
-	void timer(Object event) {
-		try {
-			handler.timer(event);
-		}
-		catch (Throwable e) {
-			fireException(SessionIncident.TIMER_EVENT_FAILURE, event, e);
-		}
-	}
-	
-	void timer(Runnable task) {
-		try {
-			handler.timer(task);
-		}
-		catch (Throwable e) {
-			fireException(SessionIncident.TIMER_TASK_FAILURE, task, e);
-		}
-	}
-	
-	void event(SessionEvent event) {
-		if (isValid(event.type())) {
-			futuresController.event(event);
-			try {
-				if (codec != null) {
-					ICodecExecutor executor = codec.getExecutor();
-					
-					executor.syncEventDrivenCodecs(this);
-					executor.event(this, event);
-				}
-				handler.event(event);
-			}
-			catch (Throwable e) {
-				fireException(SessionIncident.SESSION_EVENT_FAILURE, event, e);
-			}
-		}
-	}
-	
-	void controlCloseException(Throwable t) {
-		handler.exception(t);
-	}
-	
-	Throwable controlClose(Throwable t) {
-		if (t instanceof ICloseControllingException) {
-			ICloseControllingException e = (ICloseControllingException) t;
-			
-			t = e.getClosingCause();
-			switch (e.getCloseType()) {
-			case GENTLE:
-				if (pipelineItem != null) {
-					pipelineItem.cause(t);
-				}
-				controlCloseException(t);
-				futuresController.exception(t);
-				close();
-				return null;
-				
-			case NONE:
-				controlCloseException(t);
-				return null;
-				
-			default:
-			}
-		}
-		if (pipelineItem != null) {
-			pipelineItem.cause(t);
-		}
-		return t;
-	}
-	
-	void exception(Throwable t) {
-		if (isValid(EventType.EXCEPTION_CAUGHT)) {
-			try {
-				t = controlClose(t);
-				if (t != null) {
-					handler.exception(t);
-					futuresController.exception(t);
-					quickClose();
-				}
-			}
-			catch (Throwable e) {
-				elogger.error(logger, "Failed event {} for {}: {}", EventType.EXCEPTION_CAUGHT, this, e);
-				futuresController.exception(t);
-				quickClose();
-			}
-		}
-	}
+    void abortFutures(Throwable cause) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	void fireException(Throwable t) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Firing event {} for {}", EventType.EXCEPTION_CAUGHT, this);
-		}
-		exception(t);
-		if (logger.isTraceEnabled()) {
-			logger.trace("Ending event {} for {}", EventType.EXCEPTION_CAUGHT, this);
-		}
-	}
-	
-	/** Returns true the exception was triggered */
-	boolean fireException(SessionIncident incident, Object event, Throwable t) {
-		if (!incident(incident, t)) {
-			elogger.error(logger, incident.defaultMessage(), event, this, t);
-			fireException(t);
-			return true;
-		}
-		return false;
-	}
-	
-	boolean incident(SessionIncident incident, Throwable t) {
-		try {
-			return handler.incident(incident, t);
-		}
-		catch (Throwable e) {
-			elogger.error(logger, "Failed incident {} for {}: {}", incident, this, e);
-			exception(e);
-		}
-		return false;
-	}
-	
-	abstract void preCreated();
-	
-	abstract void postEnding();
-	
-	int copyInBuffer(InternalSession oldSession) {
-		return 0;
-	}
-	
-	void consumeInBuffer() {
-	}
-	
-	void close(SelectableChannel channel) throws IOException {
-		if (channel.isOpen()) {
-			if (pipelineItem == null || pipelineItem.canClose()) {
-				channel.close();
-			}
-			else {
-				execute(new Runnable() {
+    @Override
+    public IFuture<Void> getCreateFuture() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-					@Override
-					public void run() {
-						isSwitching = true;
-						loop.areSwitchings = true;
-						loop.switchings.add(InternalSession.this);
-					}
-				});
-			}
-		}
-	}
-	
-	void shutdown(SelectionKey key) throws Exception {
-		if (pipelineItem != null) {
-			close(key.channel());
-		}
-		else {
-			((ChannelContext<?>)key.attachment()).shutdown(key.channel());
-		}
-	}
-	
-	void closeAndFinish(SelectableChannel channel) {
-		synchronized (writeLock) {
-			closing = ClosingState.FINISHED;
-			try {
-				close(channel);
-			} catch (IOException e) {
-				//Ignore
-			}
-		}
-	}
+    @Override
+    public IFuture<Void> getOpenFuture() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> getReadyFuture() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> getCloseFuture() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> getEndFuture() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Detects if the key was replaced. It can happen after rebuilding of the selector.
+     *
+     * @throws IllegalSessionStateException
+     *             if replacement occurred and new key is invalid
+     */
+    final SelectionKey detectRebuild(SelectionKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Throws unchecked exception if the key is not valid
+     *
+     * @throws IllegalSessionStateException
+     *             if key is not valid
+     */
+    static SelectionKey checkKey(SelectionKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final void lazyWakeup() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionConfig getConfig() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ICodecPipeline getCodecPipeline() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public SessionState getState() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isOpen() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    boolean isCreated() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void setChannel(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void setSelectionKey(SelectionKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void setLoop(InternalSelectorLoop loop) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final Object getWriteLock() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void incReadBytes(long bytes, long currentTime) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void incWrittenBytes(long bytes, long currentTime) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Clears key's write interest if write is not suspended. It should be
+     * executed inside block synchronized on a write lock.
+     */
+    void clearWriteInterestOps(SelectionKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Sets key's write interest if write is not suspended. It should be
+     * executed inside block synchronized on a write lock.
+     *
+     * @throw CancelledKeyException if the key has been canceled
+     */
+    void setWriteInterestOps(SelectionKey key) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Suspends read, write or both if session is not in closing state. It
+     * should be executed inside block synchronized on a write lock.
+     *
+     * @param ops
+     *            SelectionKey.OP_RAED, SelectionKey.OP_WRITE or both
+     * @throws CancelledKeyException
+     *             if the selection key associated with this session has been
+     *             cancelled
+     */
+    boolean suspend(int ops) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void close(boolean isEos) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void close(boolean isEos, boolean sending) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private void quickClose0() {
+        SelectionKey key = this.key;
+        closeCalled.set(true);
+        if (key != null && key.isValid()) {
+            try {
+                synchronized (writeLock) {
+                    key = detectRebuild(key);
+                    closing = ClosingState.FINISHED;
+                    close(key.channel());
+                }
+            } catch (Exception e) {
+            }
+        } else if (channel != null) {
+            try {
+                close(channel);
+            } catch (IOException e) {
+            }
+        }
+        if (key != null) {
+            loop.finishInvalidatedKey(key);
+        }
+    }
+
+    @Override
+    public void quickClose() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void dirtyClose() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Handles closing operation being in progress. It should be executed only
+     * when the output buffers have no more data after compacting. It should be executed inside
+     * the same synchronized block as the compacting method
+     * @see compactOutBuffers
+     */
+    void handleClosingInProgress() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Resumes read, write or both if session is not in closing state. It should
+     * be executed inside block synchronized on a write lock.
+     *
+     * @param ops
+     *            SelectionKey.OP_RAED, SelectionKey.OP_WRITE or both
+     * @throws CancelledKeyException
+     *             if the selection key associated with this session has been
+     *             cancelled
+     */
+    boolean resume(int ops) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void suspendRead() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void suspendWrite() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void resumeRead() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void resumeWrite() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isReadSuspended() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isWriteSuspended() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final long getReadBytes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final long getWrittenBytes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void calculateThroughput(long currentTime, boolean force) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final double getReadBytesThroughput() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final double getWrittenBytesThroughput() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final long getCreationTime() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final long getLastIoTime() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final long getLastReadTime() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public final long getLastWriteTime() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISessionTimer getTimer() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isDataCopyingOptimized() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ByteBuffer allocate(int capacity) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void release(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public IFuture<Void> execute(Runnable task) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void executenf(Runnable task) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final boolean wasException() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    final boolean isValid(EventType eventType) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void event(DataEvent event, long length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void timer(Object event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void timer(Runnable task) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void event(SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void controlCloseException(Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    Throwable controlClose(Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void exception(Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void fireException(Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Returns true the exception was triggered
+     */
+    boolean fireException(SessionIncident incident, Object event, Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    boolean incident(SessionIncident incident, Throwable t) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    abstract void preCreated();
+
+    abstract void postEnding();
+
+    int copyInBuffer(InternalSession oldSession) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void consumeInBuffer() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void close(SelectableChannel channel) throws IOException {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void shutdown(SelectionKey key) throws Exception {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    void closeAndFinish(SelectableChannel channel) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
     static void checkBounds(int offset, int length, int size) {
-        if ((offset | length | (offset + length) | (size - (offset + length))) < 0) {
-        	throw new IndexOutOfBoundsException();        	
-        }
-    } 
-    
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

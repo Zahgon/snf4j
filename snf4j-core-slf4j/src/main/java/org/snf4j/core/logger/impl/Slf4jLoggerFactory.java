@@ -27,32 +27,21 @@ package org.snf4j.core.logger.impl;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
 import org.slf4j.LoggerFactory;
 import org.snf4j.core.logger.ILogger;
 import org.snf4j.core.logger.ILoggerFactory;
 
 /**
  * A factory for the SLF4J logger.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
- public class Slf4jLoggerFactory implements ILoggerFactory {
+public class Slf4jLoggerFactory implements ILoggerFactory {
 
-	private final ConcurrentMap<String, ILogger> map = new ConcurrentHashMap<String, ILogger>();
-			
-	@Override
-	public ILogger getLogger(String name) {
-		ILogger logger = map.get(name);
-		
-		if (logger == null) {
-			logger = new Slf4jLogger(LoggerFactory.getLogger(name));
-			ILogger prevLogger = map.putIfAbsent(name, logger);
-			if (prevLogger != null) {
-				return prevLogger;
-			}
-		}
-		return logger;
-	}
+    private final ConcurrentMap<String, ILogger> map = new ConcurrentHashMap<String, ILogger>();
 
+    @Override
+    public ILogger getLogger(String name) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

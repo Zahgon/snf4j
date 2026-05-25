@@ -29,68 +29,28 @@ import java.util.BitSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.snf4j.tls.handshake.IHandshake;
 
 public final class ExtensionsUtil {
-	
-	private ExtensionsUtil() {}
-	
-	public static int calculateLength(List<IExtension> extensions) {
-		int len = extensions.size() * (2 + 2);
-		
-		for (IExtension e: extensions) {
-			len += e.getDataLength();
-		}
-		return len;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <T extends IExtension> T find(IHandshake handshake, ExtensionType type) {
-		int value = type.value();
-		
-		for (IExtension e: handshake.getExtensions()) {
-			if (e.getType().value() == value) {
-				return (T) e;
-			}
-		}
-		return null;
-	}
 
-	@SuppressWarnings("unchecked")
-	public static <T extends IExtension> T findLast(IHandshake handshake) {
-		int index = handshake.getExtensions().size() - 1;
-		
-		if (index >= 0) {
-			return (T) handshake.getExtensions().get(index);
-		}
-		return null;
-	}
-	
-	public static IExtension findAnyMultiple(List<IExtension> extensions) {
-		BitSet existing = new BitSet(256);
-		Set<Integer> existing2 = null;
-		boolean multipleFound = false;
-		int size = existing.size();
-		
-		for (IExtension extension: extensions) {
-			int id = extension.getType().value();
-			
-			if (id < size) {
-				multipleFound |= existing.get(id);
-				existing.set(id);
-			}
-			else {
-				if (existing2 == null) {
-					existing2 = new HashSet<Integer>();
-				}
-				multipleFound |= existing2.contains(id);
-				existing2.add(id);
-			}
-			if (multipleFound) {
-				return extension;
-			}		
-		}
-		return null;
-	}
+    private ExtensionsUtil() {
+    }
+
+    public static int calculateLength(List<IExtension> extensions) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends IExtension> T find(IHandshake handshake, ExtensionType type) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends IExtension> T findLast(IHandshake handshake) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IExtension findAnyMultiple(List<IExtension> extensions) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

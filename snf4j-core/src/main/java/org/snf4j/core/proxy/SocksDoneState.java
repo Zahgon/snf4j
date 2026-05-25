@@ -27,22 +27,22 @@ package org.snf4j.core.proxy;
 
 class SocksDoneState extends AbstractSocksState {
 
-	SocksDoneState(AbstractSocksProxyHandler handler) {
-		super(handler);
-	}
+    SocksDoneState(AbstractSocksProxyHandler handler) {
+        super(handler);
+    }
 
-	@Override
-	AbstractSocksState read(byte[] data) {
-		return this;
-	}
+    @Override
+    AbstractSocksState read(byte[] data) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	void handleReady() {
-	}
+    @Override
+    void handleReady() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	int responseSize() {
-		return 0;
-	}
-	
+    @Override
+    int responseSize() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

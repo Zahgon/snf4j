@@ -27,7 +27,6 @@ package org.snf4j.websocket.extensions.compress;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.codec.ICodec;
 import org.snf4j.core.codec.ICodecPipeline;
 import org.snf4j.core.codec.IEventDrivenCodec;
@@ -38,86 +37,45 @@ import org.snf4j.websocket.frame.ContinuationFrame;
 import org.snf4j.websocket.frame.Frame;
 import org.snf4j.websocket.frame.TextFrame;
 
-abstract class DeflateCodec implements ICodec<Frame,Frame>, IEventDrivenCodec {
+abstract class DeflateCodec implements ICodec<Frame, Frame>, IEventDrivenCodec {
 
-    static final byte[] TAIL = new byte[] {0, 0, -1, -1};
-    
-	@Override
-	public Class<Frame> getInboundType() {
-		return Frame.class;
-	}
+    static final byte[] TAIL = new byte[] { 0, 0, -1, -1 };
 
-	@Override
-	public Class<Frame> getOutboundType() {
-		return Frame.class;
-	}
-	
-	abstract int rsvBits(Frame frame);
-	
-	abstract IEventDrivenCodec codec();
-	
-	static byte[] bytes(List<ByteBuffer> bufs, boolean removeTail) {
-		int len = 0;
-		
-		for (ByteBuffer buf: bufs) {
-			len += buf.remaining();
-		}
-		if (removeTail && len >= TAIL.length) {
-			len -= TAIL.length;
-		}
-		
-		byte[] bytes = new byte[len];
-		int off = 0, remaining;
+    @Override
+    public Class<Frame> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-		for (ByteBuffer buf: bufs) {
-			remaining = buf.remaining();
-			if (len < remaining) {
-				remaining = len;
-			}
-			buf.get(bytes, off, remaining);
-			len -= remaining;
-			off += remaining;
-		}
-		return bytes;
-	}
+    @Override
+    public Class<Frame> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@SuppressWarnings("incomplete-switch")
-	Frame createFrame(Frame frame, byte[] payload) {
-		switch (frame.getOpcode()) {
-		case CONTINUATION:
-			frame = new ContinuationFrame(frame.isFinalFragment(), rsvBits(frame), payload);
-			break;
-			
-		case BINARY:
-			frame = new BinaryFrame(frame.isFinalFragment(), rsvBits(frame), payload);
-			break;
-			
-		case TEXT:
-			frame = new TextFrame(frame.isFinalFragment(), rsvBits(frame), payload);
-			break;
-		}
-		return frame;
-	}
-	
-	@Override
-	public void added(ISession session, ICodecPipeline pipeline) {
-		if (codec() != null) {
-			codec().added(session, pipeline);
-		}
-	}
+    abstract int rsvBits(Frame frame);
 
-	@Override
-	public void event(ISession session, SessionEvent event) {
-		if (codec() != null) {
-			codec().event(session, event);
-		}
-	}
+    abstract IEventDrivenCodec codec();
 
-	@Override
-	public void removed(ISession session, ICodecPipeline pipeline) {
-		if (codec() != null) {
-			codec().removed(session, pipeline);
-		}
-	}
-	
+    static byte[] bytes(List<ByteBuffer> bufs, boolean removeTail) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    Frame createFrame(Frame frame, byte[] payload) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void added(ISession session, ICodecPipeline pipeline) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void event(ISession session, SessionEvent event) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public void removed(ISession session, ICodecPipeline pipeline) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

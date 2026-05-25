@@ -28,19 +28,19 @@ package org.snf4j.example.heartbeat;
 import java.util.Arrays;
 
 public class Packet {
-	
-	final static byte[] BYTES = "HEARTBEAT".getBytes();
-	
-	final static Packet INSTANCE = new Packet();
-	
-	private Packet() {
-	}
-	
-	public static Packet parse(byte[] bytes) {
-		return Arrays.equals(BYTES, bytes) ? INSTANCE : null;
-	}
-	
-	public byte[] toBytes() {
-		return BYTES;
-	}
+
+    final static byte[] BYTES = "HEARTBEAT".getBytes();
+
+    final static Packet INSTANCE = new Packet();
+
+    private Packet() {
+    }
+
+    public static Packet parse(byte[] bytes) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public byte[] toBytes() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -26,121 +26,90 @@
 package org.snf4j.core.future;
 
 import java.util.concurrent.atomic.AtomicReference;
-
 import org.snf4j.core.session.ISession;
 
 /**
  * Base implementation of the {@link IFuture} interface.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
 public abstract class AbstractFuture<V> implements IFuture<V> {
-	
-	AtomicReference<FutureState> state = new AtomicReference<FutureState>();
 
-	private final ISession session;
-	
-	/**
-	 * Constructs a base implementation with the specified session.
-	 * 
-	 * @param session
-	 *            the session this future is associated with
-	 */
-	protected AbstractFuture(ISession session) {
-		this.session = session;
-	}
-	
-	boolean setState(FutureState state) {
-		return this.state.compareAndSet(null, state);
-	}
-	
-	@Override
-	public ISession getSession() {
-		return session;
-	}
-	
-	String toStringDetails() {
-		return null;
-	}
-	
-	/**
-	 * Returns a string representation of this future.
-	 * 
-	 * @return a string representation of this future.
-	 */
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder(50);
-		String details;
-		
-		if (session != null) {
-			sb.append(session);
-			sb.append('-');
-		}
-		sb.append(getClass().getSimpleName());
-		sb.append("[");
-		
-		if (isSuccessful()) {
-			sb.append("successful");
-		}
-		else if (isFailed()) {
-			sb.append("failed:");
-			sb.append(cause());
-		}
-		else if (isCancelled()) {
-			sb.append("canceled");
-		}
-		else {
-			sb.append("incomplete");
-		}
-		details = toStringDetails();
-		if (details != null) {
-			sb.append(',');
-			sb.append(details);
-		}
-		sb.append("]");
-		return sb.toString();
-	}
-	
-	/**
-	 * Tells if if the operation associated with this future completed.
-	 * 
-	 * @return <code>true</code> if the operation completed
-	 */
-	@Override
-	public boolean isDone() {
-		return state.get() != null;
-	}
-	
-	/**
-	 * Tells if the operation associated with this future was cancelled
-	 * before it completed normally.
-	 * 
-	 * @return <code>true</code> if the operation was cancelled
-	 */
-	@Override
-	public boolean isCancelled() {
-		return state.get() == FutureState.CANCELLED;
-	}	
-	
-	@Override
-	public boolean isSuccessful() {
-		return state.get() == FutureState.SUCCESSFUL;
-	}
+    AtomicReference<FutureState> state = new AtomicReference<FutureState>();
 
-	@Override
-	public boolean isFailed() {
-		return state.get() == FutureState.FAILED;
-	}
-	
-	/**
-	 * Returns <code>null</code>.
-	 * 
-	 * @return <code>null</code>
-	 */
-	@Override
-	public V getNow() {
-		return null;
-	}
-	
+    private final ISession session;
+
+    /**
+     * Constructs a base implementation with the specified session.
+     *
+     * @param session
+     *            the session this future is associated with
+     */
+    protected AbstractFuture(ISession session) {
+        this.session = session;
+    }
+
+    boolean setState(FutureState state) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public ISession getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    String toStringDetails() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Returns a string representation of this future.
+     *
+     * @return a string representation of this future.
+     */
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Tells if if the operation associated with this future completed.
+     *
+     * @return <code>true</code> if the operation completed
+     */
+    @Override
+    public boolean isDone() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Tells if the operation associated with this future was cancelled
+     * before it completed normally.
+     *
+     * @return <code>true</code> if the operation was cancelled
+     */
+    @Override
+    public boolean isCancelled() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isSuccessful() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public boolean isFailed() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    /**
+     * Returns <code>null</code>.
+     *
+     * @return <code>null</code>
+     */
+    @Override
+    public V getNow() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

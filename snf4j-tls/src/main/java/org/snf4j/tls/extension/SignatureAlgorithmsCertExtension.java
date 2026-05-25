@@ -27,22 +27,21 @@ package org.snf4j.tls.extension;
 
 public class SignatureAlgorithmsCertExtension extends SignatureAlgorithmsExtension {
 
-	private final static ExtensionType TYPE = ExtensionType.SIGNATURE_ALGORITHMS_CERT;
+    private final static ExtensionType TYPE = ExtensionType.SIGNATURE_ALGORITHMS_CERT;
 
-	private final static AbstractExtensionParser PARSER = new Parser(TYPE) {
+    private final static AbstractExtensionParser PARSER = new Parser(TYPE) {
 
-		@Override
-		protected IExtension create(SignatureScheme[] schemes) {
-			return new SignatureAlgorithmsCertExtension(schemes);
-		}
-	};
+        @Override
+        protected IExtension create(SignatureScheme[] schemes) {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	public static IExtensionParser getParser() {
-		return PARSER;
-	}
+    public static IExtensionParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	public SignatureAlgorithmsCertExtension(SignatureScheme... schemes) {
-		super(TYPE, schemes);
-	}
-
+    public SignatureAlgorithmsCertExtension(SignatureScheme... schemes) {
+        super(TYPE, schemes);
+    }
 }

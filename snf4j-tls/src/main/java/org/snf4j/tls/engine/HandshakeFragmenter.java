@@ -36,46 +36,27 @@ import org.snf4j.tls.record.IEncryptorHolder;
 import org.snf4j.tls.record.Record;
 
 public class HandshakeFragmenter extends AbstractHandshakeFragmenter {
-	
-	public HandshakeFragmenter(IHandshakeEngine handshaker, IEncryptorHolder encryptors, IEngineStateListener listener) {
-		super(handshaker, encryptors, listener);
-	}
-	
-	@Override
-	protected int calculateExpansionLength(Encryptor encryptor) {
-		return encryptor == null 
-				? Record.HEADER_LENGTH 
-				: Record.HEADER_LENGTH + 1 + encryptor.getExpansion();
-	}
-	
-	private ContentType contentType(Type type) {
-		return type == Type.APPLICATION_DATA ? APPLICATION_DATA : HANDSHAKE;
-	}
-	
-	@Override
-	protected ByteBuffer prepareForContent(ByteBuffer dst, int contentLength, int maxFragmentLength, Type type, Encryptor encryptor) {
-		if (encryptor == null) {
-			Record.header(HANDSHAKE, contentLength, dst);
-			return dst;
-		}
-		else {
-			int padding = handshaker.getHandler().calculatePadding(contentType(type), contentLength);
-			
-			if (padding > 0) {
-				padding = Math.min(padding, maxFragmentLength-contentLength);
-			}
-			return ByteBuffer.wrap(new byte[contentLength + 1 + padding]);
-		}
-	}
-	
-	@Override
-	protected int wrap(ByteBuffer content, int contentLength, Type type, Encryptor encryptor, ByteBuffer dst) throws Alert {
-		if (encryptor == null) {
-			return contentLength + Record.HEADER_LENGTH;
-		}
-		content.put((byte) contentType(type).value());
-		content.position(0);
-		return Record.protect(content, encryptor, dst);
-	}
 
+    public HandshakeFragmenter(IHandshakeEngine handshaker, IEncryptorHolder encryptors, IEngineStateListener listener) {
+        super(handshaker, encryptors, listener);
+    }
+
+    @Override
+    protected int calculateExpansionLength(Encryptor encryptor) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    private ContentType contentType(Type type) {
+        return type == Type.APPLICATION_DATA ? APPLICATION_DATA : HANDSHAKE;
+    }
+
+    @Override
+    protected ByteBuffer prepareForContent(ByteBuffer dst, int contentLength, int maxFragmentLength, Type type, Encryptor encryptor) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected int wrap(ByteBuffer content, int contentLength, Type type, Encryptor encryptor, ByteBuffer dst) throws Alert {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

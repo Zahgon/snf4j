@@ -26,29 +26,28 @@
 package org.snf4j.tls.session;
 
 public class UsedSession {
-	
-	private final ISession session;
 
-	private final SessionTicket ticket;
-	
-	private final int selectedIdentity;
+    private final ISession session;
 
-	public UsedSession(ISession session, SessionTicket ticket, int selectedIdentity) {
-		this.session = session;
-		this.ticket = ticket;
-		this.selectedIdentity = selectedIdentity;
-	}
+    private final SessionTicket ticket;
 
-	public ISession getSession() {
-		return session;
-	}
+    private final int selectedIdentity;
 
-	public int getSelectedIdentity() {
-		return selectedIdentity;
-	}
+    public UsedSession(ISession session, SessionTicket ticket, int selectedIdentity) {
+        this.session = session;
+        this.ticket = ticket;
+        this.selectedIdentity = selectedIdentity;
+    }
 
-	public SessionTicket getTicket() {
-		return ticket;
-	}
-	
+    public ISession getSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public int getSelectedIdentity() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public SessionTicket getTicket() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

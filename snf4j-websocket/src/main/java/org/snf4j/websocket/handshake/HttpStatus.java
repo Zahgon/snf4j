@@ -26,28 +26,28 @@
 package org.snf4j.websocket.handshake;
 
 enum HttpStatus {
-	
-	SWITCHING_PROTOCOLS(101, "Switching Protocols"),
-	BAD_REQUEST(400, "Bad Request"),
-	FORBIDDEN(403, "Forbidden"),
-	NOT_FOUND(404, "Not Found"),
-	REQUEST_ENTITY_TOO_LARGE(413, "Request Entity Too Large"),
-	UPGRADE_REQUIRED(426, "Upgrade Required");
-	
-	private final int status;
-	
-	private final String reason;
-	
-	HttpStatus(int status, String reason) {
-		this.status = status;
-		this.reason = reason;
-	}
-	
-	public int getStatus() {
-		return status;
-	}
-	
-	public String getReason() {
-		return reason;
-	}
+
+    SWITCHING_PROTOCOLS(101, "Switching Protocols"),
+    BAD_REQUEST(400, "Bad Request"),
+    FORBIDDEN(403, "Forbidden"),
+    NOT_FOUND(404, "Not Found"),
+    REQUEST_ENTITY_TOO_LARGE(413, "Request Entity Too Large"),
+    UPGRADE_REQUIRED(426, "Upgrade Required");
+
+    private final int status;
+
+    private final String reason;
+
+    HttpStatus(int status, String reason) {
+        this.status = status;
+        this.reason = reason;
+    }
+
+    public int getStatus() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public String getReason() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

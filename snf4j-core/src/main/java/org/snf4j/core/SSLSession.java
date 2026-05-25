@@ -25,9 +25,7 @@
  */
 package org.snf4j.core;
 
-
 import java.net.SocketAddress;
-
 import org.snf4j.core.handler.IStreamHandler;
 import org.snf4j.core.logger.ILogger;
 import org.snf4j.core.logger.LoggerFactory;
@@ -36,97 +34,96 @@ import org.snf4j.core.session.SSLEngineCreateException;
 /**
  * The stream-oriented session that handles SSL/TLS connections.
  * <p>
- * It uses {@link javax.net.ssl.SSLEngine SSLEngine} to handle secure protocols 
- * such as the Secure Sockets Layer (SSL) or IETF RFC 2246 "Transport Layer 
+ * It uses {@link javax.net.ssl.SSLEngine SSLEngine} to handle secure protocols
+ * such as the Secure Sockets Layer (SSL) or IETF RFC 2246 "Transport Layer
  * Security" (TLS) protocols.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-
 public class SSLSession extends EngineStreamSession {
 
-	private final static ILogger LOGGER = LoggerFactory.getLogger(SSLSession.class);
+    private final static ILogger LOGGER = LoggerFactory.getLogger(SSLSession.class);
 
-	/**
-	 * Constructs the named SSL/TLS session associated with a handler and a 
-	 * remote peer.
-	 * 
-	 * @param name
-	 *            the name for this session, or <code>null</code> if the
-	 *            handler's name should be used for this session's name
-	 * @param remoteAddress
-	 *            the address of the remote peer
-	 * @param handler
-	 *            the handler that should be associated with this session
-	 * @param clientMode
-	 *            <code>true</code> if the engine should start its handshaking
-	 *            in "client" mode
-	 * @throws SSLEngineCreateException
-	 *             when the SSL engine could not be created
-	 */
-	public SSLSession(String name, SocketAddress remoteAddress, IStreamHandler handler, boolean clientMode) throws SSLEngineCreateException {
-		super(name, new InternalSSLEngine(remoteAddress, handler.getConfig(), clientMode), handler , LOGGER);
-	}
-	
-	/**
-	 * Constructs the SSL/TLS session associated with a handler and a 
-	 * remote peer.
-	 * 
-	 * @param remoteAddress
-	 *            the address of the remote peer
-	 * @param handler
-	 *            the handler that should be associated with this session
-	 * @param clientMode
-	 *            <code>true</code> if the engine should start its handshaking
-	 *            in "client" mode
-	 * @throws SSLEngineCreateException
-	 *             when the SSL engine could not be created
-	 */
-	public SSLSession(SocketAddress remoteAddress, IStreamHandler handler, boolean clientMode) throws SSLEngineCreateException {
-		super(new InternalSSLEngine(remoteAddress, handler.getConfig(), clientMode), handler , LOGGER);
-	}
-	
-	/**
-	 * Constructs the named SSL/TLS session associated with a handler.
-	 * 
-	 * @param name
-	 *            the name for this session, or <code>null</code> if the
-	 *            handler's name should be used for this session's name
-	 * @param handler
-	 *            the handler that should be associated with this session
-	 * @param clientMode
-	 *            <code>true</code> if the engine should start its handshaking
-	 *            in "client" mode
-	 * @throws SSLEngineCreateException
-	 *             when the SSL engine could not be created
-	 */
-	public SSLSession(String name, IStreamHandler handler, boolean clientMode) throws SSLEngineCreateException {
-		super(name, new InternalSSLEngine(null, handler.getConfig(), clientMode), handler , LOGGER);
-	}
+    /**
+     * Constructs the named SSL/TLS session associated with a handler and a
+     * remote peer.
+     *
+     * @param name
+     *            the name for this session, or <code>null</code> if the
+     *            handler's name should be used for this session's name
+     * @param remoteAddress
+     *            the address of the remote peer
+     * @param handler
+     *            the handler that should be associated with this session
+     * @param clientMode
+     *            <code>true</code> if the engine should start its handshaking
+     *            in "client" mode
+     * @throws SSLEngineCreateException
+     *             when the SSL engine could not be created
+     */
+    public SSLSession(String name, SocketAddress remoteAddress, IStreamHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(name, new InternalSSLEngine(remoteAddress, handler.getConfig(), clientMode), handler, LOGGER);
+    }
 
-	/**
-	 * Constructs the SSL/TLS session associated with a handler.
-	 * 
-	 * @param handler
-	 *            the handler that should be associated with this session
-	 * @param clientMode
-	 *            <code>true</code> if the engine should start its handshaking
-	 *            in "client" mode
-	 * @throws SSLEngineCreateException
-	 *             when the SSL engine could not be created
-	 */
-	public SSLSession(IStreamHandler handler, boolean clientMode) throws SSLEngineCreateException {
-		super(new InternalSSLEngine(null, handler.getConfig(), clientMode), handler , LOGGER);
-	}
+    /**
+     * Constructs the SSL/TLS session associated with a handler and a
+     * remote peer.
+     *
+     * @param remoteAddress
+     *            the address of the remote peer
+     * @param handler
+     *            the handler that should be associated with this session
+     * @param clientMode
+     *            <code>true</code> if the engine should start its handshaking
+     *            in "client" mode
+     * @throws SSLEngineCreateException
+     *             when the SSL engine could not be created
+     */
+    public SSLSession(SocketAddress remoteAddress, IStreamHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(new InternalSSLEngine(remoteAddress, handler.getConfig(), clientMode), handler, LOGGER);
+    }
 
-	/**
-	 * Returns the {@link javax.net.ssl.SSLSession SSLSession} in use in the
-	 * {@link javax.net.ssl.SSLEngine SSLEngine} driving this session.
-	 * 
-	 * @return the {@code SSLSession}
-	 */
-	@Override
-	public javax.net.ssl.SSLSession getEngineSession() {
-		return (javax.net.ssl.SSLSession) super.getEngineSession();
-	}
+    /**
+     * Constructs the named SSL/TLS session associated with a handler.
+     *
+     * @param name
+     *            the name for this session, or <code>null</code> if the
+     *            handler's name should be used for this session's name
+     * @param handler
+     *            the handler that should be associated with this session
+     * @param clientMode
+     *            <code>true</code> if the engine should start its handshaking
+     *            in "client" mode
+     * @throws SSLEngineCreateException
+     *             when the SSL engine could not be created
+     */
+    public SSLSession(String name, IStreamHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(name, new InternalSSLEngine(null, handler.getConfig(), clientMode), handler, LOGGER);
+    }
+
+    /**
+     * Constructs the SSL/TLS session associated with a handler.
+     *
+     * @param handler
+     *            the handler that should be associated with this session
+     * @param clientMode
+     *            <code>true</code> if the engine should start its handshaking
+     *            in "client" mode
+     * @throws SSLEngineCreateException
+     *             when the SSL engine could not be created
+     */
+    public SSLSession(IStreamHandler handler, boolean clientMode) throws SSLEngineCreateException {
+        super(new InternalSSLEngine(null, handler.getConfig(), clientMode), handler, LOGGER);
+    }
+
+    /**
+     * Returns the {@link javax.net.ssl.SSLSession SSLSession} in use in the
+     * {@link javax.net.ssl.SSLEngine SSLEngine} driving this session.
+     *
+     * @return the {@code SSLSession}
+     */
+    @Override
+    public javax.net.ssl.SSLSession getEngineSession() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

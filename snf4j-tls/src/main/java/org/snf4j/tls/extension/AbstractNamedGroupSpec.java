@@ -26,66 +26,24 @@
 package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
-
 import org.snf4j.tls.alert.DecodeErrorAlert;
 import org.snf4j.tls.alert.InternalErrorAlert;
 
 abstract public class AbstractNamedGroupSpec implements INamedGroupSpec {
 
-	protected DecodeErrorAlert decodeError(String message) {
-		return new DecodeErrorAlert("Extension 'key_share' parsing failure: " + message);
-	}
+    protected DecodeErrorAlert decodeError(String message) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	protected InternalErrorAlert internalError(String message, Throwable cause) {
-		return new InternalErrorAlert("Extension 'key_share' internal failure: " + message, cause);
-	}
-	
-	static protected void getDataWithLeftPadding(ByteBuffer buffer, byte[] data, int length) {
-		int dataLen = data.length;
-		
-		if (dataLen == length) {
-			buffer.put(data);
-		}
-		else {
-			int padding = dataLen - length;
-			
-			if (padding > 0) {
-				for (int i=0; i<padding; ++i) {
-					if (data[i] != 0) {
-						throw new IllegalArgumentException("Data too big for padding");
-					}
-				}
-				buffer.put(data, padding, length);
-			}
-			else {
-				buffer.put(new byte[-padding]);
-				buffer.put(data);
-			}
-		}
-	}
+    protected InternalErrorAlert internalError(String message, Throwable cause) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	static protected void getDataWithRightPadding(ByteBuffer buffer, byte[] data, int length) {
-		int dataLen = data.length;
-		
-		if (dataLen == length) {
-			buffer.put(data);
-		}
-		else {
-			int padding = dataLen - length;
-			
-			if (padding > 0) {
-				for (int i=0; i<padding; ++i) {
-					if (data[length+i] != 0) {
-						throw new IllegalArgumentException("Data too big for padding");
-					}
-				}
-				buffer.put(data, 0, length);
-			}
-			else {
-				buffer.put(data);
-				buffer.put(new byte[-padding]);
-			}
-		}
-	}
-	
+    static protected void getDataWithLeftPadding(ByteBuffer buffer, byte[] data, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    static protected void getDataWithRightPadding(ByteBuffer buffer, byte[] data, int length) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

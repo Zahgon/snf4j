@@ -27,7 +27,6 @@ package org.snf4j.tls.handshake;
 
 import java.nio.ByteBuffer;
 import java.util.List;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -36,59 +35,55 @@ import org.snf4j.tls.extension.IExtensionDecoder;
 
 public class KeyUpdate extends KnownHandshake implements IKeyUpdate {
 
-	private final static HandshakeType TYPE = HandshakeType.KEY_UPDATE;
-	
-	private final KeyUpdateRequest request;
-	
-	private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
+    private final static HandshakeType TYPE = HandshakeType.KEY_UPDATE;
 
-		@Override
-		public HandshakeType getType() {
-			return TYPE;
-		}
+    private final KeyUpdateRequest request;
 
-		@Override
-		public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
-			if (remaining == 1) {
-				return new KeyUpdate(KeyUpdateRequest.of(srcs.getUnsigned()));
-			}
-			throw decodeError("Inconsistent length");
-		}
-	};
+    private final static AbstractHandshakeParser PARSER = new AbstractHandshakeParser() {
 
-	public KeyUpdate(KeyUpdateRequest request) {
-		super(TYPE);
-		Args.checkNull(request, "request");
-		this.request = request;
-	}
+        @Override
+        public HandshakeType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	public KeyUpdate(boolean requested) {
-		super(TYPE);
-		request = requested ? KeyUpdateRequest.UPDATE_REQUESTED : KeyUpdateRequest.UPDATE_NOT_REQUESTED;
-	}
-	
-	public static IHandshakeParser getParser() {
-		return PARSER;
-	}
+        @Override
+        public IHandshake parse(ByteBufferArray srcs, int remaining, IExtensionDecoder decoder) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
+    };
 
-	@Override
-	public int getDataLength() {
-		return 1;
-	}
+    public KeyUpdate(KeyUpdateRequest request) {
+        super(TYPE);
+        Args.checkNull(request, "request");
+        this.request = request;
+    }
 
-	@Override
-	public List<IExtension> getExtensions() {
-		return null;
-	}
+    public KeyUpdate(boolean requested) {
+        super(TYPE);
+        request = requested ? KeyUpdateRequest.UPDATE_REQUESTED : KeyUpdateRequest.UPDATE_NOT_REQUESTED;
+    }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		buffer.put((byte) (request.value()));
-	}
+    public static IHandshakeParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public KeyUpdateRequest getRequest() {
-		return request;
-	}
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
+    @Override
+    public List<IExtension> getExtensions() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public KeyUpdateRequest getRequest() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

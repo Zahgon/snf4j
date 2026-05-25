@@ -31,19 +31,18 @@ import org.snf4j.core.codec.ICodec;
 /**
  * A base {@code class} for encoders and decoders transforming an array of
  * bytes into an {@link IByteBufferHolder}.
- * 
+ *
  * @author <a href="http://snf4j.org">SNF4J.ORG</a>
  */
-public class ArrayToBufferHolderCodec implements ICodec<byte[],IByteBufferHolder> {
+public class ArrayToBufferHolderCodec implements ICodec<byte[], IByteBufferHolder> {
 
-	@Override
-	public Class<byte[]> getInboundType() {
-		return byte[].class;
-	}
+    @Override
+    public Class<byte[]> getInboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 
-	@Override
-	public Class<IByteBufferHolder> getOutboundType() {
-		return IByteBufferHolder.class;
-	}
-
+    @Override
+    public Class<IByteBufferHolder> getOutboundType() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

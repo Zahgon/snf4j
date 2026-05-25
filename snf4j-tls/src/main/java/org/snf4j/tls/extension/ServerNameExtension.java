@@ -27,7 +27,6 @@ package org.snf4j.tls.extension;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-
 import org.snf4j.core.ByteBufferArray;
 import org.snf4j.tls.Args;
 import org.snf4j.tls.alert.Alert;
@@ -35,106 +34,71 @@ import org.snf4j.tls.handshake.HandshakeType;
 
 public class ServerNameExtension extends KnownExtension implements IServerNameExtension {
 
-	private final static ExtensionType TYPE = ExtensionType.SERVER_NAME;
-	
-	private final static ServerNameExtension EMPTY = new ServerNameExtension();
-	
-	private final byte[] hostName;
-	
-	private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
+    private final static ExtensionType TYPE = ExtensionType.SERVER_NAME;
 
-		@Override
-		public ExtensionType getType() {
-			return TYPE;
-		}
+    private final static ServerNameExtension EMPTY = new ServerNameExtension();
 
-		@Override
-		public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
-			
-			if (remaining > 0) {
-				if (remaining >= 2) {
-					int len = srcs.getUnsignedShort();
-					
-					remaining -= 2;
-					if (len == remaining && len >= 1+2) {
-						int type = srcs.get();
-						byte[] hostName = null;
-						
-						--remaining;
-						switch (type) {
-						case 0:
-							hostName = parseName(srcs, remaining);
-							remaining -= hostName.length + 2;
-							break;
-							
-						default:
-							throw decodeError("Invalid name type");
-						}
-						
-						if (remaining == 0) {
-							return new ServerNameExtension(hostName);
-						}
-					}
-				}
-			}
-			else {
-				return EMPTY;
-			}
-			throw decodeError("Inconsistent length");
-		}
-		
-		private byte[] parseName(ByteBufferArray array, int remaining) throws Alert {
-			int len = array.getUnsignedShort();
-			
-			if (len == 0) {
-				throw decodeError("Empty name");
-			}
-			if (len <= remaining-2) {
-				byte[] data = new byte[len];
-				
-				array.get(data);
-				return data;
-			}
-			throw decodeError("Inconsistent name length");
-		}
-	};
-	
-	public ServerNameExtension(String hostName) {
-		super(TYPE);
-		this.hostName = hostName.getBytes(StandardCharsets.US_ASCII);
-		Args.checkRange(this.hostName.length, 1, 0xffff-5, "hostName length");
-	}
+    private final byte[] hostName;
 
-	public ServerNameExtension(byte[] hostName) {
-		super(TYPE);
-		Args.checkRange(hostName.length, 1, 0xffff-5, "hostName length");
-		this.hostName = hostName;
-	}
+    private final static AbstractExtensionParser PARSER = new AbstractExtensionParser() {
 
-	public ServerNameExtension() {
-		super(TYPE);
-		this.hostName = null;
-	}
-	
-	@Override
-	public String getHostName() { return hostName == null ? "" : new String(hostName, StandardCharsets.US_ASCII); }
-	
-	public static IExtensionParser getParser() {
-		return PARSER;
-	}
+        @Override
+        public ExtensionType getType() {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	@Override
-	public int getDataLength() {
-		return hostName == null ? 0 : 2 + 1 + 2 + hostName.length;
-	}
+        @Override
+        public IExtension parse(HandshakeType handshakeType, ByteBufferArray srcs, int remaining) throws Alert {
+            throw new UnsupportedOperationException("STUB: not implemented");
+        }
 
-	@Override
-	protected void getData(ByteBuffer buffer) {
-		if (hostName != null) {
-			buffer.putShort((short) (hostName.length + 1 + 2));
-			buffer.put((byte) 0);
-			buffer.putShort((short) hostName.length);
-			buffer.put(hostName);
-		}
-	}
+        private byte[] parseName(ByteBufferArray array, int remaining) throws Alert {
+            int len = array.getUnsignedShort();
+            if (len == 0) {
+                throw decodeError("Empty name");
+            }
+            if (len <= remaining - 2) {
+                byte[] data = new byte[len];
+                array.get(data);
+                return data;
+            }
+            throw decodeError("Inconsistent name length");
+        }
+    };
+
+    public ServerNameExtension(String hostName) {
+        super(TYPE);
+        this.hostName = hostName.getBytes(StandardCharsets.US_ASCII);
+        Args.checkRange(this.hostName.length, 1, 0xffff - 5, "hostName length");
+    }
+
+    public ServerNameExtension(byte[] hostName) {
+        super(TYPE);
+        Args.checkRange(hostName.length, 1, 0xffff - 5, "hostName length");
+        this.hostName = hostName;
+    }
+
+    public ServerNameExtension() {
+        super(TYPE);
+        this.hostName = null;
+    }
+
+    @Override
+    public String getHostName() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static IExtensionParser getParser() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    public int getDataLength() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    protected void getData(ByteBuffer buffer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

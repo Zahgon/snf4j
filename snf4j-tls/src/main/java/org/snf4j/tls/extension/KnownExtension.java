@@ -27,11 +27,12 @@ package org.snf4j.tls.extension;
 
 public abstract class KnownExtension extends AbstractExtension {
 
-	protected KnownExtension(ExtensionType type) {
-		super(type);
-	}
+    protected KnownExtension(ExtensionType type) {
+        super(type);
+    }
 
-	@Override
-	public final boolean isKnown() { return true; }
-	
+    @Override
+    public final boolean isKnown() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

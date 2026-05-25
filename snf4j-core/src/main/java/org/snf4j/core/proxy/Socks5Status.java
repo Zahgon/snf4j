@@ -26,6 +26,7 @@
 package org.snf4j.core.proxy;
 
 enum Socks5Status {
+
     SUCCESS(0, "Succeeded"),
     FAILURE(1, "General SOCKS server failure"),
     FORBIDDEN(2, "Connection not allowed by ruleset"),
@@ -36,31 +37,25 @@ enum Socks5Status {
     COMMAND_UNSUPPORTED(7, "Command not supported"),
     ADDRESS_UNSUPPORTED(8, "Address type not supported"),
     UNKNOWN(-1, "Unknown");
-	
-	private final int code;
-	
-	private final String description;
-	
-	Socks5Status(int code, String description) {
-		this.code = code;
-		this.description = description;
-	}
-	
-	public int code() {
-		return code;
-	}
-	
-	public String description() {
-		return description;
-	}
-	
-	public static Socks5Status valueOf(int code) {
-		for (Socks5Status value: values()) {
-			if (value.code == code) {
-				return value;
-			}
-		}
-		return UNKNOWN;
-	}
 
+    private final int code;
+
+    private final String description;
+
+    Socks5Status(int code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+
+    public int code() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public String description() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    public static Socks5Status valueOf(int code) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

@@ -26,36 +26,26 @@
 package org.snf4j.core.codec;
 
 class DecoderContext extends CodecContext {
-	
-	final private IDecoder<?,?> decoder;
-	
-	DecoderContext(Object key, IDecoder<?,?> decoder) {
-		super(key, decoder);
-		this.decoder = decoder;
-	}
-	
-	@SuppressWarnings("rawtypes")
-	final IDecoder getDecoder() {
-		return decoder;
-	}
 
-	@Override
-	final boolean isValid(CodecContext previous) {
-		if (previous == null) {
-			return inboundByte && !inboundHolder;
-		}
-		if (previous instanceof DecoderContext) {
-			if (previous.clogged) {
-				return isValid(previous.prev);
-			}
-			return decoder.getInboundType().isAssignableFrom(((DecoderContext)previous).decoder.getOutboundType());
-		}
-		return false;
-	}
-	
-	@Override
-	final boolean isDecoder() {
-		return true;
-	}
+    final private IDecoder<?, ?> decoder;
 
+    DecoderContext(Object key, IDecoder<?, ?> decoder) {
+        super(key, decoder);
+        this.decoder = decoder;
+    }
+
+    @SuppressWarnings("rawtypes")
+    final IDecoder getDecoder() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final boolean isValid(CodecContext previous) {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
+
+    @Override
+    final boolean isDecoder() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }

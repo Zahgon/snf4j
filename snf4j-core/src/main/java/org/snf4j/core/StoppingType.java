@@ -25,22 +25,17 @@
  */
 package org.snf4j.core;
 
-
 enum StoppingType {
 
-	GENTLE(new StoppingType[] {null}),
+    GENTLE(new StoppingType[] { null }), QUICK(new StoppingType[] { null, StoppingType.GENTLE }), DIRTY(new StoppingType[] { null, StoppingType.GENTLE, StoppingType.QUICK });
 
-	QUICK(new StoppingType[] {null, StoppingType.GENTLE}),
-	
-	DIRTY(new StoppingType[] {null, StoppingType.GENTLE, StoppingType.QUICK});
-	
-	private StoppingType[] expect;
-	
-	StoppingType(StoppingType[] expect) {
-		this.expect = expect;
-	}
-	
-	public StoppingType[] expect() {
-		return expect;
-	}
+    private StoppingType[] expect;
+
+    StoppingType(StoppingType[] expect) {
+        this.expect = expect;
+    }
+
+    public StoppingType[] expect() {
+        throw new UnsupportedOperationException("STUB: not implemented");
+    }
 }
